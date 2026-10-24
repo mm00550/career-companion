@@ -455,9 +455,10 @@ const MatchSectionSchema = z.object({
   id: z.string().describe("short slug, e.g. 'skills', 'experience', 'keywords', 'seniority'"),
   name: z.string().describe("display name, e.g. 'Skills Match'"),
   tag: z.string().describe("short descriptor shown under the name, e.g. 'tools & technical skills'"),
-  score: z.number().describe("0-10"),
-  gaps: z.array(z.string()),
-  fixes: z.array(z.string()),
+  score: z.number().describe("0-10, one decimal allowed, e.g. 7.5"),
+  summary: z.string().describe("ONE short sentence, max 15 words, on how well the CV shows this area and the single most useful next step, e.g. 'The next step in responsibility needs clearer evidence.'"),
+  gaps: z.array(z.string()).describe("1-3 specific gaps (empty if this area has no real gap)"),
+  fixes: z.array(z.string()).describe("the practical fix for the gap at the SAME position in gaps — same length, paired by position"),
 });
 const TailoringSuggestionSchema = z.object({
   section: z.string().describe("which part of the CV this applies to, e.g. 'Summary' or 'Most recent role'"),
@@ -469,6 +470,7 @@ const ChecklistItemSchema = z.object({
   impact: z.enum(["high", "medium", "low"]),
 });
 const MatchAnalysisSchema = z.object({
+  roleTitle: z.string().describe("the job title of the role, taken from the job description"),
   overallScore: z.number().describe("0-100 overall match score"),
   readinessSummary: z.string().describe("2-3 sentence honest summary of how strong this match is and why"),
   sections: z.array(MatchSectionSchema).describe("4-6 sections, e.g. Skills, Experience, Keywords, Seniority Fit"),
@@ -495,7 +497,7 @@ exports.matchJobToCV = onRequest({ cors: true, timeoutSeconds: 120, region: "us-
     const response = await client.messages.parse({
       model: "claude-opus-5",
       max_tokens: 8000,
-      system: "You are an expert technical recruiter and CV coach. Compare the candidate's CV against the job description and target role, and produce an honest, specific, actionable match analysis. Be concrete — quote real phrases from the CV and job description rather than generic advice. If the CV is a strong match, say so; don't manufacture gaps that aren't there.",
+      system: "You are an expert technical recruiter and CV coach. Compare the candidate's CV against the job description and target role, and produce an honest, specific, actionable match analysis. Be concrete — quote real phrases from the CV and job description rather than generic advice. If the CV is a strong match, say so; don't manufacture gaps that aren't there. Within each section, gaps and fixes must be the same length and paired by position: fixes[0] addresses gaps[0], and so on.",
       messages: [{
         role: "user",
         content: `Target role: ${targetRole || "(not specified)"}\n\n` +

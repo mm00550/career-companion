@@ -187,7 +187,16 @@
   .routine-day { font-size: 12px; font-weight: 700; color: var(--color-primary); width: 85px; flex-shrink: 0; }
 
   /* Header flex */
-  .hdr-row  { display: flex; align-items: baseline; justify-content: space-between; }
+  .hdr-row  { display: grid; grid-template-columns: minmax(0, 1fr) auto max-content; align-items: center; gap: 12px; }
+  @media (min-width: 1500px) { .hdr-row { grid-template-columns: 1fr auto 1fr; } }
+  .header .brand { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; }
+  .header .brand-logo { display: block; width: 280px; height: 33px; overflow: hidden; flex-shrink: 0; }
+  .header .brand-logo img { display: block; width: 318px; max-width: none; margin: -35px 0 0 -19px; mix-blend-mode: multiply; }
+  .header .brand-title { padding-left: 18px; border-left: 1px solid var(--border-default); font-size: 22px; font-weight: 600; letter-spacing: -.01em; color: var(--text-primary); line-height: 1.2; }
+  .header-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; justify-self: end; }
+  .header-actions .ha-row { display: flex; align-items: center; gap: 10px; white-space: nowrap; position: relative; }
+  /* "Saved" appears to the left of the user chip without taking up room, so the chip sits right next to Sign out */
+  .header-actions .save-flash { position: absolute; right: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
   .card-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
   .card-ttl { font-size: 13px; font-weight: 700; }
 
@@ -208,15 +217,25 @@
     .modal { width: 95vw; padding: 20px 18px; }
     .header { padding: 14px 14px 0; }
     .header h1 { font-size: 16px; }
-    .header .hdr-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-    .header-actions { flex-wrap: wrap; }
+    .header .hdr-row { grid-template-columns: 1fr; justify-items: center; gap: 10px; }
+    .hdr-spacer { display: none; }
+    .header .brand { gap: 10px; }
+    .header .brand-logo { width: 200px; height: 24px; }
+    .header .brand-logo img { width: 227px; margin: -25px 0 0 -14px; }
+    .header .brand-title { font-size: 17px; padding-left: 10px; }
+    .header-actions { align-items: center; justify-self: center; }
+    .header-actions .ha-row { flex-wrap: wrap; justify-content: center; }
     .body { padding: 14px 10px; }
     .item-row { flex-wrap: wrap; }
     .item-actions { width: 100%; justify-content: flex-start; }
   }
 
   /* Login screen */
-  .login-overlay { --login-bg: #F5E7EF; --login-accent: #3B002F; position: fixed; inset: 0; background: var(--login-bg); z-index: 999; display: flex; align-items: center; justify-content: center; }
+  .login-overlay { --login-bg: #F5E7EF; --login-accent: #3B002F; position: fixed; inset: 0; background: var(--login-bg); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; overflow-y: auto; padding: 20px 0; }
+  .login-brand { text-align: center; }
+  .login-brand-logo { display: block; width: 280px; max-width: 86vw; height: 33px; overflow: hidden; margin: 0 auto; }
+  .login-brand-logo img { display: block; width: 318px; max-width: none; margin: -35px 0 0 -19px; mix-blend-mode: multiply; }
+  .login-brand-title { margin-top: 14px; font-size: 22px; font-weight: 600; letter-spacing: -.01em; color: var(--login-accent); line-height: 1.2; }
   .login-box { background: var(--bg-surface); border-radius: var(--radius-lg); padding: 40px 40px 36px; width: 360px; box-shadow: var(--shadow-modal); }
   .login-logo { font-size: 22px; font-weight: 800; color: var(--login-accent); margin-bottom: 4px; letter-spacing: -.4px; }
   .login-sub  { font-size: 12px; color: var(--login-accent); opacity: .7; margin-bottom: 28px; }
@@ -281,6 +300,10 @@
 
 <!-- LOGIN OVERLAY -->
 <div class="login-overlay" id="loginOverlay">
+  <div class="login-brand">
+    <span class="login-brand-logo"><img src="ai-accelerate-logo.webp" alt="AI Accelerate"></span>
+    <div class="login-brand-title">Career Companion</div>
+  </div>
   <div class="login-box">
     <div class="login-logo" id="loginTitle">Please enter your credentials</div>
     <div class="login-sub" id="loginSub"></div>
@@ -324,19 +347,23 @@
 <!-- HEADER -->
 <div class="header">
   <div class="hdr-row">
-    <div>
-      <h1>Job Search, Network &amp; Training Tracker</h1>
-      <p>June – November 2026 · Target: New role before notice period ends</p>
+    <div class="hdr-spacer"></div>
+    <div class="brand">
+      <span class="brand-logo"><img src="ai-accelerate-logo.webp" alt="AI Accelerate"></span>
+      <span class="brand-title">Career Companion</span>
     </div>
-    <div class="header-actions" style="display:flex;align-items:center;gap:10px">
-      <span style="display:inline-flex;align-items:center;gap:6px;background:var(--bg-surface-subtle);border-radius:var(--radius-pill);padding:4px 10px 4px 8px">
-        <span id="headerUserName" style="font-size:12px;font-weight:600;color:var(--text-primary)"></span><span id="syncStatus" style="font-size:11px;font-weight:600;color:var(--status-success-text)"></span>
-      </span>
-      <span class="save-flash" id="saveFlash">✓ Saved</span>
-      <button class="logout-btn" onclick="openDesignAdmin()" title="Design System">⚙️</button>
-      <button class="logout-btn" onclick="openPasswordModal()">🔑 Change Password</button>
-      <button class="logout-btn" onclick="exportCSV()">Export CSV</button>
-      <button class="logout-btn logout-btn-danger" onclick="doLogout()">Sign out</button>
+    <div class="header-actions">
+      <div class="ha-row">
+        <span style="display:inline-flex;align-items:center;gap:6px;background:var(--bg-surface-subtle);border-radius:var(--radius-pill);padding:4px 10px 4px 8px">
+          <span id="headerUserName" style="font-size:12px;font-weight:600;color:var(--text-primary)"></span><span id="syncStatus" style="font-size:11px;font-weight:600;color:var(--status-success-text)"></span>
+        </span>
+        <span class="save-flash" id="saveFlash">✓ Saved</span>
+        <button class="logout-btn logout-btn-danger" onclick="doLogout()">Sign out</button>
+      </div>
+      <div class="ha-row">
+        <button class="logout-btn" onclick="openDesignAdmin()" title="Design System">⚙️</button>
+        <button class="logout-btn" onclick="openPasswordModal()">🔑 Change Password</button>
+      </div>
     </div>
   </div>
   <div class="tabs">
@@ -483,55 +510,46 @@
 
 <!-- ════════════════════════════ SUGGESTIONS ════════════════════════════════ -->
 <div id="tab-suggestions" class="section">
-  <div class="card card-purple" style="margin-bottom:16px">
-    <div style="font-size:14px;font-weight:700;color:var(--color-primary)">🎯 Job Match</div>
-    <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Compare a specific job description against one of your CVs and get an AI-generated match analysis — score, gaps, and tailoring suggestions.</div>
+  <div class="intro-panel">
+  <div class="intro-head">
+    <div class="intro-title">Review and Match your CV</div>
+    <div class="intro-desc">Upload a job description and your CV to analyze your match against the role</div>
   </div>
 
-  <div class="card" style="margin-bottom:16px">
-    <div class="grid2" style="align-items:start">
-      <div>
-        <div class="sec-label" style="margin-bottom:8px">💼 The role</div>
-        <div class="form-group" style="margin-bottom:10px">
-          <label class="form-label">Select target role</label>
-          <input class="form-input" id="jm-role" list="jm-role-options" placeholder="e.g. Senior Project Manager">
-          <datalist id="jm-role-options"></datalist>
-        </div>
-        <div class="form-group" style="margin-bottom:6px">
-          <label class="form-label">Job posting link</label>
-          <input class="form-input" id="jm-job-url" placeholder="https://…" oninput="jmClearJobFile()">
-        </div>
-        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">— or —</div>
-        <div class="form-group">
-          <label class="form-label">Upload a job description</label>
-          <input class="form-input" type="file" id="jm-job-file" accept=".pdf,.docx,.txt" onchange="jmOnJobFileChange(event)">
-          <div id="jm-job-file-status" style="font-size:11px;color:var(--text-muted);margin-top:4px"></div>
-        </div>
+  <div class="upload-grid">
+    <div class="upload-card">
+      <div class="step-label">Step 01</div>
+      <h3>Job description</h3>
+      <p>The role, responsibilities, and requirements.</p>
+      <div class="dropzone" id="dz-job">
+        <div class="dz-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4 4 0 0 1-.5 7.96"/><path d="M12 12v8M9 15l3-3 3 3"/></svg></div>
+        <div class="dz-title">Drop a file here, or <span class="dz-browse">browse</span></div>
+        <div class="dz-hint">PDF, Word, TXT or MD · Max 8 MB</div>
+        <div class="dz-file" id="jm-job-file-status"></div>
       </div>
-      <div>
-        <div class="sec-label" style="margin-bottom:8px">📄 Your CV</div>
-        <div class="form-group" style="margin-bottom:10px">
-          <label class="form-label">Select CV</label>
-          <select class="form-input" id="jm-cv-select" onchange="jmOnCvSelectChange()">
-            <option value="">No CV folder connected yet</option>
-          </select>
-          <div style="margin-top:6px">
-            <button class="btn btn-sky btn-sm" onclick="jmConnectCvFolder()">📁 Connect CV folder</button>
-          </div>
-          <div id="jm-cv-folder-status" style="font-size:11px;color:var(--text-muted);margin-top:4px">Chrome/Edge only — lets you pick a local folder and choose from the CVs in it. Not supported in this browser? Use upload instead.</div>
-        </div>
-        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">— or —</div>
-        <div class="form-group">
-          <label class="form-label">Upload a CV</label>
-          <input class="form-input" type="file" id="jm-cv-file" accept=".pdf,.docx" onchange="jmOnCvFileChange(event)">
-          <div id="jm-cv-file-status" style="font-size:11px;color:var(--text-muted);margin-top:4px"></div>
-        </div>
+      <input type="file" id="jm-job-file" accept=".pdf,.docx,.txt,.md" hidden onchange="jmOnJobFileChange(event)">
+      <div class="alt-row"><span>Or paste a link to the job posting</span><input class="form-input" id="jm-job-url" placeholder="https://…" oninput="jmClearJobFile()"></div>
+    </div>
+    <div class="upload-card">
+      <div class="step-label">Step 02</div>
+      <h3>Candidate CV</h3>
+      <p>The candidate's experience, skills, and education.</p>
+      <div class="dropzone" id="dz-cv">
+        <div class="dz-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4 4 0 0 1-.5 7.96"/><path d="M12 12v8M9 15l3-3 3 3"/></svg></div>
+        <div class="dz-title">Drop a file here, or <span class="dz-browse">browse</span></div>
+        <div class="dz-hint">PDF, Word, TXT or MD · Max 8 MB</div>
+        <div class="dz-file" id="jm-cv-file-status"></div>
       </div>
+      <input type="file" id="jm-cv-file" accept=".pdf,.docx,.txt,.md" hidden onchange="jmOnCvFileChange(event)">
+      <div class="alt-row" id="jm-cv-folder-row" hidden><span>Or pick a CV from a folder on this computer</span>
+        <div class="alt-flex"><button type="button" class="btn btn-ghost btn-sm" onclick="jmConnectCvFolder()">📁 Connect CV folder</button><select class="form-input" id="jm-cv-select" onchange="jmOnCvSelectChange()" hidden></select></div>
+        <div id="jm-cv-folder-status" class="alt-status"></div></div>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border-default)">
-      <span style="font-size:12px;color:var(--text-muted)" id="jm-status">Add a job description and a CV, then run the analysis.</span>
-      <button class="btn btn-purple" id="jm-analyze-btn" onclick="runJobMatchAnalysis()">✨ Analyze Match</button>
-    </div>
+  </div>
+  <div class="analyse-row">
+    <button class="btn btn-purple" id="jm-analyze-btn" onclick="runJobMatchAnalysis()" disabled>Analyse candidate →</button>
+    <div class="analyse-note" id="jm-status">Your job description and CV are sent to Claude (Anthropic API) through your cloud function, for this analysis only.</div>
+  </div>
   </div>
 
   <style>
@@ -546,7 +564,7 @@
     #jm-dashboard section{margin-bottom:28px}
     #jm-dashboard .stitle{font-size:16px;font-weight:700;color:var(--color-primary);margin:0 0 4px}
     #jm-dashboard .sdesc{color:var(--text-muted);font-size:12.5px;margin:0 0 14px}
-    #jm-dashboard .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+    #jm-dashboard .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:10px}
     #jm-dashboard .score-card{background:var(--bg-surface);border:1px solid var(--border-default);border-radius:var(--radius-md);padding:14px 16px;cursor:pointer;transition:border-color .15s}
     #jm-dashboard .score-card:hover{border-color:var(--color-primary)}
     #jm-dashboard .score-card.active{border-color:var(--color-primary);box-shadow:0 0 0 2px var(--color-primary-light)}
@@ -568,11 +586,6 @@
     #jm-dashboard .chip{font-size:11.5px;padding:4px 10px;border-radius:var(--radius-pill)}
     #jm-dashboard .chip.matched{background:var(--status-success-bg);color:var(--status-success-text)}
     #jm-dashboard .chip.missing{background:var(--status-urgent-bg);color:var(--status-urgent-text)}
-    #jm-dashboard .rw-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-    #jm-dashboard .rw-block{padding:14px 16px;border-radius:var(--radius-md);font-size:12.5px;line-height:1.6;white-space:pre-wrap}
-    #jm-dashboard .rw-before{background:var(--status-urgent-bg);color:var(--status-urgent-text)}
-    #jm-dashboard .rw-after{background:var(--status-success-bg);color:var(--status-success-text)}
-    #jm-dashboard .rw-label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:block;font-weight:700}
     #jm-dashboard .checklist{background:var(--bg-surface);border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 20px}
     #jm-dashboard .chk{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--border-default)}
     #jm-dashboard .chk:last-child{border-bottom:none}
@@ -586,11 +599,13 @@
       #jm-dashboard .ring-wrap{margin:0 auto}
       #jm-dashboard .detail-cols,#jm-dashboard .rw-pair{grid-template-columns:1fr}
     }
+    @page{size:A4;margin:12mm}
     @media print{
       body *{visibility:hidden}
       #jm-dashboard,#jm-dashboard *{visibility:visible}
       #jm-dashboard{position:absolute;left:0;top:0;width:100%}
       #jm-dashboard .jm-no-print{display:none!important}
+      #jm-dashboard .gf-row,#jm-dashboard .rw-pair,#jm-dashboard .score-card,#jm-dashboard .chk,#jm-dashboard .gf-for{break-inside:avoid;page-break-inside:avoid}
       #jm-dashboard .score-card{cursor:default}
       #jm-dashboard .hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     }
@@ -603,9 +618,124 @@
     #jm-history-trigger{width:100%;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--bg-surface)}
     #jm-history-trigger span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     #jm-history-panel{position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--bg-surface);border:1px solid var(--border-default);border-radius:var(--radius-md);box-shadow:var(--shadow-card-hover);z-index:30;max-height:260px;overflow-y:auto;padding:6px}
+      /* Upload layout (two steps + centred action button). Colours come from the
+       design-system variables in theme.css, so changing the theme changes this too. */
+    #tab-suggestions .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+    #tab-suggestions .upload-card { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-card); }
+    #tab-suggestions .step-label { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 14px; }
+    #tab-suggestions .upload-card h3 { font-size: 19px; font-weight: 700; color: var(--text-primary); margin: 0 0 6px; letter-spacing: -.01em; }
+    #tab-suggestions .upload-card p { font-size: 13.5px; color: var(--text-muted); margin: 0 0 20px; }
+    #tab-suggestions .dropzone { border: 1.5px dashed var(--border-strong); border-radius: var(--radius-md); background: var(--bg-surface-subtle); padding: 34px 20px; text-align: center; cursor: pointer; transition: border-color .15s, background .15s; }
+    #tab-suggestions .dropzone:hover, #tab-suggestions .dropzone.dragover { border-color: var(--color-primary); background: var(--color-primary-light); }
+    #tab-suggestions .dropzone.has-file { border-style: solid; border-color: var(--status-success-border); background: var(--status-success-bg); }
+    #tab-suggestions .dropzone.has-error { border-color: var(--status-urgent-text); background: var(--status-urgent-bg); }
+    #tab-suggestions .dz-icon { width: 40px; height: 40px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-card); color: var(--text-muted); }
+    #tab-suggestions .dz-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    #tab-suggestions .dz-browse { color: var(--color-primary); }
+    #tab-suggestions .dz-hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+    #tab-suggestions .dz-file { font-size: 12px; font-weight: 600; margin-top: 10px; color: var(--status-success-text); word-break: break-word; }
+    #tab-suggestions .dropzone.has-error .dz-file { color: var(--status-urgent-text); }
+    #tab-suggestions .dz-file:empty { display: none; }
+    #tab-suggestions .analyse-row { text-align: center; margin-bottom: 26px; }
+    #tab-suggestions .analyse-row .btn { font-size: 15px; padding: 14px 34px; }
+    #tab-suggestions .analyse-row .btn:disabled { background: var(--border-default); color: var(--bg-surface); cursor: not-allowed; opacity: 1; }
+    #tab-suggestions .analyse-note { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+    @media (max-width: 700px) { #tab-suggestions .upload-grid{ grid-template-columns: 1fr; } }
+    
+    /* Section score cards: title + score, bar, one-line suggestion */
+    #jm-dashboard .cards{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+    #jm-dashboard .score-card{padding:18px 20px}
+    #jm-dashboard .sc-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+    #jm-dashboard .score-card .sc-head b{display:block;font-size:14px;color:var(--text-primary)}
+    #jm-dashboard .score-card .sc-head .n{float:none;font-size:21px;font-weight:800}
+    #jm-dashboard .score-card .sc-head .n small{display:inline;font-size:11px;color:var(--text-subtle);font-weight:600;margin:0}
+    #jm-dashboard .score-card .bar{margin:12px 0 14px}
+    #jm-dashboard .score-card .sc-sum{font-size:12.5px;line-height:1.5;color:var(--text-muted);margin:0}
+    
+    /* Gaps and fixes: each gap beside its recommended fix */
+    #jm-dashboard .eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--color-primary);margin:0 0 8px}
+    #jm-dashboard .gf-for{font-size:13px;font-weight:700;color:var(--text-primary);margin:0 0 10px}
+    #jm-dashboard .gf-for span{color:var(--text-muted);font-weight:600;margin-left:6px}
+    #jm-dashboard .gf-panel{border:1px solid var(--border-default);border-radius:var(--radius-md);overflow:hidden;background:var(--bg-surface)}
+    #jm-dashboard .gf-row{display:grid;grid-template-columns:1fr 1fr}
+    #jm-dashboard .gf-row + .gf-row{border-top:1px solid var(--border-default)}
+    #jm-dashboard .gf-cell{padding:22px 24px}
+    #jm-dashboard .gf-gap{background:var(--status-warning-bg);border-right:1px solid var(--border-default)}
+    #jm-dashboard .gf-fix{background:var(--status-success-bg)}
+    #jm-dashboard .gf-head{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+    #jm-dashboard .gf-gap .gf-head{color:var(--status-warning-text)}
+    #jm-dashboard .gf-fix .gf-head{color:var(--status-success-text)}
+    #jm-dashboard .gf-badge{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;letter-spacing:0}
+    #jm-dashboard .gf-gap .gf-badge{background:var(--status-warning-border);color:var(--status-warning-text)}
+    #jm-dashboard .gf-fix .gf-badge{background:var(--status-success-border);color:var(--status-success-text)}
+    #jm-dashboard .gf-cell p{margin:0;font-size:14px;line-height:1.7;color:var(--text-secondary)}
+    #jm-dashboard .gf-none{padding:22px 24px;font-size:14px;color:var(--status-success-text);background:var(--status-success-bg)}
+    @media(max-width:680px){#jm-dashboard .gf-row{grid-template-columns:1fr}#jm-dashboard .gf-gap{border-right:none}}
+    
+    /* Section score cards sit inside a white panel, like Keyword coverage */
+    #jm-dashboard .detail > .cards .score-card{background:var(--bg-surface-subtle)}
+    #jm-dashboard .detail > .cards .score-card.active{background:var(--bg-surface)}
+    
+    /* Gaps and fixes + tailoring suggestions also sit inside a white panel */
+    #jm-dashboard .detail > .rw-pair:last-child{margin-bottom:0}
+    #jm-dashboard .detail > .gf-panel{margin:0}
+    
+    /* Compact score cards so six fit on one row on a wide window */
+    #jm-dashboard .cards{grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:10px}
+    #jm-dashboard .score-card{padding:12px 13px}
+    #jm-dashboard .score-card .sc-head b{font-size:12.5px;line-height:1.3}
+    #jm-dashboard .score-card .sc-head .n{font-size:17px}
+    #jm-dashboard .score-card .sc-head .n small{font-size:10px}
+    #jm-dashboard .score-card .bar{margin:9px 0 10px}
+    #jm-dashboard .score-card .sc-sum{font-size:11.5px;line-height:1.45}
+    
+    /* Tailoring suggestions: titled card, "Current" | "Suggested" columns */
+    #jm-dashboard .rw-pair{display:block;padding:0;margin-bottom:16px;background:var(--bg-surface);border:1px solid var(--border-default);border-radius:var(--radius-lg);overflow:hidden}
+    #jm-dashboard .rw-title{padding:14px 22px;background:var(--bg-surface-subtle);border-bottom:1px solid var(--border-default);font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--text-primary)}
+    #jm-dashboard .rw-cols{display:grid;grid-template-columns:1fr 1fr}
+    #jm-dashboard .rw-block{padding:22px 24px;border-radius:0;font-size:13px;line-height:1.7;white-space:pre-wrap}
+    #jm-dashboard .rw-before{background:var(--bg-surface);color:var(--text-secondary);border-right:1px solid var(--border-default)}
+    #jm-dashboard .rw-after{background:var(--color-primary-light);color:var(--text-primary);font-weight:700}
+    #jm-dashboard .rw-label{display:block;margin-bottom:12px;font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+    #jm-dashboard .rw-before .rw-label{color:var(--text-muted)}
+    #jm-dashboard .rw-after .rw-label{color:var(--color-primary)}
+    @media(max-width:680px){#jm-dashboard .rw-cols{grid-template-columns:1fr}#jm-dashboard .rw-before{border-right:none;border-bottom:1px solid var(--border-default)}}
+    
+    /* Quick-win checklist: numbered rows with outlined impact pills */
+    #jm-dashboard .checklist,#jm-dashboard section .checklist{padding:0 !important;border-radius:var(--radius-lg);overflow:hidden}
+    #jm-dashboard .checklist .chk{gap:16px;padding:20px 24px !important}
+    #jm-dashboard .chk-n{flex-shrink:0;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border-default);border-radius:var(--radius-md);background:var(--bg-surface);font-size:12px;font-weight:600;color:var(--text-secondary)}
+    #jm-dashboard .chk label{font-size:14px;line-height:1.5;color:var(--text-primary)}
+    #jm-dashboard .impact-pill{padding:5px 14px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.08em;border:1px solid transparent}
+    #jm-dashboard .impact-pill.high{border-color:var(--status-urgent-border)}
+    #jm-dashboard .impact-pill.medium{border-color:var(--status-warning-border)}
+    #jm-dashboard .impact-pill.low{border-color:var(--status-success-border)}
+    
+    /* Numbered section headlines: "01 · SECTION SCORES – A closer look at the fit" */
+    #jm-dashboard .stitle .sn{font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    
+    /* Intro card text: same type as the upload cards' title and description */
+    #tab-suggestions .intro-title {text-align:center;font-size:19px;font-weight:700;color:var(--text-primary);margin:0 0 6px;letter-spacing:-.01em}
+    #tab-suggestions .intro-desc {text-align:center;font-size:13.5px;color:var(--text-muted)}
+    
+    /* White panel around the intro heading + upload cards */
+    #tab-suggestions .intro-panel {background:var(--bg-surface);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:32px 36px 28px;margin-bottom:16px;box-shadow:var(--shadow-card)}
+    #tab-suggestions .intro-head {margin-bottom:26px}
+    #tab-suggestions .intro-panel .upload-card {background:var(--bg-surface);box-shadow:none}
+    #tab-suggestions .intro-panel .analyse-row {margin-bottom:0}
+    @media(max-width:680px){#tab-suggestions .intro-panel{padding:22px 16px 20px}}
+    #tab-suggestions .alt-row{margin-top:16px;font-size:12px;color:var(--text-muted)}
+    #tab-suggestions .alt-row .form-input{margin-top:6px}
+    #tab-suggestions .alt-flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
+    #tab-suggestions .alt-flex .form-input{margin:0;width:auto;max-width:100%;flex:1;min-width:160px}
+    #tab-suggestions .alt-status{margin-top:6px}
+    #tab-suggestions [hidden]{display:none !important}
   </style>
   <div id="jm-history-wrap" class="card" style="margin-bottom:16px;display:none">
-    <div class="form-label" style="margin-bottom:8px">📁 Previous matches</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px">
+      <div class="form-label" style="margin:0">📁 Previous matches</div>
+      <button class="btn btn-sky btn-sm" onclick="jmDownloadPdf()">⬇️ Download PDF</button>
+    </div>
     <div style="position:relative">
       <button type="button" id="jm-history-trigger" class="form-input" onclick="jmToggleHistoryDropdown(event)">
         <span id="jm-history-trigger-label">Select a match…</span>
@@ -4782,10 +4912,10 @@ function migrateLegacyJobMatch(legacy) {
 }
 
 function initJobMatchTab() {
-  document.getElementById("jm-role-options").innerHTML =
-    (state.searchCriteria.roleTitles||[]).map(t=>`<option value="${escHtml(t)}">`).join("");
-  document.getElementById("jm-role").value = state.jobMatch?.role || "";
-  document.getElementById("jm-job-url").value = state.jobMatch?.jobUrl || "";
+  jmSetupDropzone("dz-job", "jm-job-file", jmOnJobFileChange);
+  jmSetupDropzone("dz-cv", "jm-cv-file", jmOnCvFileChange);
+  if (window.showDirectoryPicker) document.getElementById("jm-cv-folder-row").hidden = false;   // folder picking needs desktop Chrome/Edge
+  jmUpdateAnalyzeState();
   renderJobMatchHistorySelect();
   const hist = state.jobMatchHistory||[];
   if (hist.length) renderJobMatchResults(hist[0].results, hist[0]);
@@ -4802,11 +4932,12 @@ function jmHistoryLabel(h) {
 function renderJobMatchHistorySelect() {
   const wrap = document.getElementById("jm-history-wrap");
   const hist = state.jobMatchHistory||[];
-  if (!hist.length) { wrap.style.display = "none"; return; }
+  const unsaved = jmCurrentEntry && !jmEntryIsSaved(jmCurrentEntry);   // a fresh result that hasn't been named/saved yet
+  if (!hist.length && !unsaved) { wrap.style.display = "none"; return; }
   wrap.style.display = "";
   const current = jmCurrentEntry?.id || hist[0].id;
   const currentEntry = hist.find(h=>h.id===current);
-  document.getElementById("jm-history-trigger-label").textContent = currentEntry ? jmHistoryLabel(currentEntry) : "Select a match…";
+  document.getElementById("jm-history-trigger-label").textContent = currentEntry ? jmHistoryLabel(currentEntry) : unsaved ? "Current analysis (not saved yet)" : "Select a match…";
   const panel = document.getElementById("jm-history-panel");
   panel.innerHTML = hist.map(h => `
       <div class="jm-history-row ${h.id===current?"active":""}">
@@ -4870,7 +5001,7 @@ function jmDeleteHistoryEntryById(id) {
 // loaded from CDN (see the <script> tags near the end of <body>).
 async function jmExtractText(file) {
   const name = file.name.toLowerCase();
-  if (name.endsWith(".txt")) return await file.text();
+  if (name.endsWith(".txt") || name.endsWith(".md")) return await file.text();
   const buf = await file.arrayBuffer();
   if (name.endsWith(".pdf")) {
     const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
@@ -4889,34 +5020,76 @@ async function jmExtractText(file) {
   throw new Error("Unsupported file type — use .pdf, .docx, or .txt");
 }
 
-// ── Job description: link or upload ──────────────────────────────────────────
+// ── Upload step 1 & 2: job description and CV ───────────────────────────────
+// Two drop zones (drag a file in, or click to browse). Two optional extras are
+// kept from the earlier version: a job posting link (fetched by the cloud
+// function) and, in Chrome/Edge on a computer, picking a CV from a folder.
+const JM_MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
+let jmJobFileName = "";
+let jmRunning = false;
+const jmById = id => document.getElementById(id);
+
+function jmUpdateAnalyzeState() {
+  const hasJob = !!(jmJobFileText || jmById("jm-job-url").value.trim());
+  jmById("jm-analyze-btn").disabled = jmRunning || !(hasJob && jmCvText);
+}
+function jmSetDropzone(zoneId, statusId, file, text, err) {
+  const zone = jmById(zoneId), st = jmById(statusId);
+  zone.classList.toggle("has-file", !!text);
+  zone.classList.toggle("has-error", !!err);
+  st.textContent = err ? err : text ? `✓ ${file.name} (${text.trim().length.toLocaleString()} characters) — click or drop to replace` : "";
+}
+async function jmReadUpload(file, zoneId, statusId) {
+  if (file.size > JM_MAX_UPLOAD_BYTES) { jmSetDropzone(zoneId, statusId, file, "", "That file is larger than 8 MB."); return null; }
+  jmById(statusId).textContent = "Reading…";
+  try {
+    const text = await jmExtractText(file);
+    if (!text.trim()) throw new Error("No readable text found in that file.");
+    jmSetDropzone(zoneId, statusId, file, text, "");
+    return text;
+  } catch (e) { jmSetDropzone(zoneId, statusId, file, "", `Couldn't read this file: ${e.message}`); return null; }
+}
+// Typing a job posting link replaces an uploaded job description.
 function jmClearJobFile() {
-  jmJobFileText = "";
-  document.getElementById("jm-job-file").value = "";
-  document.getElementById("jm-job-file-status").textContent = "";
+  jmJobFileText = ""; jmJobFileName = "";
+  jmById("dz-job").classList.remove("has-file", "has-error");
+  jmById("jm-job-file-status").textContent = "";
+  jmUpdateAnalyzeState();
 }
 async function jmOnJobFileChange(event) {
   const file = event.target.files[0];
   if (!file) return;
-  document.getElementById("jm-job-url").value = "";
-  const statusEl = document.getElementById("jm-job-file-status");
-  statusEl.textContent = "Reading…";
-  try {
-    jmJobFileText = await jmExtractText(file);
-    statusEl.textContent = `✓ ${file.name} (${jmJobFileText.trim().length.toLocaleString()} characters)`;
-  } catch (e) {
-    jmJobFileText = "";
-    statusEl.textContent = `Couldn't read this file: ${e.message}`;
-  }
+  jmById("jm-job-url").value = "";
+  jmJobFileText = (await jmReadUpload(file, "dz-job", "jm-job-file-status")) || "";
+  jmJobFileName = jmJobFileText ? file.name : "";
+  jmUpdateAnalyzeState();
+}
+async function jmOnCvFileChange(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const sel = jmById("jm-cv-select"); if (sel) sel.value = "";
+  jmById("jm-cv-folder-status").textContent = "";
+  jmCvText = (await jmReadUpload(file, "dz-cv", "jm-cv-file-status")) || "";
+  jmCvSourceName = jmCvText ? file.name : "";
+  jmUpdateAnalyzeState();
+}
+function jmSetupDropzone(zoneId, inputId, handler) {
+  const zone = jmById(zoneId), input = jmById(inputId);
+  zone.addEventListener("click", () => input.click());
+  zone.addEventListener("dragover", e => { e.preventDefault(); zone.classList.add("dragover"); });
+  zone.addEventListener("dragleave", () => zone.classList.remove("dragover"));
+  zone.addEventListener("drop", e => {
+    e.preventDefault(); zone.classList.remove("dragover");
+    if (e.dataTransfer.files[0]) handler({ target: { files: [e.dataTransfer.files[0]] } });
+  });
+  input.addEventListener("click", e => e.stopPropagation());
+  input.addEventListener("change", () => { input.value = ""; }); // allow picking the same file again
 }
 
-// ── CV: connect a local folder, pick from it, or upload one file ────────────
+// ── CV from a local folder (Chrome/Edge on a computer only) ──────────────────
 async function jmConnectCvFolder() {
-  const statusEl = document.getElementById("jm-cv-folder-status");
-  if (!window.showDirectoryPicker) {
-    statusEl.textContent = "Your browser doesn't support folder access (Chrome/Edge only) — use upload instead.";
-    return;
-  }
+  const statusEl = jmById("jm-cv-folder-status");
+  if (!window.showDirectoryPicker) { statusEl.textContent = "Your browser doesn't support folder access — use the upload box instead."; return; }
   try {
     const dirHandle = await window.showDirectoryPicker();
     jmCvFileHandles = {};
@@ -4924,64 +5097,51 @@ async function jmConnectCvFolder() {
       if (handle.kind === "file" && /\.(pdf|docx|txt)$/i.test(name)) jmCvFileHandles[name] = handle;
     }
     const names = Object.keys(jmCvFileHandles).sort();
-    const select = document.getElementById("jm-cv-select");
+    const select = jmById("jm-cv-select");
     if (!names.length) {
-      select.innerHTML = `<option value="">No .pdf/.docx/.txt files found in that folder</option>`;
+      select.hidden = true;
       statusEl.textContent = `Connected "${dirHandle.name}" — no CV files found in it.`;
       return;
     }
     select.innerHTML = `<option value="">Choose a CV…</option>` + names.map(n=>`<option value="${escHtml(n)}">${escHtml(n)}</option>`).join("");
+    select.hidden = false;
     statusEl.textContent = `Connected "${dirHandle.name}" — ${names.length} file${names.length===1?"":"s"} found.`;
   } catch (e) {
     if (e.name !== "AbortError") statusEl.textContent = `Couldn't open that folder: ${e.message}`;
   }
 }
 async function jmOnCvSelectChange() {
-  const name = document.getElementById("jm-cv-select").value;
+  const name = jmById("jm-cv-select").value;
   if (!name) return;
-  document.getElementById("jm-cv-file").value = "";
-  const fileStatusEl = document.getElementById("jm-cv-file-status");
-  fileStatusEl.textContent = "";
   const handle = jmCvFileHandles[name];
   if (!handle) return;
-  const folderStatusEl = document.getElementById("jm-cv-folder-status");
+  const folderStatusEl = jmById("jm-cv-folder-status");
   try {
     const file = await handle.getFile();
     jmCvText = await jmExtractText(file);
     jmCvSourceName = name;
+    jmSetDropzone("dz-cv", "jm-cv-file-status", { name }, "", "");   // an uploaded file no longer applies
     folderStatusEl.textContent = `✓ Using "${name}" (${jmCvText.trim().length.toLocaleString()} characters)`;
   } catch (e) {
     jmCvText = ""; jmCvSourceName = "";
     folderStatusEl.textContent = `Couldn't read this file: ${e.message}`;
   }
-}
-async function jmOnCvFileChange(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  document.getElementById("jm-cv-select").value = "";
-  const statusEl = document.getElementById("jm-cv-file-status");
-  statusEl.textContent = "Reading…";
-  try {
-    jmCvText = await jmExtractText(file);
-    jmCvSourceName = file.name;
-    statusEl.textContent = `✓ ${file.name} (${jmCvText.trim().length.toLocaleString()} characters)`;
-  } catch (e) {
-    jmCvText = ""; jmCvSourceName = "";
-    statusEl.textContent = `Couldn't read this file: ${e.message}`;
-  }
+  jmUpdateAnalyzeState();
 }
 
 // ── Run the analysis ─────────────────────────────────────────────────────────
+const JM_IDLE_NOTE = "Your job description and CV are sent to Claude (Anthropic API) through your cloud function, for this analysis only.";
 async function runJobMatchAnalysis() {
-  const role = document.getElementById("jm-role").value.trim();
-  const jobUrl = document.getElementById("jm-job-url").value.trim();
-  const statusEl = document.getElementById("jm-status");
-  const btn = document.getElementById("jm-analyze-btn");
+  const jobUrl = jmById("jm-job-url").value.trim();
+  const statusEl = jmById("jm-status");
+  const btn = jmById("jm-analyze-btn");
 
-  if (!jmJobFileText && !jobUrl) { statusEl.textContent = "Add a job posting link or upload a job description first."; return; }
-  if (!jmCvText) { statusEl.textContent = "Select or upload a CV first."; return; }
+  if (!jmJobFileText && !jobUrl) { statusEl.textContent = "Add a job description first (upload it, or paste a link)."; return; }
+  if (!jmCvText) { statusEl.textContent = "Add a CV first."; return; }
 
-  btn.disabled = true; btn.textContent = "Analyzing…";
+  jmRunning = true; btn.disabled = true; btn.textContent = "Analysing…";
+  const started = Date.now();
+  let ticker = null;
   try {
     let jobDescription = jmJobFileText;
     if (!jobDescription) {
@@ -4994,14 +5154,18 @@ async function runJobMatchAnalysis() {
       if (!jdRes.ok) throw new Error(jdData.error || `HTTP ${jdRes.status}`);
       jobDescription = jdData.text;
     }
-    statusEl.textContent = "Analyzing match with AI…";
+    const tick = () => { statusEl.textContent = `Analysing with Claude… ${Math.round((Date.now() - started) / 1000)}s (usually 1–3 minutes)`; };
+    tick(); ticker = setInterval(tick, 1000);
     const res = await fetch(MATCH_JOB_TO_CV_URL, {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ targetRole: role, jobDescription, cvText: jmCvText }),
+      body: JSON.stringify({ targetRole: "", jobDescription, cvText: jmCvText }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
+    // The role title comes from the job description (newer analyses) or the file / link name.
+    let role = (data.roleTitle || "").trim() || jmJobFileName.replace(/\.[^.]+$/, "");
+    if (!role && jobUrl) { try { role = new URL(jobUrl).hostname.replace(/^www\./, ""); } catch { role = ""; } }
     const entry = {
       id: String(Date.now()) + Math.random().toString(36).slice(2,7),
       timestamp: new Date().toISOString(),
@@ -5010,7 +5174,9 @@ async function runJobMatchAnalysis() {
     state.jobMatch = { role, jobUrl };
     saveState();
     // Not added to the saved list yet — the result is shown first, then
-    // Candidate is asked whether to keep it and what to call it.
+    // the user is asked whether to keep it and what to call it.
+    clearInterval(ticker);
+    jmCurrentEntry = entry;
     renderJobMatchHistorySelect();
     renderJobMatchResults(data, entry);
     statusEl.textContent = `Analysis complete — ${data.overallScore}/100 match.`;
@@ -5018,31 +5184,30 @@ async function runJobMatchAnalysis() {
   } catch (e) {
     statusEl.textContent = `Analysis failed: ${e.message}`;
   } finally {
-    btn.disabled = false; btn.textContent = "✨ Analyze Match";
+    clearInterval(ticker);
+    jmRunning = false; btn.textContent = "Analyse candidate →"; jmUpdateAnalyzeState();
   }
 }
 
-// ── Render results, LinkedIn-tab-style: hero score, section cards with a
-// gap/fix detail panel, matched/missing keyword chips, before/after rewrite
-// suggestions, and a ranked checklist. ───────────────────────────────────────
+// ── Render results: hero score, numbered sections (section scores with a one-line
+// suggestion each, gaps paired with fixes, keyword coverage, tailoring
+// suggestions, quick-win checklist). Older saved analyses lack the one-line
+// suggestion and the gap/fix pairing, so those fall back gracefully. ──────────
 let jmActiveSection = null;
+const jmFmtScore = n => Number.isInteger(Number(n)) ? String(Number(n)) : Number(n).toFixed(1);
 function renderJobMatchResults(data, entry) {
   jmCurrentEntry = entry || null;
-  const el = document.getElementById("jm-results");
-  const impactColor = { high:"var(--status-success-text)", medium:"var(--status-warning-text)", low:"var(--text-muted)" };
+  const el = jmById("jm-results");
   const scoreColor = (s) => s>=7 ? "var(--status-success-text)" : s>=4 ? "var(--status-warning-text)" : "var(--status-urgent-text)";
   jmActiveSection = data.sections?.[0]?.id || null;
 
   const role = entry?.role || state.jobMatch?.role || "this role";
-  const dateStr = entry?.timestamp ? new Date(entry.timestamp).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}) : new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  const dateStr = new Date(entry?.timestamp || Date.now()).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
   const metaLine = [entry?.cvName ? `CV: ${entry.cvName}` : null, `Generated ${dateStr}`].filter(Boolean).join(" · ");
 
   el.innerHTML = `
     <div id="jm-dashboard">
-      <div class="jm-no-print" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px">
-        ${entry && !jmEntryIsSaved(entry) ? `<button class="btn btn-purple btn-sm" onclick="openJmSaveModal()">💾 Save analysis</button>` : ""}
-        <button class="btn btn-sky btn-sm" onclick="jmDownloadPdf()">⬇️ Download PDF</button>
-      </div>
+      ${entry && !jmEntryIsSaved(entry) ? `<div class="jm-no-print" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px"><button class="btn btn-purple btn-sm" onclick="openJmSaveModal()">💾 Save analysis</button></div>` : ""}
       <div class="hero">
         <div class="ring-wrap">
           <svg width="130" height="130" viewBox="0 0 130 130">
@@ -5059,14 +5224,20 @@ function renderJobMatchResults(data, entry) {
       </div>
 
       <section>
-        <p class="stitle">Section scores</p>
-        <p class="sdesc">Click a card to see the specific gaps and fixes behind the score.</p>
-        <div class="cards" id="jm-cardGrid"></div>
-        <div class="detail" id="jm-detailPanel"></div>
+        <p class="stitle"><span class="sn">01 · Section scores</span> – A closer look at the fit</p>
+        <p class="sdesc">Scores show how strongly your CV demonstrates each part of the role.</p>
+        <div class="detail"><div class="cards" id="jm-cardGrid"></div></div>
       </section>
 
       <section>
-        <p class="stitle">Keyword coverage</p>
+        <p class="stitle"><span class="sn">02 · Gaps and fixes</span> – Please click a section card above to see its gaps and where your CV can get stronger</p>
+        <p class="sdesc">Each gap is paired with a recommended fix to improve the meaning.</p>
+        <div class="gf-for" id="jm-gfFor"></div>
+        <div class="detail"><div class="gf-panel" id="jm-detailPanel"></div></div>
+      </section>
+
+      <section>
+        <p class="stitle"><span class="sn">03 · Keyword coverage in your CV</span></p>
         <p class="sdesc">Important terms from the job description, and whether your CV covers them.</p>
         <div class="detail">
           <div class="chips" style="margin-bottom:10px">${(data.matchedKeywords||[]).map(k=>`<span class="chip matched">${escHtml(k)}</span>`).join("")||`<span style="font-size:12px;color:var(--text-muted)">None found</span>`}</div>
@@ -5075,21 +5246,27 @@ function renderJobMatchResults(data, entry) {
       </section>
 
       <section>
-        <p class="stitle">Tailoring suggestions</p>
-        <p class="sdesc">Drop-in rewrites to better mirror the job description's language.</p>
+        <p class="stitle"><span class="sn">04 · Additional Tailoring suggestions</span></p>
+        <p class="sdesc">Suggestions to better mirror the job description's language and requirements.</p>
+        <div class="detail">
         ${(data.tailoringSuggestions||[]).map(s=>`
           <div class="rw-pair">
-            <div class="rw-block rw-before"><span class="rw-label">${escHtml(s.section)} — current</span>${escHtml(s.before)}</div>
-            <div class="rw-block rw-after"><span class="rw-label">${escHtml(s.section)} — suggested</span>${escHtml(s.after)}</div>
-          </div>`).join("") || `<div class="detail" style="font-size:12.5px;color:var(--text-muted)">No suggestions.</div>`}
+            <div class="rw-title">${escHtml(s.section)}</div>
+            <div class="rw-cols">
+              <div class="rw-block rw-before"><span class="rw-label">Current</span>${escHtml(s.before)}</div>
+              <div class="rw-block rw-after"><span class="rw-label">Suggested</span>${escHtml(s.after)}</div>
+            </div>
+          </div>`).join("") || `<span style="font-size:12.5px;color:var(--text-muted)">No suggestions.</span>`}
+        </div>
       </section>
 
       <section>
-        <p class="stitle">Quick-win checklist</p>
-        <p class="sdesc">Ordered by impact on your match for this role.</p>
+        <p class="stitle"><span class="sn">05 · Quick-win checklist</span> – Additional steps, ordered by impact</p>
+        <p class="sdesc">Use these actions to further strengthen the application before submitting.</p>
         <div class="checklist">
-          ${(data.checklist||[]).map(c=>`
+          ${(data.checklist||[]).map((c,i)=>`
             <div class="chk">
+              <span class="chk-n">${i+1}</span>
               <label>${escHtml(c.label)}</label>
               <span class="impact-pill ${c.impact}">${escHtml(c.impact)}</span>
             </div>`).join("")}
@@ -5097,40 +5274,42 @@ function renderJobMatchResults(data, entry) {
       </section>
     </div>`;
 
-  const cardGrid = document.getElementById("jm-cardGrid");
+  const cardGrid = jmById("jm-cardGrid");
   function renderCards() {
     cardGrid.innerHTML = (data.sections||[]).map(s => `
-      <div class="score-card ${s.id===jmActiveSection?"active":""}" data-id="${s.id}">
-        <span class="n" style="color:${scoreColor(s.score)}">${s.score}</span>
-        <b>${escHtml(s.name)}</b>
-        <small>${escHtml(s.tag)}</small>
+      <div class="score-card ${s.id===jmActiveSection?"active":""}" data-id="${escHtml(s.id)}">
+        <div class="sc-head"><b>${escHtml(s.name)}</b><span class="n" style="color:${scoreColor(s.score)}">${jmFmtScore(s.score)}<small>/10</small></span></div>
         <div class="bar"><i style="width:${s.score*10}%;background:${scoreColor(s.score)}"></i></div>
+        <p class="sc-sum">${escHtml(s.summary || s.tag || "")}</p>
       </div>`).join("");
     cardGrid.querySelectorAll(".score-card").forEach(c=>{
       c.addEventListener("click", ()=>{ jmActiveSection = c.dataset.id; renderCards(); renderDetail(); });
     });
   }
+  // Gap i is shown beside fix i. Older analyses listed gaps and fixes separately; they still line up by position.
   function renderDetail() {
     const s = (data.sections||[]).find(x=>x.id===jmActiveSection);
-    const panel = document.getElementById("jm-detailPanel");
-    if (!s) { panel.innerHTML = ""; return; }
-    panel.innerHTML = `
-      <div class="detail-cols">
-        <div class="gap"><b>Gaps</b><ul>${s.gaps.map(g=>`<li>${escHtml(g)}</li>`).join("")||"<li>None</li>"}</ul></div>
-        <div class="fix"><b>Fixes</b><ul>${s.fixes.map(f=>`<li>${escHtml(f)}</li>`).join("")||"<li>None</li>"}</ul></div>
-      </div>`;
+    const panel = jmById("jm-detailPanel");
+    if (!s) { panel.innerHTML = ""; jmById("jm-gfFor").textContent = ""; return; }
+    jmById("jm-gfFor").innerHTML = `${escHtml(s.name)} <span>${jmFmtScore(s.score)}/10</span>`;
+    const gaps = s.gaps||[], fixes = s.fixes||[], n = Math.max(gaps.length, fixes.length);
+    panel.innerHTML = n ? Array.from({length:n}, (_, i) => `
+      <div class="gf-row">
+        <div class="gf-cell gf-gap"><div class="gf-head"><span class="gf-badge">${i+1}</span>Gap</div><p>${escHtml(gaps[i] || "—")}</p></div>
+        <div class="gf-cell gf-fix"><div class="gf-head"><span class="gf-badge">✓</span>Recommended fix</div><p>${escHtml(fixes[i] || "—")}</p></div>
+      </div>`).join("") : `<div class="gf-none">No real gaps found in this area — nothing to fix here.</div>`;
   }
   renderCards();
   renderDetail();
 
   const circumference = 345.6;
   const offset = circumference - (Math.max(0,Math.min(100,data.overallScore))/100)*circumference;
-  document.getElementById("jm-heroRing").style.strokeDashoffset = offset;
+  jmById("jm-heroRing").style.strokeDashoffset = offset;
 }
 
 // Uses the browser's native print-to-PDF rather than a client-side PDF
 // library — produces a real, text-selectable PDF with zero new dependencies.
-// Print CSS (see the @media print block near the top of <head>) hides
+// Print CSS (see the @media print block in the Job Match tab) hides
 // everything except #jm-dashboard. Setting document.title first means the
 // browser's "Save as PDF" dialog defaults to a sensible filename.
 function jmDownloadPdf() {
