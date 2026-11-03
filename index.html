@@ -295,6 +295,198 @@
   window.pdfjsLib = pdfjsLib;
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.12.2/mammoth.browser.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0,0&display=block" rel="stylesheet">
+<style>
+  /* ── Network tab (Stitch "New Design 1 + 2": Kanban + Table/Drawer) ── */
+  .msi { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; font-size: 18px; line-height: 1; display: inline-block; vertical-align: middle; -webkit-font-smoothing: antialiased; }
+  .nw-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px; }
+  .nw-stat { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: var(--shadow-card); display: flex; justify-content: space-between; align-items: center; gap: 10px; transition: box-shadow .15s; }
+  .nw-stat:hover { box-shadow: var(--shadow-card-hover); }
+  .nw-stat-lbl { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .nw-stat-row { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 2px; flex-wrap: wrap; }
+  .nw-stat-val { font-size: 30px; font-weight: 800; letter-spacing: -.5px; line-height: 1.1; }
+  .nw-stat-sub { font-size: 11px; color: var(--text-muted); }
+  .nw-stat-icon { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--border-default); }
+  .nw-stat-icon .msi { font-size: 24px; }
+  .nw-pill { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-pill); border: 1px solid transparent; white-space: nowrap; text-transform: none; letter-spacing: 0; }
+  .nw-pill .msi { font-size: 13px; }
+  .nw-toolbar { margin-bottom: 16px; }
+  .nw-toolbar-top { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+  .nw-toolbar-top > div:first-child { flex: 1; min-width: 0; }
+  .nw-title { font-size: 17px; font-weight: 700; color: var(--text-primary); }
+  .nw-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .nw-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .nw-seg { display: flex; gap: 3px; background: var(--bg-surface-subtle); border: 1px solid var(--border-default); border-radius: 12px; padding: 3px; }
+  .nw-seg button { display: flex; align-items: center; gap: 5px; border: none; background: transparent; padding: 6px 12px; border-radius: 9px; font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; font-family: inherit; }
+  .nw-seg button.on { background: var(--color-primary); color: #fff; box-shadow: var(--shadow-xs); }
+  .nw-seg button .msi { font-size: 16px; }
+  .nw-select { appearance: none; -webkit-appearance: none; background: var(--bg-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237C6470'/%3E%3C/svg%3E") no-repeat right 11px center; border: 1px solid var(--border-default); border-radius: 12px; padding: 8px 30px 8px 12px; font-size: 12px; font-weight: 500; color: var(--text-primary); font-family: inherit; cursor: pointer; }
+  .nw-btn-primary { display: inline-flex; align-items: center; gap: 5px; background: var(--color-primary); color: #fff; border: none; border-radius: 12px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; box-shadow: var(--shadow-xs); }
+  .nw-btn-primary:hover { background: var(--color-primary-hover); }
+  .nw-btn-primary .msi { font-size: 16px; }
+  .nw-toolbar-bottom { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-top: 1px solid var(--border-subtle); margin-top: 14px; padding-top: 14px; }
+  .nw-search { position: relative; flex: 0 1 360px; min-width: 200px; }
+  .nw-kbd { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 10px; font-weight: 600; color: var(--text-muted); background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 5px; padding: 1px 5px; pointer-events: none; }
+  .nw-search .msi { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 17px; color: var(--text-subtle); }
+  .nw-search input { width: 100%; box-sizing: border-box; background: var(--bg-surface-subtle); border: 1px solid transparent; border-radius: 12px; padding: 8px 12px 8px 34px; font-size: 12px; font-family: inherit; color: var(--text-primary); outline: none; }
+  .nw-search input:focus { background: var(--bg-surface); border-color: var(--border-default); box-shadow: 0 0 0 2px var(--color-primary-light); }
+  .nw-chips { display: flex; gap: 6px; flex: 1; min-width: 0; justify-content: flex-end; flex-wrap: wrap; }
+  .nw-chip { flex-shrink: 0; white-space: nowrap; }
+  @media (max-width: 900px) {
+    .nw-toolbar-top, .nw-toolbar-bottom { flex-wrap: wrap; }
+    .nw-actions { flex-wrap: wrap; flex-shrink: 1; min-width: 0; max-width: 100%; }
+    .nw-search { flex: 1 1 100%; }
+    .nw-chips { justify-content: flex-start; }
+  }
+  .nw-chip { border: 1px solid var(--border-default); background: var(--bg-surface); color: var(--text-secondary); border-radius: var(--radius-pill); padding: 4px 11px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
+  .nw-chip:hover { background: var(--bg-surface-hover); }
+  .nw-chip.on { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+  .nw-chip.urgent { background: var(--status-urgent-bg); color: var(--status-urgent-text); border-color: var(--status-urgent-border); }
+  .nw-chip.urgent.on { background: var(--status-urgent-text); color: #fff; border-color: var(--status-urgent-text); }
+  .nw-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  /* Kanban */
+  /* Board breaks out of the 1100px content column to use the full window width */
+  .nw-board { display: flex; gap: 10px; align-items: flex-start; overflow-x: auto; padding-bottom: 10px; margin-bottom: 16px;
+    width: calc(100vw - var(--sbw, 0px) - 48px); margin-left: calc(50% - (100vw - var(--sbw, 0px)) / 2 + 24px); box-sizing: border-box; }
+  @media (max-width: 700px) { .nw-board { width: calc(100vw - var(--sbw, 0px) - 20px); margin-left: calc(50% - (100vw - var(--sbw, 0px)) / 2 + 10px); } }
+  .nw-board::-webkit-scrollbar { height: 7px; } .nw-board::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; } .nw-board::-webkit-scrollbar-track { background: var(--bg-surface-subtle); border-radius: 4px; }
+  .nw-col { flex: 1 0 240px; min-width: 240px; background: var(--bg-surface-subtle); border: 1px solid var(--border-default); border-radius: var(--radius-lg); padding: 10px 6px 10px 10px; display: flex; flex-direction: column; gap: 7px; min-height: 120px; max-height: calc(100vh - 60px); box-sizing: border-box; transition: background .12s, border-color .12s; }
+  .nw-col-hdr { margin-right: 4px; flex-shrink: 0; }
+  .nw-col-body { position: relative; display: flex; flex-direction: column; gap: 7px; overflow-y: auto; min-height: 0; padding-right: 4px; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+  .nw-col-body::-webkit-scrollbar { width: 6px; }
+  .nw-col-body::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  .nw-col-body::-webkit-scrollbar-track { background: transparent; }
+  .nw-col.drop { background: var(--color-primary-light); border-color: var(--color-primary); border-style: dashed; }
+  .nw-col-hdr { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; }
+  .nw-col-ttl { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--text-secondary); }
+  .nw-col-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .nw-col-count { font-size: 11px; font-weight: 700; background: var(--bg-surface); border: 1px solid var(--border-default); color: var(--text-muted); border-radius: var(--radius-pill); padding: 1px 8px; }
+  .nw-col-empty { font-size: 11px; color: var(--text-subtle); text-align: center; padding: 18px 6px; border: 1px dashed var(--border-default); border-radius: 12px; }
+  .nw-card { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: 10px 12px; box-shadow: var(--shadow-xs); display: flex; flex-direction: column; gap: 7px; cursor: grab; transition: box-shadow .15s; }
+  .nw-card:hover { box-shadow: var(--shadow-card-hover); }
+  .nw-card.dragging { opacity: .45; }
+  .nw-card .nw-avatar { width: 30px; height: 30px; border-radius: 10px; font-size: 11px; }
+  .nw-card .nw-name { font-size: 13px; }
+  .nw-card .nw-role { font-size: 11px; -webkit-line-clamp: 1; }
+  .nw-company { font-weight: 700; color: var(--text-primary); }
+  .nw-card .nw-tag { font-size: 10.5px; padding: 1px 8px; }
+  .nw-card .nw-prio { font-size: 9.5px; }
+  .nw-card .nw-act { font-size: 10.5px; padding: 3px 9px; }
+  .nw-card .nw-card-btns { gap: 4px; }
+  .nw-card .nw-icon-btn { padding: 2px 5px; line-height: 0; }
+  .nw-card .nw-icon-btn .msi { font-size: 14px; }
+  .nw-card .nw-due { font-size: 10.5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .nw-card .nw-card-foot { flex-wrap: nowrap; }
+  .nw-card .nw-card-btns { flex-shrink: 0; }
+  .nw-card .nw-due .msi { font-size: 12px; }
+  .nw-fu { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--text-muted); background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 3px 6px 3px 8px; cursor: pointer; }
+  .nw-fu .msi { font-size: 13px; }
+  .nw-fu-lbl { font-weight: 600; white-space: nowrap; }
+  .nw-fu input { border: none; background: transparent; font: inherit; font-weight: 600; color: var(--text-primary); padding: 0; margin-left: auto; cursor: pointer; outline: none; width: 104px; flex-shrink: 0; }
+  .nw-fu.empty input { width: 16px; color: transparent; }
+  .nw-fu.empty input::-webkit-datetime-edit { display: none; }
+  .nw-fu.set { background: var(--status-progress-bg); border-color: var(--status-progress-border); color: var(--status-progress-text); }
+  .nw-fu.warning { background: var(--status-warning-bg); border-color: var(--status-warning-border); color: var(--status-warning-text); }
+  .nw-fu.urgent { background: var(--status-urgent-bg); border-color: var(--status-urgent-border); color: var(--status-urgent-text); }
+  .nw-fu.urgent { flex-wrap: wrap; row-gap: 2px; font-weight: 700; }
+  .nw-card.overdue { border-left: 3px solid var(--status-urgent-text); }
+  .nw-col-fu { background: var(--status-warning-bg); border-color: var(--status-warning-border); }
+  .nw-col-fu .nw-col-empty { border-color: var(--status-warning-border); color: var(--status-warning-text); }
+  .nw-col-flag { font-size: 9.5px; font-weight: 700; text-transform: none; letter-spacing: 0; color: #fff; background: var(--status-urgent-text); border-radius: var(--radius-pill); padding: 1px 7px; }
+  .nw-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .nw-person { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .nw-avatar { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .nw-avatar.sm { width: 28px; height: 28px; border-radius: 50%; font-size: 11px; }
+  .nw-name { font-size: 14px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+  .nw-role { font-size: 12px; color: var(--text-muted); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .nw-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .nw-tag { font-size: 11px; font-weight: 500; padding: 2px 9px; border-radius: var(--radius-pill); border: 1px solid var(--border-default); }
+  .nw-note { background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 8px 10px; font-size: 12px; color: var(--text-secondary); line-height: 1.5; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; white-space: pre-wrap; }
+  .nw-note.empty { color: var(--text-subtle); font-style: italic; }
+  .nw-card-foot { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .nw-due { font-size: 11px; font-weight: 500; color: var(--text-muted); display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+  .nw-card-btns { margin-left: auto; }
+  .nw-due .msi { font-size: 13px; }
+  .nw-card-btns { display: flex; gap: 5px; flex-shrink: 0; }
+  .nw-act { font-size: 11px; font-weight: 600; padding: 5px 11px; border-radius: var(--radius-pill); border: 1px solid var(--border-default); background: var(--bg-surface); color: var(--text-primary); cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .nw-act:hover { background: var(--bg-surface-hover); }
+  .nw-act.primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+  .nw-act.primary:hover { background: var(--color-primary-hover); }
+  .nw-act.teal { background: var(--status-progress-text); border-color: var(--status-progress-text); color: #fff; }
+  .nw-act.danger { background: var(--status-urgent-bg); border-color: var(--status-urgent-border); color: var(--status-urgent-text); }
+  /* Table */
+  .nw-table-wrap { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); overflow: hidden; margin-bottom: 16px; }
+  .nw-table-scroll { overflow-x: auto; }
+  .nw-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .nw-table th { text-align: left; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); background: var(--bg-surface-subtle); padding: 10px 8px; border-bottom: 1px solid var(--border-default); white-space: nowrap; }
+  .nw-table td { padding: 11px 8px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; color: var(--text-primary); }
+  .nw-table td:first-child, .nw-table th:first-child { padding-left: 12px; }
+  .nw-table td:last-child, .nw-table th:last-child { padding-right: 12px; }
+  .nw-sortable { cursor: pointer; user-select: none; }
+  .nw-sortable:hover { color: var(--text-primary); background: var(--bg-surface-hover); }
+  .nw-sortable.on { color: var(--color-primary); }
+  .nw-sort-ind { margin-left: 4px; font-size: 9px; opacity: .45; }
+  .nw-sortable.on .nw-sort-ind { opacity: 1; }
+  .nw-li { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: #0A66C2; text-decoration: none; padding: 3px 9px 3px 4px; border-radius: var(--radius-pill); background: #E8F0FE; }
+  .nw-li:hover { background: #D2E3FC; }
+  .nw-li-mark { width: 16px; height: 16px; border-radius: 4px; background: #0A66C2; color: #fff; font-size: 10px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; }
+  .nw-row { border-left: 3px solid transparent; transition: background .12s; }
+  .nw-row:hover { background: var(--bg-surface-subtle); }
+  .nw-row.open { background: var(--status-progress-bg); border-left-color: var(--status-progress-text); }
+  .nw-row.overdue { border-left-color: var(--status-warning-accent); }
+  .nw-row.open.overdue { border-left-color: var(--status-progress-text); }
+  .nw-exp { width: 26px; height: 26px; border-radius: 7px; border: none; background: transparent; color: var(--text-subtle); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .nw-exp:hover { background: var(--bg-surface-hover); color: var(--text-primary); }
+  .nw-row.open .nw-exp { background: var(--bg-surface); color: var(--status-progress-text); }
+  .nw-row.open .nw-exp .msi { transform: rotate(180deg); }
+  .nw-prio { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 5px; border: 1px solid transparent; white-space: nowrap; }
+  .nw-status { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: var(--radius-pill); cursor: pointer; white-space: nowrap; border: 1px solid transparent; }
+  .nw-status .d { width: 6px; height: 6px; border-radius: 50%; }
+  .nw-muted { font-size: 11px; color: var(--text-muted); }
+  .nw-outcome { font-size: 11px; color: var(--text-secondary); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nw-date-pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; border: 1px solid transparent; }
+  .nw-drawer td { padding: 0; background: var(--bg-surface-subtle); border-bottom: 2px solid var(--status-progress-border); }
+  .nw-drawer-in { display: grid; grid-template-columns: 7fr 5fr; gap: 20px; padding: 18px 22px; position: sticky; left: 0; box-sizing: border-box; max-width: min(1058px, calc(100vw - 48px)); }
+  .nw-sec-ttl { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .nw-sec-ttl h4 { margin: 0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
+  .nw-sec-ttl h4 .msi { color: var(--status-progress-text); }
+  .nw-timeline { position: relative; padding-left: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .nw-timeline::before { content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 2px; background: var(--status-progress-border); }
+  .nw-tl-item { position: relative; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 10px; padding: 10px 12px; }
+  .nw-tl-item::before { content: ""; position: absolute; left: -18px; top: 13px; width: 8px; height: 8px; border-radius: 50%; background: var(--border-strong); border: 2px solid var(--bg-surface-subtle); }
+  .nw-tl-item:first-child::before { background: var(--status-progress-text); box-shadow: 0 0 0 2px var(--status-progress-border); }
+  .nw-tl-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .nw-tl-ch { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 5px; background: var(--status-progress-bg); color: var(--status-progress-text); border: 1px solid var(--status-progress-border); }
+  .nw-tl-date { font-size: 10px; color: var(--text-subtle); white-space: nowrap; }
+  .nw-tl-text { font-size: 12px; color: var(--text-secondary); line-height: 1.5; white-space: pre-wrap; }
+  .nw-logger { background: var(--bg-surface); border: 1px solid var(--status-progress-border); border-radius: 12px; padding: 14px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; gap: 10px; align-self: start; }
+  .nw-logger-hdr { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px; font-size: 12px; font-weight: 700; }
+  .nw-logger-hdr span:first-child { display: flex; align-items: center; gap: 5px; }
+  .nw-logger-hdr .msi { font-size: 16px; color: var(--status-progress-text); }
+  .nw-logger label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); margin-bottom: 4px; }
+  .nw-logger select, .nw-logger input, .nw-logger textarea { width: 100%; box-sizing: border-box; font-size: 12px; font-family: inherit; border: 1px solid var(--border-default); border-radius: 8px; padding: 7px 9px; background: var(--bg-surface-subtle); color: var(--text-primary); outline: none; }
+  .nw-logger textarea { resize: vertical; min-height: 66px; }
+  .nw-logger select:focus, .nw-logger input:focus, .nw-logger textarea:focus { background: var(--bg-surface); border-color: var(--status-progress-text); }
+  .nw-g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: end; }
+  .nw-save { width: 100%; display: flex; align-items: center; justify-content: center; gap: 5px; background: var(--color-primary); color: #fff; border: none; border-radius: 8px; padding: 8px 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .nw-save:hover { background: var(--color-primary-hover); }
+  .nw-save .msi { font-size: 14px; }
+  .nw-table-foot { background: var(--bg-surface-subtle); border-top: 1px solid var(--border-default); padding: 10px 14px; font-size: 12px; color: var(--text-muted); }
+  .nw-empty { padding: 30px; text-align: center; font-size: 13px; color: var(--text-muted); }
+  /* Playbook */
+  .nw-playbook-hdr { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .nw-playbook-hdr h3 { margin: 0; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; color: var(--text-primary); }
+  .nw-playbook-hdr h3 .msi { color: var(--status-warning-accent); font-size: 22px; }
+  .nw-play-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .nw-play { background: var(--bg-surface-subtle); border: 1px solid var(--border-default); border-radius: 12px; padding: 12px 14px; font-size: 12px; color: var(--text-secondary); line-height: 1.5; display: flex; gap: 8px; align-items: flex-start; }
+  .nw-play-num { width: 20px; height: 20px; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  @media (max-width: 900px) {
+    .nw-stats { grid-template-columns: repeat(2, 1fr); }
+    .nw-drawer-in { grid-template-columns: 1fr; position: sticky; left: 0; max-width: calc(100vw - 48px); box-sizing: border-box; padding: 14px; }
+    .nw-play-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) { .nw-stats { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
 
@@ -773,28 +965,40 @@
 
 <!-- ══════════════════════════════ NETWORK ═══════════════════════════════════ -->
 <div id="tab-network" class="section">
-  <div class="card card-teal" style="margin-bottom:16px">
-    <div style="display:flex;justify-content:space-between;align-items:center">
+  <div class="nw-stats" id="nw-stats"></div>
+
+  <div class="card nw-toolbar">
+    <div class="nw-toolbar-top">
       <div>
-        <div style="font-size:14px;font-weight:700;color:var(--status-progress-text)">🤝 Network Outreach Tracker</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Target: 10 contacts/week · 2 messages/day · warm beats cold</div>
+        <div class="nw-title">Network Outreach &amp; Relationship Manager</div>
+        <div class="nw-sub">Track outreach momentum, touchpoint history, and executive meeting outcomes</div>
       </div>
-      <button class="btn btn-teal" onclick="openNetModal()">+ Add Contact</button>
+      <div class="nw-actions">
+        <div class="nw-seg" id="nw-seg"></div>
+        <select class="nw-select" id="nw-sort" onchange="setNetSort(this.value)">
+          <option value="latest">Sort: Latest interaction</option>
+          <option value="followup">Sort: Next follow-up due</option>
+          <option value="name">Sort: Name (A–Z)</option>
+        </select>
+        <button class="nw-btn-primary" onclick="openNetModal()"><span class="msi">person_add</span>+ Add Contact</button>
+      </div>
+    </div>
+    <div class="nw-toolbar-bottom">
+      <div class="nw-search"><span class="msi">search</span><input id="netSearch" placeholder="Search contacts, companies, notes, dates…" style="padding-right:52px" oninput="renderNetwork()"><span class="nw-kbd">Ctrl K</span></div>
+      <div class="nw-chips" id="net-relation-filters"></div>
     </div>
   </div>
 
-  <div class="card card-dashed" style="margin-bottom:16px">
-    <div style="font-size:12px;font-weight:700;color:var(--color-primary);margin-bottom:8px">💡 Outreach rules that work at senior level</div>
-    <div class="tips-grid" id="net-tips"></div>
+  <div id="nw-workspace"></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="nw-playbook-hdr">
+      <h3><span class="msi">lightbulb</span>Outreach Playbook — what works at senior level</h3>
+      <span class="nw-pill" style="background:var(--status-warning-bg);color:var(--status-warning-text);border-color:var(--status-warning-border)">Warm beats cold</span>
+    </div>
+    <div class="nw-play-grid" id="net-tips"></div>
   </div>
 
-  <div class="filters" id="net-status-filters"></div>
-  <div class="filters" id="net-priority-filters" style="margin-top:6px"></div>
-  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;margin-top:6px" id="net-relation-filters"></div>
-  <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
-    <input class="search-input" id="netSearch" placeholder="Search contacts…" oninput="renderNetwork()">
-  </div>
-  <div id="net-list"></div>
   <div class="net-section-hdr contacted" style="margin-top:16px">👥 Shared by your network</div>
   <div id="net-shared-list"></div>
 </div>
@@ -1939,13 +2143,12 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
       <div><label class="form-label">Status</label><select class="form-input" id="nf-status"></select></div>
     </div>
     <div class="form-grid2" style="margin-bottom:14px">
-      <div><label class="form-label">Purpose</label><select class="form-input" id="nf-purpose"></select></div>
+      <div><label class="form-label">Follow-up</label><input type="date" class="form-input" id="nf-followupdate"></div>
       <div><label class="form-label">Priority</label>
         <select class="form-input" id="nf-priority"><option>High</option><option selected>Medium</option><option>Low</option></select>
       </div>
     </div>
     <input type="hidden" id="nf-contactdate">
-    <input type="hidden" id="nf-followupdate">
     <div class="form-group"><label class="form-label">LinkedIn URL</label><input class="form-input" id="nf-linkedin" placeholder="https://linkedin.com/in/…"></div>
     <div class="form-group">
       <label class="form-label">Notes / History</label>
@@ -2193,18 +2396,29 @@ const NET_RELATION = {
   "Former colleague":  { color:"var(--color-primary)", bg:"var(--color-primary-light)", icon:"👔" },
   "AZ / Evinova":      { color:"var(--status-success-text)", bg:"var(--status-success-bg)", icon:"🏢" },
   "Recruiter/Agency":  { color:"var(--color-primary)", bg:"var(--color-primary-light)", icon:"🔍" },
-  "Industry contact":  { color:"var(--status-warning-text)", bg:"var(--status-warning-bg)", icon:"🌐" },
+  "Industry / Company contact": { color:"var(--status-warning-text)", bg:"var(--status-warning-bg)", icon:"🌐" },
   "Friend / Personal": { color:"var(--status-progress-text)", bg:"var(--status-progress-bg)", icon:"🤝" },
   "LinkedIn":          { color:"#0A66C2", bg:"#E8F0FE", icon:"💼" },
 };
 const NET_STATUS = {
   "To contact":    { color:"var(--status-warning-text)", bg:"var(--status-warning-bg)", dot:"var(--status-warning-accent)" },
   "Contacted":     { color:"var(--status-progress-text)", bg:"var(--status-progress-bg)", dot:"var(--status-progress-accent)" },
-  "Replied":       { color:"var(--status-success-text)", bg:"var(--status-success-bg)", dot:"var(--status-success-accent)" },
   "Meeting set":   { color:"var(--status-progress-text)", bg:"var(--status-progress-bg)", dot:"var(--status-progress-accent)" },
-  "Met":           { color:"var(--color-primary)", bg:"var(--color-primary-light)", dot:"var(--color-primary)" },
+  "Met / Replied": { color:"var(--color-primary)", bg:"var(--color-primary-light)", dot:"var(--color-primary)" },
+  // "Replied" was merged into "Contacted", and "Met" renamed — see netMigrateStatuses()
   "Not responsive":{ color:"var(--status-neutral-text)", bg:"var(--status-neutral-bg)", dot:"var(--status-neutral-text)" },
 };
+// Older contacts may still carry retired status / relationship names; map them on load.
+// The change is saved with the next normal save.
+const NET_STATUS_RENAMES   = { "Replied": "Contacted", "Met": "Met / Replied" };
+const NET_RELATION_RENAMES = { "Industry contact": "Industry / Company contact" };
+function netMigrateStatuses(contacts) {
+  return contacts.map(c => {
+    const status   = NET_STATUS_RENAMES[c.status]     || c.status;
+    const relation = NET_RELATION_RENAMES[c.relation] || c.relation;
+    return status === c.status && relation === c.relation ? c : { ...c, status, relation };
+  });
+}
 const CO_STATUS = {
   "To Do":       { color:"var(--status-warning-text)", bg:"var(--status-warning-bg)", dot:"var(--status-warning-accent)" },
   "In Progress": { color:"var(--status-progress-text)", bg:"var(--status-progress-bg)", dot:"var(--status-progress-accent)" },
@@ -2352,6 +2566,8 @@ let jwSort = "fit";
 let trainCatFilter  = "All";
 let trainStatusFilter = "All";
 let netStatusFilter = "All", netPriorityFilter = "All", netRelationFilter = "All";
+let netWeekOnly = false, netOverdueOnly = false, netSort = "latest", netExpandedId = null;
+let netView = (()=>{ try { return localStorage.getItem("netView") || "kanban"; } catch(e) { return "kanban"; } })();
 let coStatusFilter = "All", coPriorityFilter = "All";
 let showRec = false;
 // Per-company scan status (search-in-progress, last result message, pagination
@@ -2406,7 +2622,7 @@ async function loadState() {
         const d = doc.data();
         state.apps            = d.apps            || [];
         state.trainings       = d.trainings       || [];
-        state.contacts        = d.contacts        || [];
+        state.contacts        = netMigrateStatuses(d.contacts || []);
         state.watchlist        = d.watchlist       || [];
         state.checkouts        = d.checkouts       || [];
         state.searchSetup      = d.searchSetup !== undefined ? d.searchSetup : DEFAULT_SEARCH_SETUP;
@@ -2437,7 +2653,7 @@ async function loadState() {
   // localStorage fallback
   state.apps            = lsGet("apps")      || [];
   state.trainings       = lsGet("trainings") || [];
-  state.contacts         = lsGet("contacts")  || [];
+  state.contacts         = netMigrateStatuses(lsGet("contacts") || []);
   state.watchlist        = lsGet("watchlist") || [];
   state.checkouts        = lsGet("checkouts") || [];
   { const lsSS = lsGet("searchSetup"); state.searchSetup = lsSS !== null && lsSS !== undefined ? lsSS : DEFAULT_SEARCH_SETUP; }
@@ -2724,7 +2940,6 @@ function populateSelects() {
   sel("tf-status",  Object.keys(TRAIN_STATUS));
   sel("nf-relation",Object.keys(NET_RELATION));
   sel("nf-status",  Object.keys(NET_STATUS));
-  sel("nf-purpose", Object.keys(NET_PURPOSE));
   sel("cf-status",  Object.keys(CO_STATUS));
 }
 function sel(id, opts, selected) {
@@ -2781,13 +2996,13 @@ function renderDashboard() {
 
   const totalC = contacts.length;
   const highPri = contacts.filter(c=>c.priority==="High").length;
-  const activeC = contacts.filter(c=>["Contacted","Replied","Meeting set"].includes(c.status)).length;
-  const metC    = contacts.filter(c=>c.status==="Met").length;
+  const activeC = contacts.filter(c=>["Contacted","Meeting set"].includes(c.status)).length;
+  const metC    = contacts.filter(c=>c.status==="Met / Replied").length;
   document.getElementById("dash-net-stats").innerHTML =
     stat(totalC, "Contacts Tracked", "var(--status-progress-text)") +
     stat(highPri, "High Priority", "var(--color-primary)") +
     stat(activeC, "In Progress", "var(--status-warning-text)") +
-    stat(metC, "Met / Done", "var(--status-success-text)");
+    stat(metC, "Met / Replied", "var(--status-success-text)");
 
   const completed = trainings.filter(t=>t.status==="Completed").length;
   const inProg    = trainings.filter(t=>t.status==="In progress").length;
@@ -3053,78 +3268,370 @@ function renderNetwork() {
         </div>
       </div>
     </div>`);
-  // Tips
+  // Playbook
   const tips = [
-    "Ask for advice or a coffee chat — not a job. 'I'd love your perspective on the market' converts far better than 'do you know of any openings?'",
-    "Personalise every message — one line showing you remember something specific about them or their work",
-    "Follow up once if no reply after 10–14 days. Then move on without resentment.",
-    "High-priority contacts first — former direct managers and colleagues who know your work are your strongest advocates",
-    "Always send a thank-you note within 24h of any meeting or call",
-    "If they give you a name or introduction — follow up and report back. People refer again when they see results.",
+    ["Ask for advice, not a job", "'I'd love your perspective on the market' converts far better than 'do you know of any openings?'"],
+    ["Personalise every message", "One line showing you remember something specific about them or their work."],
+    ["Follow up once, then move on", "If there's no reply after 10–14 days, send one follow-up. Then move on without resentment."],
+    ["High-priority contacts first", "Former direct managers and colleagues who know your work are your strongest advocates."],
+    ["Thank-you within 24 hours", "Always send a thank-you note within 24h of any meeting or call."],
+    ["Report back on introductions", "If they give you a name or introduction, follow up and report back. People refer again when they see results."],
   ];
-  document.getElementById("net-tips").innerHTML = tips.map((t,i)=>
-    `<div class="tip-row"><span style="color:var(--status-progress-text);font-weight:700;font-size:12px;flex-shrink:0">${i+1}.</span><span style="font-size:12px;line-height:1.5">${t}</span></div>`
+  document.getElementById("net-tips").innerHTML = tips.map(([t,d],i)=>
+    `<div class="nw-play"><span class="nw-play-num">${i+1}</span><div><div style="font-weight:700;color:var(--text-primary);margin-bottom:2px">${t}</div>${d}</div></div>`
   ).join("");
 
-  // Status filters
-  document.getElementById("net-status-filters").innerHTML = ["All",...Object.keys(NET_STATUS)].map(s=>
-    `<button class="filter-btn${s===netStatusFilter?" active-teal":""}" onclick="setNetStatusFilter('${s}')">${s}</button>`).join("");
+  const t0 = today();
+  const all = state.contacts;
+  const isDue = c => c.followUpDate && c.followUpDate <= t0;
+  const isOverdue = c => c.followUpDate && c.followUpDate < t0;
 
-  // Priority filters
-  document.getElementById("net-priority-filters").innerHTML = ["All","High","Medium","Low"].map(p=>
-    `<button class="filter-btn${p===netPriorityFilter?" active-dark":""}" onclick="setNetPriFilter('${p}')">${p==="All"?p:p+" priority"}</button>`).join("");
+  // Stats
+  const thisMonth = t0.slice(0,7);
+  const addedThisMonth = all.filter(c => /^\d{13}$/.test(c.id) && new Date(+c.id).toISOString().slice(0,7) === thisMonth).length;
+  const companies = new Set(all.map(c=>(c.company||"").trim().toLowerCase()).filter(Boolean)).size;
+  const due = all.filter(isDue).sort((a,b)=>a.followUpDate.localeCompare(b.followUpDate));
+  const meetings = all.filter(c=>c.status==="Meeting set").sort((a,b)=>(a.followUpDate||"9").localeCompare(b.followUpDate||"9"));
+  const nextMeet = meetings.find(c=>c.followUpDate && c.followUpDate >= t0);
+  const active = all.filter(c=>c.status==="Contacted"||c.status==="Meeting set");
+  const reached = all.filter(c=>c.status!=="To contact").length;
+  const responded = all.filter(c=>["Meeting set","Met / Replied"].includes(c.status)).length;
+  const replyRate = reached ? Math.round(responded/reached*100) : 0;
+  const shortName = c => { const p = (c.name||"").trim().split(/\s+/); return p.length>1 ? `${p[0]} ${p[p.length-1][0]}.` : (p[0]||""); };
+  const namesOf = (list,n) => list.slice(0,n).map(shortName).join(", ") + (list.length>n?` +${list.length-n}`:"");
+  const pill = (txt,color,bg,border,icon) => `<span class="nw-pill" style="color:${color};background:${bg};border-color:${border}">${icon?`<span class="msi">${icon}</span>`:""}${txt}</span>`;
+  const statCard = (lbl, extra, val, valColor, after, icon, iconColor, iconBg) => `
+    <div class="nw-stat"><div style="min-width:0">
+      <div class="nw-stat-lbl">${lbl}${extra}</div>
+      <div class="nw-stat-row"><span class="nw-stat-val" style="color:${valColor}">${val}</span>${after}</div></div>
+      <div class="nw-stat-icon" style="color:${iconColor};background:${iconBg}"><span class="msi">${icon}</span></div></div>`;
+  // Follow-ups = every contact with a scheduled follow-up date (same as the Follow-up column)
+  const followUps = all.filter(c=>c.followUpDate);
+  const fuOver = followUps.filter(isOverdue).length;
+  document.getElementById("nw-stats").innerHTML =
+    statCard("Contacts", "", all.length, "var(--text-primary)",
+      addedThisMonth ? pill(`+${addedThisMonth} this month`,"var(--status-progress-text)","var(--status-progress-bg)","var(--status-progress-border)","trending_up") : "",
+      "group", "var(--color-primary)", "var(--bg-surface-subtle)") +
+    statCard("Follow-ups", fuOver ? pill(`${fuOver} overdue`,"var(--status-urgent-text)","var(--status-urgent-bg)","var(--status-urgent-border)") : "",
+      followUps.length, fuOver?"var(--status-urgent-text)":"var(--status-warning-text)", `<span class="nw-stat-sub">scheduled</span>`,
+      "hourglass_top", "var(--status-urgent-text)", "var(--status-urgent-bg)") +
+    statCard("Meetings set", nextMeet ? pill("Next: "+netRelDay(nextMeet.followUpDate),"var(--status-success-text)","var(--status-success-bg)","var(--status-success-border)") : "",
+      meetings.length, "var(--status-progress-text)", `<span class="nw-stat-sub">scheduled</span>`,
+      "coffee", "var(--status-progress-text)", "var(--status-progress-bg)") +
+    statCard("Active conversations", "", active.length, "var(--color-primary)",
+      reached ? pill(`${replyRate}% reply rate`,"var(--status-success-text)","var(--status-success-bg)","var(--status-success-border)","mark_chat_read") : "",
+      "chat", "var(--color-primary)", "var(--color-primary-light)");
 
-  // Relation filters
-  document.getElementById("net-relation-filters").innerHTML = ["All",...Object.keys(NET_RELATION)].map(r=>
-    `<button class="filter-btn${r===netRelationFilter?" active-dark":""}" onclick="setNetRelFilter('${r}')">${r==="All"?r:NET_RELATION[r].icon+" "+r}</button>`).join("");
+  // View switch
+  document.getElementById("nw-seg").innerHTML =
+    `<button class="${netView==="kanban"?"on":""}" onclick="setNetView('kanban')"><span class="msi">view_kanban</span>Kanban View</button>` +
+    `<button class="${netView==="list"?"on":""}" onclick="setNetView('list')"><span class="msi">table_rows</span>List View</button>`;
+  document.getElementById("nw-sort").value = netSort;
 
-  const search = (document.getElementById("netSearch")||{}).value||"";
-  let filtered = state.contacts.filter(c=>{
+  // Filter chips: All · relations · high priority · overdue
+  const overdueCount = all.filter(isOverdue).length;
+  document.getElementById("net-relation-filters").innerHTML =
+    `<button class="nw-chip${netRelationFilter==="All"&&netPriorityFilter==="All"&&!netOverdueOnly&&!netWeekOnly&&netStatusFilter==="All"?" on":""}" onclick="clearNetFilters()">All (${all.length})</button>` +
+    Object.keys(NET_RELATION).map(r=>{ const rc=NET_RELATION[r], on=r===netRelationFilter;
+      return `<button class="nw-chip${on?" on":""}" style="${on?"":`color:${rc.color};background:${rc.bg};border-color:${rc.bg}`}" onclick="setNetRelFilter('${on?"All":r}')">${rc.icon} ${r}</button>`; }).join("") +
+    `<button class="nw-chip${netWeekOnly?" on":""}" onclick="toggleNetWeek()" title="Follow-ups due in the next 7 days (incl. overdue)">📅 Next 7 days (${all.filter(c=>c.followUpDate&&netDaysFromToday(c.followUpDate)<=7).length})</button>` +
+    (overdueCount ? `<button class="nw-chip urgent${netOverdueOnly?" on":""}" onclick="toggleNetOverdue()"><span class="dot"></span>Overdue (${overdueCount})</button>` : "") +
+    (netStatusFilter!=="All" ? `<button class="nw-chip on" onclick="setNetStatusFilter('All')">${escHtml(netStatusFilter)} ✕</button>` : "");
+
+  const search = ((document.getElementById("netSearch")||{}).value||"").toLowerCase();
+  const prioRank = { High:0, Medium:1, Low:2 };
+  const sorters = {
+    latest:   (a,b)=>(b.contactDate||"").localeCompare(a.contactDate||""),
+    followup: (a,b)=>(a.followUpDate||"9999").localeCompare(b.followUpDate||"9999"),
+    priority: (a,b)=>(prioRank[a.priority]??1)-(prioRank[b.priority]??1) || (b.contactDate||"").localeCompare(a.contactDate||""),
+    name:     (a,b)=>(a.name||"").localeCompare(b.name||""),
+  };
+  const filtered = all.filter(c=>{
     const ms = netStatusFilter==="All"||c.status===netStatusFilter;
     const mp = netPriorityFilter==="All"||c.priority===netPriorityFilter;
     const mr = netRelationFilter==="All"||c.relation===netRelationFilter;
+    const mo = !netOverdueOnly||isOverdue(c);
     const notes = (c.history||[]).map(h=>h.text).join(" ") + (c.notes||"");
-    const mq = !search||[c.name,c.company,c.role,notes].join(" ").toLowerCase().includes(search.toLowerCase());
-    return ms&&mp&&mr&&mq;
-  }).sort((a,b)=>(b.contactDate||"").localeCompare(a.contactDate||"")); // latest contact first; never-contacted ones sink last
+    const mq = !search||[c.name,c.company,c.role,c.relation,c.status,c.followUpDate,c.contactDate,notes].join(" ").toLowerCase().includes(search);
+    const mw = !netWeekOnly||(c.followUpDate && netDaysFromToday(c.followUpDate)<=7);
+    return ms&&mp&&mr&&mo&&mq&&mw;
+  }).sort(sorters[netSort]||sorters.latest);
 
-  function renderContactCard(c) {
-    const rc = NET_RELATION[c.relation]||NET_RELATION["LinkedIn"];
-    const sc = NET_STATUS[c.status]||NET_STATUS["To contact"];
-    const pc = NET_PURPOSE[c.purpose]||NET_PURPOSE["General reconnect"];
-    const hi = c.priority==="High";
-    const latestNote = (c.history||[]).length > 0 ? c.history[c.history.length-1].text : (c.notes||"");
-    return `<div class="item-card${hi?" high-pri":""}" style="border-left-color:${sc.dot}">
-      <div class="item-row">
-        <div style="flex:1">
-          <div class="item-badges">
-            ${hi?`<span style="font-size:14px">⭐</span>`:""}
-            <span class="item-name">${c.name}</span>
-            ${badge(c.status+" →", sc.color, sc.bg, true, `cycleNetStatus('${c.id}')`)}
-            ${badge(rc.icon+" "+c.relation, rc.color, rc.bg)}
-            ${badge(c.purpose, pc.color, pc.bg)}
-            ${hi?badge("High priority","var(--status-urgent-text)","var(--status-urgent-bg)"):""}
-            ${c.shared?badge("📤 Shared","var(--status-success-text)","var(--status-success-bg)"):""}
-          </div>
-          <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px">${[c.role,c.company].filter(Boolean).join(" @ ")}</div>
-          <div class="item-meta">
-            ${c.contactDate?`<span>📅 Last contact: ${c.contactDate}</span>`:""}
-            ${c.followUpDate?`<span>🔔 Follow up: ${c.followUpDate}</span>`:""}
-            ${c.linkedIn?`<a href="${c.linkedIn}" target="_blank" rel="noopener">🔗 LinkedIn</a>`:""}
-          </div>
-          ${latestNote?`<div class="item-notes">${escHtml(latestNote)}</div>`:""}
-        </div>
-        <div class="item-actions">
-          <button class="btn btn-sky btn-sm" onclick="openNetModal('${c.id}')">Edit</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteNet('${c.id}')">✕</button>
-        </div>
-      </div>
+  const ws = document.getElementById("nw-workspace");
+  ws.innerHTML = netView === "list" ? netRenderTable(filtered, all.length) : netRenderBoard(filtered);
+  if (netView === "kanban") { netWireDrag(); netFitColumns(); }
+}
+
+// Cap each Kanban column at 5 cards tall (scrolls beyond that) and record the
+// page scrollbar width so the full-width board doesn't cause sideways page scroll.
+const NET_MAX_VISIBLE_CARDS = 5;
+function netFitColumns() {
+  document.documentElement.style.setProperty("--sbw", (window.innerWidth - document.documentElement.clientWidth) + "px");
+  document.querySelectorAll("#nw-workspace .nw-col-body").forEach(bd=>{
+    const cards = bd.querySelectorAll(".nw-card");
+    if (cards.length <= NET_MAX_VISIBLE_CARDS || !cards[0].offsetHeight) { bd.style.maxHeight = ""; return; }
+    const gap = parseFloat(getComputedStyle(bd).rowGap) || 0;
+    bd.style.maxHeight = (cards[NET_MAX_VISIBLE_CARDS].offsetTop - cards[0].offsetTop - gap) + "px";
+  });
+}
+// Re-fit when the tab becomes visible or the window is resized (cards re-wrap at new widths).
+function netObserveTab() {
+  const tab = document.getElementById("tab-network");
+  if (tab && window.ResizeObserver) new ResizeObserver(()=>{ if (netView==="kanban") netFitColumns(); }).observe(tab);
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", netObserveTab); else netObserveTab();
+
+// ── Network helpers (new design) ──
+const NET_AVATAR_TONES = [
+  ["var(--color-primary-light)","var(--color-primary)"], ["var(--status-progress-bg)","var(--status-progress-text)"],
+  ["var(--status-success-bg)","var(--status-success-text)"], ["var(--status-warning-bg)","var(--status-warning-text)"],
+  ["var(--status-neutral-bg)","var(--status-neutral-text)"], ["var(--status-urgent-bg)","var(--status-urgent-text)"],
+];
+const NET_NEXT_STEP = {
+  "To contact":     { label:"Mark contacted", to:"Contacted", cls:"primary" },
+  "Contacted":      { label:"Set meeting",    to:"Meeting set", cls:"teal" },
+  "Meeting set":    { label:"Mark met",       to:"Met / Replied", cls:"primary" },
+  "Met / Replied":  { label:"Log note",       to:null,        cls:"" },
+  "Not responsive": { label:"Try again",      to:"To contact", cls:"" },
+};
+const NET_CHANNELS = ["LinkedIn message","Email","Phone / video call","In person / coffee","Text / WhatsApp","Other"];
+function netInitials(name) { const p=(name||"?").trim().split(/\s+/); return ((p[0]||"?")[0]+(p.length>1?p[p.length-1][0]:"")).toUpperCase(); }
+function netAvatar(c, sm) {
+  let h = 0; for (const ch of (c.name||"")) h = (h*31 + ch.charCodeAt(0)) >>> 0;
+  const [bg,fg] = c.priority==="High" ? ["var(--color-primary)","#fff"] : NET_AVATAR_TONES[h % NET_AVATAR_TONES.length];
+  return `<div class="nw-avatar${sm?" sm":""}" style="background:${bg};color:${fg}">${escHtml(netInitials(c.name))}</div>`;
+}
+function netDaysFromToday(d) { if (!d) return null; return Math.round((new Date(d+"T00:00:00") - new Date(today()+"T00:00:00"))/86400000); }
+function netRelDay(d) {
+  const n = netDaysFromToday(d); if (n===null) return "";
+  if (n===0) return "today"; if (n===1) return "tomorrow"; if (n===-1) return "yesterday";
+  return n>0 ? `in ${n} days` : `${-n}d ago`;
+}
+function netPrioPill(p, short) {
+  const m = { High:["var(--status-urgent-text)","var(--status-urgent-bg)","var(--status-urgent-border)"],
+              Medium:["var(--status-warning-text)","var(--status-warning-bg)","var(--status-warning-border)"],
+              Low:["var(--status-neutral-text)","var(--status-neutral-bg)","var(--status-neutral-border)"] }[p] || null;
+  return m ? `<span class="nw-prio" style="color:${m[0]};background:${m[1]};border-color:${m[2]}">${short ? ({High:"High",Medium:"Med",Low:"Low"})[p] : p+" priority"}</span>` : "";
+}
+function netLatestNote(c) { const h=c.history||[]; return ((h.length ? h[h.length-1].text : c.notes)||"").trim(); }
+function netDueInfo(c) {
+  const n = netDaysFromToday(c.followUpDate);
+  if (n!==null && n<0)  return { txt:`Follow-up overdue ${-n}d`, tone:"urgent", icon:"warning" };
+  if (n===0)            return { txt:"Follow-up due today", tone:"urgent", icon:"warning" };
+  if (n!==null)         return { txt:`Due ${netRelDay(c.followUpDate)}`, tone: n<=2?"warning":"muted", icon:"event" };
+  if (c.contactDate)    return { txt:netRelDay(c.contactDate), tone:"muted", icon:"history" };
+  return { txt:"Not contacted", tone:"muted", icon:"schedule" };
+}
+
+// Follow-up column: every contact with a scheduled follow-up date sits here
+// (soonest/overdue first) instead of in its status column.
+const NET_FU_COL = "__followup";
+function netRenderBoard(list) {
+  const fuItems = list.filter(c=>c.followUpDate).sort((a,b)=>a.followUpDate.localeCompare(b.followUpDate));
+  const fuOverdue = fuItems.filter(c=>c.followUpDate < today()).length;
+  const col = (key, title, dot, items, extra, renderOpts, emptyTxt) => `<div class="nw-col${key===NET_FU_COL?" nw-col-fu":""}" data-status="${escHtml(key)}">
+      <div class="nw-col-hdr"><div class="nw-col-ttl"><span class="nw-col-dot" style="background:${dot}"></span>${escHtml(title)}${extra}</div><span class="nw-col-count">${items.length}</span></div>
+      <div class="nw-col-body">${items.length ? items.map(c=>netRenderCard(c, renderOpts)).join("") : `<div class="nw-col-empty">${emptyTxt}</div>`}</div>
     </div>`;
-  }
+  const statusCol = s => col(s, s, NET_STATUS[s].dot,
+    list.filter(c=>!c.followUpDate && (NET_STATUS[c.status]?c.status:"To contact")===s), "", {}, "Drop a contact here");
+  const fuCol = col(NET_FU_COL, "Follow-up", "var(--status-warning-accent)", fuItems,
+    fuOverdue ? `<span class="nw-col-flag">${fuOverdue} overdue</span>` : "", { inFollowUp: true }, "Drop a contact here to schedule a follow-up");
+  // Follow-up sits right after "To contact"
+  return `<div class="nw-board">` +
+    Object.keys(NET_STATUS).map(s => statusCol(s) + (s==="To contact" ? fuCol : "")).join("") +
+    `</div>`;
+}
+function netRenderCard(c, opts = {}) {
+  const rc = NET_RELATION[c.relation]||NET_RELATION["LinkedIn"];
+  const note = netLatestNote(c);
+  const due = netDueInfo(c);
+  const fuTone = !c.followUpDate ? "" : due.tone==="urgent" ? " urgent" : due.tone==="warning" ? " warning" : " set";
+  const step = opts.inFollowUp ? { label:"✓ Done", cls:"primary" } : (NET_NEXT_STEP[c.status]||NET_NEXT_STEP["To contact"]);
+  const stepClick = opts.inFollowUp ? `netFollowUpDone('${c.id}')` : step.to ? `netAdvance('${c.id}','${step.to}')` : `netOpenInList('${c.id}')`;
+  const sc = NET_STATUS[c.status]||NET_STATUS["To contact"];
+  return `<div class="nw-card${fuTone===" urgent"?" overdue":""}" draggable="true" data-id="${c.id}" title="${note?escHtml(note.slice(0,300)):""}">
+    <div class="nw-card-top">
+      <div class="nw-person">${netAvatar(c)}<div style="min-width:0"><div class="nw-name">${escHtml(c.name)}</div><div class="nw-role" title="${escHtml([c.company,c.role].filter(Boolean).join(" · "))}">${c.company?`<strong class="nw-company">${escHtml(c.company)}</strong>`:""}${c.company&&c.role?" · ":""}${escHtml(c.role||"")}</div></div></div>
+    </div>
+    <div class="nw-tags">
+      ${opts.inFollowUp?`<span class="nw-tag" style="color:${sc.color};background:${sc.bg};border-color:transparent;font-weight:600" title="Status">● ${escHtml(c.status||"To contact")}</span>`:""}
+      <span class="nw-tag" style="color:${rc.color};background:${rc.bg};border-color:transparent">${rc.icon} ${escHtml(c.relation||"LinkedIn")}</span>
+      ${c.shared?`<span class="nw-tag" style="color:var(--status-success-text);background:var(--status-success-bg);border-color:transparent">📤 Shared</span>`:""}
+    </div>
+    <label class="nw-fu${fuTone}${c.followUpDate?"":" empty"}" title="${c.followUpDate ? "Follow-up "+netRelDay(c.followUpDate) : "Schedule the next follow-up"}" onclick="netPickDate(event, this)">
+      <span class="msi">${fuTone===" urgent"?"warning":"event"}</span><span class="nw-fu-lbl">${fuTone===" urgent" ? escHtml(due.txt) : c.followUpDate ? "Follow-up" : "Schedule follow-up"}</span>
+      <input type="date" value="${c.followUpDate||""}" onchange="netSetFollowUp('${c.id}', this.value)" draggable="false">
+    </label>
+    <div class="nw-card-foot">
+      <span class="nw-due" title="${c.contactDate?"Last contact: "+c.contactDate:"No contact logged yet"}"><span class="msi">${c.contactDate?"history":"schedule"}</span>${c.contactDate?netRelDay(c.contactDate):"No contact"}</span>
+      <div class="nw-card-btns">
+        <button class="nw-act nw-icon-btn" onclick="openNetModal('${c.id}')" title="Edit contact"><span class="msi">edit</span></button>
+        <button class="nw-act ${step.cls}" onclick="${stepClick}"${opts.inFollowUp?" title=\"Follow-up done: clears the date and logs today as last contact\"":""}>${step.label}</button>
+      </div>
+    </div>
+  </div>`;
+}
+function netWireDrag() {
+  document.querySelectorAll("#nw-workspace .nw-card").forEach(card=>{
+    card.addEventListener("dragstart", e=>{ e.dataTransfer.setData("text/plain", card.dataset.id); e.dataTransfer.effectAllowed="move"; card.classList.add("dragging"); });
+    card.addEventListener("dragend", ()=>card.classList.remove("dragging"));
+  });
+  document.querySelectorAll("#nw-workspace .nw-col").forEach(col=>{
+    col.addEventListener("dragover", e=>{ e.preventDefault(); col.classList.add("drop"); });
+    col.addEventListener("dragleave", e=>{ if (!col.contains(e.relatedTarget)) col.classList.remove("drop"); });
+    col.addEventListener("drop", e=>{ e.preventDefault(); col.classList.remove("drop"); const id=e.dataTransfer.getData("text/plain"); if (id) netDropOn(id, col.dataset.status); });
+  });
+}
 
-  document.getElementById("net-list").innerHTML = filtered.length === 0
-    ? `<div class="card"><div class="empty-state">No contacts match this filter.</div></div>`
-    : filtered.map(renderContactCard).join("");
+// List view column sorting (click a header; click again to reverse). Empty values always sort last.
+let netTableSort = null; // { key, dir: 1 | -1 }
+const NET_TABLE_SORTS = {
+  name:     c => (c.name||"").toLowerCase(),
+  company:  c => (c.company||"").toLowerCase(),
+  status:   c => Object.keys(NET_STATUS).indexOf(c.status),
+  last:     c => c.contactDate||"",
+  linkedin: c => netSafeUrl(c.linkedIn) ? 0 : "",
+  followup: c => c.followUpDate||"",
+};
+function setNetTableSort(key) {
+  netTableSort = netTableSort && netTableSort.key===key ? { key, dir: -netTableSort.dir } : { key, dir: 1 };
+  renderNetwork();
+}
+function netSafeUrl(u) { return /^https?:\/\//i.test((u||"").trim()) ? u.trim() : ""; }
+function netRenderTable(list, total) {
+  if (!list.length) return `<div class="nw-table-wrap"><div class="nw-empty">No contacts match this filter.</div></div>`;
+  if (netTableSort) {
+    const get = NET_TABLE_SORTS[netTableSort.key], dir = netTableSort.dir;
+    list = [...list].sort((a,b)=>{
+      const va = get(a), vb = get(b), ea = va===""||va===-1, eb = vb===""||vb===-1;
+      if (ea || eb) return ea===eb ? 0 : ea ? 1 : -1;
+      return (va<vb ? -1 : va>vb ? 1 : 0) * dir;
+    });
+  }
+  const rows = list.map(c=>{
+    const sc = NET_STATUS[c.status]||NET_STATUS["To contact"];
+    const rc = NET_RELATION[c.relation]||NET_RELATION["LinkedIn"];
+    const open = c.id===netExpandedId;
+    const overdue = c.followUpDate && c.followUpDate < today();
+    const fd = netDaysFromToday(c.followUpDate);
+    let follow = `<span class="nw-muted">—</span>`;
+    if (c.followUpDate) {
+      const tone = fd<0 ? ["var(--status-urgent-text)","var(--status-urgent-bg)","var(--status-urgent-border)",`Follow-up overdue ${-fd}d`] : fd===0 ? ["var(--status-urgent-text)","var(--status-urgent-bg)","var(--status-urgent-border)","Due today"] : c.status==="Meeting set" ? ["var(--status-success-text)","var(--status-success-bg)","var(--status-success-border)",netRelDay(c.followUpDate)] : null;
+      follow = tone ? `<span class="nw-date-pill" style="color:${tone[0]};background:${tone[1]};border-color:${tone[2]}">${c.followUpDate}<span style="display:block;font-size:10px;font-weight:500">${tone[3]}</span></span>`
+                    : `<div style="font-weight:600;font-size:11px">${c.followUpDate}</div><div class="nw-muted" style="font-size:10px">${netRelDay(c.followUpDate)}</div>`;
+    }
+    const lastCh = (c.history||[]).length ? c.history[c.history.length-1].channel : "";
+    const li = netSafeUrl(c.linkedIn);
+    return `<tr class="nw-row${open?" open":""}${overdue?" overdue":""}">
+      <td style="width:30px"><button class="nw-exp" onclick="toggleNetRow('${c.id}')" title="${open?"Hide":"Show"} touchpoint history"><span class="msi">expand_more</span></button></td>
+      <td><div style="display:flex;align-items:center;gap:9px">${netAvatar(c,true)}<div style="min-width:0">
+        <div style="font-weight:700;font-size:13px">${escHtml(c.name)}</div>
+        <div class="nw-muted">${escHtml(c.role||"")}</div></div></div></td>
+      <td><div style="font-weight:600">${escHtml(c.company||"—")}</div><div class="nw-muted">${rc.icon} ${escHtml(c.relation||"LinkedIn")}</div></td>
+      <td><span class="nw-status" style="color:${sc.color};background:${sc.bg}" onclick="cycleNetStatus('${c.id}')" title="Click to move to the next stage"><span class="d" style="background:${sc.dot}"></span>${escHtml(c.status||"To contact")}</span></td>
+      <td>${c.contactDate?`<div style="font-weight:500">${c.contactDate}</div><div class="nw-muted">${lastCh?escHtml(lastCh)+" · ":""}${netRelDay(c.contactDate)}</div>`:`<div class="nw-muted">No contact yet</div>`}</td>
+      <td>${li?`<a class="nw-li" href="${escHtml(li)}" target="_blank" rel="noopener" title="${escHtml(li)}"><span class="nw-li-mark">in</span>Profile</a>`:`<span class="nw-muted">—</span>`}</td>
+      <td>${follow}</td>
+      <td style="text-align:right;white-space:nowrap"><button class="nw-act" onclick="openNetModal('${c.id}')">Edit</button> <button class="nw-act danger" onclick="deleteNet('${c.id}')">✕</button></td>
+    </tr>${open?netRenderDrawer(c):""}`;
+  }).join("");
+  const th = (key, label) => {
+    const on = netTableSort && netTableSort.key===key;
+    return `<th class="nw-sortable${on?" on":""}" onclick="setNetTableSort('${key}')" title="Sort by ${label.replace(/&amp;/g,"&")}">${label}<span class="nw-sort-ind">${on ? (netTableSort.dir>0?"▲":"▼") : "↕"}</span></th>`;
+  };
+  return `<div class="nw-table-wrap"><div class="nw-table-scroll"><table class="nw-table">
+    <thead><tr><th></th>${th("name","Contact &amp; role")}${th("company","Organisation")}${th("status","Status")}${th("last","Last touchpoint")}${th("linkedin","LinkedIn")}${th("followup","Next follow-up")}<th style="text-align:right">Actions</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    <div class="nw-table-foot">Showing <strong>${list.length}</strong> of <strong>${total}</strong> contacts</div></div>`;
+}
+function netRenderDrawer(c) {
+  const hist = [...(c.history||[])].reverse();
+  const timeline = hist.length ? hist.map(h=>`<div class="nw-tl-item">
+      <div class="nw-tl-head"><span>${h.channel?`<span class="nw-tl-ch">${escHtml(h.channel)}</span>`:""}</span><span class="nw-tl-date">${fmtDatetime(h.ts)}</span></div>
+      <div class="nw-tl-text">${escHtml((h.text||"").trim())}</div>${noteImageThumb(h)}</div>`).join("")
+    : `<div class="nw-muted" style="padding:6px 0">No touchpoints logged yet — add the first one on the right.</div>`;
+  const statusOpts = [`<option value="">Keep: ${escHtml(c.status||"To contact")}</option>`, ...Object.keys(NET_STATUS).filter(s=>s!==c.status).map(s=>`<option value="${escHtml(s)}">${escHtml(s)}</option>`)].join("");
+  return `<tr class="nw-drawer"><td colspan="8"><div class="nw-drawer-in">
+    <div>
+      <div class="nw-sec-ttl"><h4><span class="msi">history_edu</span>Touchpoint history</h4><span class="nw-muted">${hist.length} logged</span></div>
+      <div class="nw-timeline">${timeline}</div>
+    </div>
+    <div class="nw-logger">
+      <div class="nw-logger-hdr"><span><span class="msi">add_comment</span>Quick touchpoint logger</span><span class="nw-muted" style="font-weight:400">Adds to this contact's history</span></div>
+      <div class="nw-g2">
+        <div><label>Channel</label><select id="nwl-ch-${c.id}">${NET_CHANNELS.map(ch=>`<option>${ch}</option>`).join("")}</select></div>
+        <div><label>New status</label><select id="nwl-st-${c.id}">${statusOpts}</select></div>
+      </div>
+      <div><label>Notes &amp; key takeaways</label><textarea id="nwl-tx-${c.id}" placeholder="What did they say? Any action items, dates or mutual connections mentioned?"></textarea></div>
+      <div class="nw-g2">
+        <div><label>Next follow-up</label><input type="date" id="nwl-fu-${c.id}" value="${c.followUpDate||""}"></div>
+        <button class="nw-save" onclick="netLogTouchpoint('${c.id}')">Save &amp; update<span class="msi">send</span></button>
+      </div>
+    </div>
+  </div></td></tr>`;
+}
+
+document.addEventListener("keydown", e=>{
+  const tab = document.getElementById("tab-network");
+  if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="k" && tab && tab.classList.contains("active")) { e.preventDefault(); document.getElementById("netSearch").focus(); }
+});
+function setNetView(v)   { netView = v; try { localStorage.setItem("netView", v); } catch(e) {} renderNetwork(); }
+function setNetSort(s)   { netSort = s; netTableSort = null; renderNetwork(); }
+function toggleNetWeek() { netWeekOnly = !netWeekOnly; renderNetwork(); }
+function toggleNetOverdue() { netOverdueOnly = !netOverdueOnly; renderNetwork(); }
+function clearNetFilters() { netStatusFilter = netPriorityFilter = netRelationFilter = "All"; netOverdueOnly = netWeekOnly = false; renderNetwork(); }
+function toggleNetRow(id) { netExpandedId = netExpandedId===id ? null : id; renderNetwork(); }
+function netOpenInList(id) { netExpandedId = id; setNetView("list"); }
+function netAdvance(id, to) {
+  const c = state.contacts.find(x=>x.id===id);
+  if (!c || !to || c.status===to) return;
+  state.contacts = state.contacts.map(x=>x.id!==id ? x : { ...x, status: to, contactDate: (to==="Contacted" && !x.contactDate) ? today() : x.contactDate });
+  saveState(); renderNetwork(); renderDashboard();
+}
+// Drag & drop: onto Follow-up schedules one (in 7 days if none is set yet);
+// onto a status column sets that status and, if the card came from Follow-up, clears the date.
+function netDropOn(id, target) {
+  const c = state.contacts.find(x=>x.id===id);
+  if (!c) return;
+  if (target === NET_FU_COL) {
+    if (c.followUpDate) return;
+    const d = new Date(); d.setDate(d.getDate()+7);
+    return netSetFollowUp(id, d.toISOString().slice(0,10));
+  }
+  if (c.status===target && !c.followUpDate) return;
+  state.contacts = state.contacts.map(x=>x.id!==id ? x : { ...x, status: target, followUpDate: "",
+    contactDate: (target==="Contacted" && !x.contactDate) ? today() : x.contactDate });
+  saveState(); renderNetwork(); renderDashboard();
+}
+function netFollowUpDone(id) {
+  state.contacts = state.contacts.map(x=>x.id!==id ? x : { ...x, followUpDate: "", contactDate: today() });
+  saveState(); renderNetwork(); renderDashboard();
+}
+function netPickDate(e, label) {
+  const input = label.querySelector("input");
+  if (e.target !== input && input.showPicker) { e.preventDefault(); try { input.showPicker(); } catch(err) { input.focus(); } }
+}
+function netSetFollowUp(id, date) {
+  state.contacts = state.contacts.map(x=>x.id!==id ? x : { ...x, followUpDate: date });
+  saveState(); renderNetwork(); renderDashboard();
+}
+function netLogTouchpoint(id) {
+  const text = document.getElementById("nwl-tx-"+id).value.trim();
+  const channel = document.getElementById("nwl-ch-"+id).value;
+  const newStatus = document.getElementById("nwl-st-"+id).value;
+  const followUp = document.getElementById("nwl-fu-"+id).value;
+  const c = state.contacts.find(x=>x.id===id);
+  if (!c) return;
+  if (!text && !newStatus && followUp===(c.followUpDate||"")) return;
+  const history = [...(c.history||[])];
+  if (text) history.push({ id: String(Date.now()), ts: new Date().toISOString(), text, channel });
+  state.contacts = state.contacts.map(x=>x.id!==id ? x : {
+    ...x, history, followUpDate: followUp,
+    status: newStatus || x.status,
+    contactDate: text ? today() : x.contactDate,
+  });
+  saveState(); renderNetwork(); renderDashboard();
 }
 
 // ═══════════════════════════ SHARED DATA MIRRORING ═════════════════════════════
@@ -3729,7 +4236,6 @@ function openNetModal(id) {
   document.getElementById("nf-role").value        = c?.role||"";
   sel("nf-relation", Object.keys(NET_RELATION), c?.relation||"Former colleague");
   sel("nf-status",   Object.keys(NET_STATUS),   c?.status||"To contact");
-  sel("nf-purpose",  Object.keys(NET_PURPOSE),  c?.purpose||"Coffee chat / advice");
   sel("nf-priority", ["High","Medium","Low"],    c?.priority||"Medium");
   document.getElementById("nf-contactdate").value  = c?.contactDate||"";
   document.getElementById("nf-followupdate").value = c?.followUpDate||"";
@@ -3823,7 +4329,7 @@ async function submitNet() {
     role:        document.getElementById("nf-role").value.trim(),
     relation:    document.getElementById("nf-relation").value,
     status:      document.getElementById("nf-status").value,
-    purpose:     document.getElementById("nf-purpose").value,
+    purpose:     (editNetId && (state.contacts.find(x=>x.id===editNetId)||{}).purpose) || "",
     priority:    document.getElementById("nf-priority").value,
     contactDate: document.getElementById("nf-contactdate").value,
     followUpDate:document.getElementById("nf-followupdate").value,
