@@ -2172,6 +2172,7 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
       <label for="nf-shared" style="font-size:13px;cursor:pointer">📤 Share contact name, company &amp; role with other job search users</label>
     </div>
     <div class="modal-footer">
+      <button class="btn btn-danger" id="nf-delete-btn" style="display:none;margin-right:auto" onclick="deleteNetFromModal()">Delete contact</button>
       <button class="btn btn-ghost" onclick="closeNetModal()">Cancel</button>
       <button class="btn btn-teal" onclick="submitNet()">Save</button>
     </div>
@@ -4231,6 +4232,7 @@ function openNetModal(id) {
   const c = id ? state.contacts.find(x=>x.id===id) : null;
   _modalHistory = c?.history ? JSON.parse(JSON.stringify(c.history)) : [];
   document.getElementById("netModalTitle").textContent = id?"Edit Contact":"Add Network Contact";
+  document.getElementById("nf-delete-btn").style.display = id?"":"none";
   document.getElementById("nf-name").value        = c?.name||"";
   document.getElementById("nf-company").value     = c?.company||"";
   document.getElementById("nf-role").value        = c?.role||"";
@@ -4344,10 +4346,15 @@ async function submitNet() {
   else unmirrorShared("sharedContacts", entry.id);
 }
 function deleteNet(id) {
-  if (!confirm("Remove this contact?")) return;
+  const c = state.contacts.find(x=>x.id===id);
+  if (!confirm(`Delete ${c?.name||"this contact"}? This can't be undone.`)) return false;
   state.contacts = state.contacts.filter(c=>c.id!==id);
   saveState(); renderNetwork(); renderDashboard();
   unmirrorShared("sharedContacts", id);
+  return true;
+}
+function deleteNetFromModal() {
+  if (editNetId && deleteNet(editNetId)) closeNetModal();
 }
 function cycleNetStatus(id) {
   const order = Object.keys(NET_STATUS);
