@@ -2319,11 +2319,15 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
     <div class="form-group">
       <label class="form-label">Notes / History / Activity</label>
       <div class="history-log">
-        <div class="history-add">
-          <textarea id="af-note-input" rows="2" placeholder="Next steps, interview feedback, recruiter name… (you can paste a screenshot here, Ctrl+V)"></textarea>
-          <input type="file" accept="image/*" id="af-note-image" style="display:none" onchange="handleNoteImageSelect('af', this.files[0])">
-          <button type="button" title="Attach screenshot" onclick="document.getElementById('af-note-image').click()">📷</button>
-          <button onclick="addAppHistoryEntry()">Add</button>
+        <div class="history-add" style="flex-wrap:wrap;gap:6px">
+          <textarea id="af-note-input" rows="2" placeholder="Next steps, interview feedback, recruiter name… (you can paste a screenshot here, Ctrl+V)" style="flex:1;min-width:0"></textarea>
+          <div style="display:flex;align-items:center;gap:6px;width:100%;padding:0 0 2px">
+            <label style="font-size:11px;color:var(--text-muted);white-space:nowrap">Date:</label>
+            <input type="date" id="af-note-date" class="form-input" style="flex:1;font-size:11px;padding:5px 8px">
+            <input type="file" accept="image/*" id="af-note-image" style="display:none" onchange="handleNoteImageSelect('af', this.files[0])">
+            <button type="button" title="Attach screenshot" onclick="document.getElementById('af-note-image').click()">📷</button>
+            <button onclick="addAppHistoryEntry()">Add</button>
+          </div>
         </div>
         <div id="af-note-image-preview" style="display:none;padding:8px 12px;background:var(--bg-surface-subtle);border-bottom:1px solid var(--border-default)"></div>
         <div class="history-entries" id="af-history-entries"></div>
@@ -4703,6 +4707,7 @@ function openAppModal(id, defaultStatus) {
   document.getElementById("af-concerns").value   = app?.concerns||"";
   updateFitPreview();
   document.getElementById("af-note-input").value = "";
+  document.getElementById("af-note-date").value = today();
   resetBooking("af");
   clearNoteImage("af");
   setupNotePasteListener("af-note-input", "af");
@@ -4740,7 +4745,7 @@ async function addAppHistoryEntry() {
   const file = _pendingNoteImage["af"];
   const booking = takeBooking("af");
   if (!text && !file && !booking) return;
-  const entry = { id:String(Date.now()), ts:new Date().toISOString(), text, ...(booking||{}) };
+  const entry = { id:String(Date.now()), ts:appNoteTs(), text, ...(booking||{}) };
   if (file) Object.assign(entry, await uploadNoteImage(file));
   _appModalHistory.push(entry);
   input.value = ""; resetBooking("af"); clearNoteImage("af"); renderAppHistoryEntries();
@@ -4772,7 +4777,7 @@ async function submitApp() {
   const pendingBook = takeBooking("af");
   const history = [..._appModalHistory];
   if (pendingNote || pendingFile || pendingBook) {
-    const note = { id:String(Date.now()), ts:new Date().toISOString(), text:pendingNote, ...(pendingBook||{}) };
+    const note = { id:String(Date.now()), ts:appNoteTs(), text:pendingNote, ...(pendingBook||{}) };
     if (pendingFile) Object.assign(note, await uploadNoteImage(pendingFile));
     history.push(note);
   }
@@ -4989,6 +4994,10 @@ function bookingBadge(h) {
   const [d, t] = h.scheduledAt.split("T"), [y, m, dd] = d.split("-").map(Number);
   const day = new Date(y, m-1, dd).toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short", year:"numeric"});
   return `<div><span class="book-badge">📅 Booked: ${day}${t ? ", "+t : ""}${h.subject ? " · "+escHtml(h.subject) : ""}</span></div>`;
+}
+function appNoteTs() {
+  const d = document.getElementById("af-note-date").value;
+  return d && d !== today() ? new Date(d).toISOString() : new Date().toISOString();
 }
 function fmtDatetime(iso) {
   if (!iso) return "";
