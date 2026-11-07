@@ -274,6 +274,153 @@
   @media (max-width: 767px)  { .cd-grid3 { grid-template-columns: 1fr; } }
   @media (max-width: 639px)  { .cd-grid5 { grid-template-columns: 1fr; } .cd-phdr { flex-wrap: wrap; } }
 
+  /* ── Activities ── (wide like the Dashboard; colours from the Stitch screen) */
+  .body:has(> #tab-activities.active) { max-width: 1360px; }
+  #tab-activities { --ac-plum:#3b0030; --ac-teal:#006879; --ac-teal2:#2f7a86; --ac-green:#1f9c6e; --ac-orange:#d9600a; --ac-ink:#1f1a1d;
+    --ac-border:#e5e3df; --ac-soft:#f1f0ee; --ac-subtle:#fbfaf8; --ac-gray:#6b7280; --ac-gray4:#9ca3af; color: var(--ac-ink); }
+  #tab-activities .msi { font-size: 15px; }
+  .ac-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--ac-border); }
+  .ac-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .ac-kicker { padding: 2px 8px; border-radius: 9999px; background: #f5e7ef; color: var(--ac-plum); font-size: 10px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+  .ac-live { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: #047857; }
+  .ac-pulse { width: 6px; height: 6px; border-radius: 50%; background: #10b981; animation: acPulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+  @keyframes acPulse { 50% { opacity: .5; } }
+  .ac-h1 { font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -.025em; margin: 0; }
+  .ac-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; }
+  .ac-title-sep { width: 1px; height: 22px; background: var(--ac-border); }
+  .ac-title-sub { font-size: 14px; font-weight: 500; color: var(--ac-gray); }
+  .ac-lead { font-size: 12px; color: var(--ac-gray); margin: 4px 0 0; }
+  .ac-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .ac-seg { display: flex; align-items: center; background: var(--ac-soft); padding: 4px; border-radius: 9999px; }
+  .ac-seg button { display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 9999px; border: none; background: none; font-size: 12px; font-weight: 500; font-family: inherit; color: #4b5563; cursor: pointer; transition: all .15s; }
+  .ac-seg button:hover { color: #000; background: rgba(255,255,255,.6); }
+  .ac-seg button.on { background: var(--ac-plum); color: #fff; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.05); padding: 6px 14px; }
+  .ac-btn-out { display: flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 9999px; background: #fff; color: var(--ac-plum); border: 1px solid var(--ac-border); font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  .ac-btn-out:hover { background: rgba(245,231,239,.6); }
+  .ac-card { margin-top: 24px; background: #fff; border: 1px solid var(--ac-border); border-radius: 12px; padding: 24px; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  .ac-card-hdr { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 20px; border-bottom: 1px solid var(--ac-soft); }
+  .ac-card-hdr.tight { padding-bottom: 16px; }
+  .ac-hl { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .ac-ico { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  .ac-ico.sm { width: 32px; height: 32px; border-radius: 8px; box-shadow: none; }
+  #tab-activities .ac-ico .msi { font-size: 22px; }
+  #tab-activities .ac-ico.sm .msi { font-size: 18px; }
+  .ac-h2 { font-size: 16px; font-weight: 700; letter-spacing: -.025em; margin: 0; }
+  .ac-sub { font-size: 12px; color: var(--ac-gray); margin: 2px 0 0; }
+  .ac-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; border: 1px solid; white-space: nowrap; }
+  .ac-range { display: flex; align-items: center; gap: 2px; background: var(--ac-subtle); border: 1px solid var(--ac-border); border-radius: 9999px; padding: 2px 4px; font-size: 12px; font-weight: 500; color: #374151; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  .ac-range button { border: none; background: none; cursor: pointer; color: var(--ac-gray); padding: 3px; border-radius: 9999px; display: flex; font-family: inherit; }
+  .ac-range button:hover { background: var(--ac-soft); color: #000; }
+  .ac-range .ac-range-lbl { display: flex; align-items: center; gap: 6px; padding: 3px 6px; font-size: 12px; font-weight: 500; color: #374151; }
+  .ac-tiles { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; margin-top: 20px; padding: 16px; background: var(--ac-subtle); border-radius: 12px; border-bottom: 1px solid var(--ac-soft); }
+  .ac-tile { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 8px; background: #fff; border: 1px solid rgba(229,227,223,.7); box-shadow: 0 1px 2px rgba(0,0,0,.05); min-width: 0; }
+  .ac-tile-ico { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  #tab-activities .ac-tile-ico .msi { font-size: 18px; }
+  .ac-tile-body { flex: 1; min-width: 0; }
+  .ac-tile-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .ac-tile-lbl { font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--ac-gray); letter-spacing: .05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ac-tile-badge { font-size: 9px; padding: 2px 6px; border-radius: 9999px; font-weight: 700; border: 1px solid; white-space: nowrap; }
+  .ac-tile-val { font-size: 14px; font-weight: 800; display: flex; align-items: baseline; gap: 4px; }
+  .ac-tile-val small { font-size: 12px; color: var(--ac-gray4); font-weight: 500; }
+  .ac-week { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 12px; padding-top: 20px; }
+  .ac-day { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 12px; background: var(--ac-subtle); border: 1px solid var(--ac-border); min-width: 0; }
+  .ac-day.weekend { background: #faf9f7; border-color: rgba(229,227,223,.7); }
+  .ac-day.today { background: rgba(236,253,245,.5); border: 2px solid rgba(16,185,129,.7); box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  .ac-day-hdr { display: flex; align-items: center; justify-content: space-between; gap: 4px; padding-bottom: 6px; border-bottom: 1px solid rgba(229,227,223,.6); font-size: 12px; }
+  .ac-day.today .ac-day-hdr { border-bottom-color: #a7f3d0; }
+  .ac-day-name { font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .ac-day.weekend .ac-day-name { font-weight: 600; color: #4b5563; }
+  .ac-today-tag { font-size: 9px; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; background: #059669; color: #fff; font-weight: 900; }
+  .ac-day-count { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 9999px; white-space: nowrap; }
+  .ac-day-items { display: flex; flex-direction: column; gap: 8px; max-height: 560px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #d4cfcb transparent; }
+  .ac-day-empty { font-size: 10px; color: var(--ac-gray4); text-align: center; padding: 8px 0; }
+  .ac-item { padding: 10px; border-radius: 8px; background: #fff; border: 1px solid var(--ac-border); box-shadow: 0 1px 2px rgba(0,0,0,.05); display: flex; flex-direction: column; gap: 4px; cursor: pointer; transition: border-color .15s, transform .15s; min-width: 0; }
+  .ac-item:hover { border-color: #b5afa8; }
+  .ac-day.today .ac-item.plain { border-color: #a7f3d0; }
+  .ac-item-top { display: flex; align-items: center; justify-content: space-between; gap: 4px; min-width: 0; }
+  .ac-item-who { font-size: 11px; font-weight: 700; line-height: 1.3; min-width: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word; }
+  .ac-item-tag { font-size: 10px; line-height: 1.3; padding: 1px 6px; border-radius: 4px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; box-sizing: border-box; }
+  /* Name and tag share a row when they fit; a long relationship tag drops onto its own line under the name. */
+  .ac-item-top { flex-wrap: wrap; align-items: flex-start !important; row-gap: 3px; }
+  .ac-item-top .ac-item-who { flex: 1 1 70px; }
+  .ac-item-co { font-size: 11px; font-weight: 700; line-height: 1.3; color: #6b7280; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word; }
+  .ac-item-subj { font-size: 12px; color: #1f2937; line-height: 1.3; font-weight: 500; margin: 2px 0 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; word-break: break-word; cursor: text; }
+  .ac-item-subj:hover { text-decoration: underline dotted #b5afa8; }
+  .ac-add-subj { align-self: flex-start; font-size: 11px; font-weight: 500; color: var(--ac-gray4); background: none; border: 1px dashed #d4cfcb; border-radius: 6px; padding: 1px 6px; margin-top: 2px; cursor: pointer; font-family: inherit; }
+  .ac-add-subj:hover { color: var(--ac-plum); border-color: var(--ac-plum); }
+  .ac-subj-input { width: 100%; box-sizing: border-box; font-size: 12px; font-family: inherit; padding: 3px 6px; margin-top: 2px; border: 1px solid var(--ac-plum); border-radius: 6px; outline: none; }
+  .ac-item-meta { font-size: 10px; color: var(--ac-gray4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  .ac-month { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 8px; padding-top: 20px; }
+  .ac-mhead { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ac-gray); text-align: center; }
+  .ac-mcell { min-height: 104px; padding: 6px; border-radius: 10px; background: var(--ac-subtle); border: 1px solid var(--ac-border); display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .ac-mcell.out { opacity: .45; }
+  .ac-mcell.today { background: rgba(236,253,245,.5); border: 2px solid rgba(16,185,129,.7); }
+  .ac-mdate { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #374151; }
+  .ac-mchip { display: flex; align-items: center; gap: 4px; font-size: 10px; padding: 2px 4px; border-radius: 4px; background: #fff; border: 1px solid var(--ac-border); cursor: pointer; min-width: 0; }
+  .ac-mchip span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #374151; font-weight: 500; }
+  .ac-mdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .ac-mmore { font-size: 10px; font-weight: 600; color: var(--ac-plum); background: none; border: none; text-align: left; padding: 0 4px; cursor: pointer; font-family: inherit; }
+  .ac-agenda { padding-top: 20px; max-height: 720px; overflow-y: auto; }
+  .ac-ag-day { display: grid; grid-template-columns: 110px minmax(0,1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--ac-soft); }
+  .ac-ag-date { font-size: 12px; font-weight: 700; color: #1f2937; }
+  .ac-ag-date small { display: block; font-size: 10px; font-weight: 500; color: var(--ac-gray4); }
+  .ac-ag-items { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 8px; }
+  .ac-prog { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--ac-soft); }
+  .ac-prog-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: #4b5563; margin-bottom: 12px; }
+  .ac-prog-ttl { font-weight: 600; color: #1f2937; display: flex; align-items: center; gap: 6px; }
+  #tab-activities .ac-prog-ttl .msi { font-size: 16px; color: var(--ac-plum); }
+  .ac-prog-bar { width: 100%; height: 10px; border-radius: 9999px; background: #f3f4f6; display: flex; overflow: hidden; }
+  .ac-prog-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; font-size: 11px; color: #4b5563; }
+  .ac-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+  .ac-legend span { display: flex; align-items: center; gap: 6px; }
+  .ac-legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .ac-legend strong { color: #000; }
+  .ac-pills { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .ac-pill { padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; border: 1px solid; white-space: nowrap; }
+  .ac-pri { margin-top: 16px; }
+  .ac-pri-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 8px; border-left: 4px solid; border-radius: 8px; transition: background .15s; cursor: pointer; }
+  .ac-pri-row + .ac-pri-row { border-top: 1px solid var(--ac-soft); border-top-left-radius: 0; border-top-right-radius: 0; }
+  .ac-pri-row:hover { background: #faf9f7; }
+  .ac-pri-main { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .ac-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+  #tab-activities .ac-av .msi { font-size: 16px; }
+  .ac-pri-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .ac-pri-name { font-weight: 700; font-size: 14px; }
+  .ac-pri-role { font-size: 12px; color: #4b5563; font-weight: 500; }
+  .ac-pri-desc { font-size: 12px; color: #4b5563; margin: 4px 0 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .ac-pri-acts { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .ac-act { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 9999px; color: #fff; font-size: 12px; font-weight: 600; font-family: inherit; border: none; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.05); white-space: nowrap; transition: filter .15s; }
+  .ac-act:hover { filter: brightness(1.15); }
+  .ac-act.ghost { background: #fff; color: var(--ac-plum); border: 1px solid var(--ac-border); }
+  #tab-activities .ac-act .msi { font-size: 13px; }
+  .ac-icon-btn { padding: 6px; border-radius: 9999px; border: none; background: none; color: var(--ac-gray4); cursor: pointer; display: flex; }
+  .ac-icon-btn:hover { color: #374151; background: #f3f4f6; }
+  #tab-activities .ac-icon-btn .msi { font-size: 18px; }
+  .ac-empty { font-size: 13px; color: var(--ac-gray); text-align: center; padding: 24px; border: 1px dashed var(--ac-border); border-radius: 10px; margin-top: 16px; background: var(--ac-subtle); }
+  @media (max-width: 1100px) { .ac-week { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+  @media (max-width: 1023px) { .ac-tiles { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+  @media (max-width: 767px) {
+    .ac-week, .ac-tiles { grid-template-columns: 1fr; }
+    .ac-month { grid-template-columns: repeat(7,minmax(0,1fr)); gap: 3px; }
+    .ac-mchip span:last-child, .ac-mhead { font-size: 8px; }
+    .ac-pri-row { flex-direction: column; align-items: flex-start; }
+    .ac-pri-acts { align-self: flex-end; }
+    .ac-ag-day { grid-template-columns: 1fr; }
+    .ac-card { padding: 16px; }
+  }
+
+  .act-book { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 12px; border-bottom: 1px solid var(--border-default); background: var(--bg-surface-subtle); font-size: 12px; }
+  .act-book label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; color: var(--text-primary); white-space: nowrap; }
+  .act-book label input { width: 15px; height: 15px; cursor: pointer; margin: 0; }
+  .act-book-fields { display: none; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .act-book-fields .form-input { font-size: 12px; padding: 5px 8px; width: auto; }
+  .history-add:has(.act-book) { flex-wrap: wrap; }
+  .history-add .act-book { flex-basis: 100%; padding: 2px 0 0; border: none; background: none; }
+  .entry-book { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 6px; padding: 6px 8px; border-radius: 8px; background: #faf6f8; border: 1px solid #e9dee5; }
+  .entry-book .form-input { font-size: 12px; padding: 4px 8px; width: auto; }
+  .act-book-subj { flex: 1 1 200px; min-width: 160px; width: auto !important; }
+  .book-badge { display: inline-block; margin-bottom: 4px; font-size: 11px; font-weight: 600; color: #3b0030; background: #f5e7ef; border: 1px solid #e9dee5; border-radius: 9999px; padding: 1px 8px; }
+
   a { color: var(--color-primary-hover); }
   @media (max-width: 700px) {
     .grid4 { grid-template-columns: repeat(2,1fr); }
@@ -627,6 +774,7 @@
   </div>
   <div class="tabs">
     <button class="tab-btn active" onclick="showTab('dashboard')">Dashboard</button>
+    <button class="tab-btn" onclick="showTab('activities')">Activities</button>
     <button class="tab-btn" onclick="showTab('jobsites')">Job Sites &amp; Companies</button>
     <button class="tab-btn" onclick="showTab('jobwatchlist')">Job Watchlist</button>
     <button class="tab-btn" onclick="showTab('applications')">Applications</button>
@@ -686,6 +834,54 @@
       <span class="cd-ptarget">Real-time conversion funnels</span>
     </div>
     <div class="cd-grid3" id="cd-pipelines"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ ACTIVITIES ════════════════════════════════ -->
+<div id="tab-activities" class="section">
+  <div class="ac-top">
+    <div>
+      <div class="ac-eyebrow"><span class="ac-kicker">Weekly Cadence</span></div>
+      <div class="ac-title-row"><h1 class="ac-h1">Activities</h1><span class="ac-title-sep"></span><span class="ac-title-sub">Weekly touchpoints and activities</span></div>
+    </div>
+    <div class="ac-actions">
+      <button class="ac-btn-out" onclick="exportCSV()"><span class="msi">download</span><span>Export Report</span></button>
+    </div>
+  </div>
+
+  <div class="ac-card">
+    <div class="ac-card-hdr">
+      <div class="ac-hl">
+        <span class="ac-ico" style="background:#f5e7ef;color:var(--ac-plum)"><span class="msi">calendar_month</span></span>
+        <div>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:2px">
+            <h2 class="ac-h2" id="ac-matrix-title">Weekly Activities</h2>
+            <span class="ac-badge" style="color:#047857;background:#ecfdf5;border-color:#a7f3d0"><span class="ac-pulse"></span> Cross-Pillar Velocity</span>
+          </div>
+        </div>
+      </div>
+      <div class="ac-actions">
+        <div class="ac-seg ac-period"></div>
+        <div class="ac-range" id="ac-range"></div>
+      </div>
+    </div>
+    <div class="ac-tiles" id="ac-tiles"></div>
+    <div id="ac-cal"></div>
+    <div class="ac-prog" id="ac-prog"></div>
+  </div>
+
+  <div class="ac-card" style="margin-bottom:24px">
+    <div class="ac-card-hdr tight">
+      <div class="ac-hl">
+        <span class="ac-ico sm" style="background:#fff4eb;color:var(--ac-orange)"><span class="msi">bolt</span></span>
+        <div>
+          <h2 class="ac-h2">Priority Action Items this Week</h2>
+          <p class="ac-sub">Comprehensive commitments across outreach touches, 1:1 meetings, events, interviews &amp; certifications</p>
+        </div>
+      </div>
+      <div class="ac-pills" id="ac-pri-pills"></div>
+    </div>
+    <div class="ac-pri" id="ac-pri"></div>
   </div>
 </div>
 
@@ -2121,7 +2317,7 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
     <div class="form-group"><label class="form-label">Concerns</label><textarea class="form-textarea" id="af-concerns" rows="2" placeholder="Gaps, trade-offs, unknowns…"></textarea></div>
 
     <div class="form-group">
-      <label class="form-label">Notes / History</label>
+      <label class="form-label">Notes / History / Activity</label>
       <div class="history-log">
         <div class="history-add">
           <textarea id="af-note-input" rows="2" placeholder="Next steps, interview feedback, recruiter name… (you can paste a screenshot here, Ctrl+V)"></textarea>
@@ -2160,7 +2356,7 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
     <div class="form-group"><label class="form-label">Target Completion</label><input class="form-input" id="tf-target" placeholder="e.g. Week 4 / July 2026"></div>
     <div class="form-group"><label class="form-label">Course URL</label><input class="form-input" id="tf-url" placeholder="https://…"></div>
     <div class="form-group">
-      <label class="form-label">Notes / History</label>
+      <label class="form-label">Notes / History / Activity</label>
       <div class="history-log">
         <div class="history-add">
           <textarea id="tf-note-input" rows="2" placeholder="Progress notes, what you learned, next module…"></textarea>
@@ -2197,7 +2393,7 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
     <input type="hidden" id="nf-contactdate">
     <div class="form-group"><label class="form-label">LinkedIn URL</label><input class="form-input" id="nf-linkedin" placeholder="https://linkedin.com/in/…"></div>
     <div class="form-group">
-      <label class="form-label">Notes / History</label>
+      <label class="form-label">Notes / History / Activity</label>
       <div class="history-log">
         <div class="history-add" style="flex-wrap:wrap;gap:6px">
           <textarea id="nf-note-input" rows="2" placeholder="Add a note — what you discussed, next steps, follow-up… (you can paste a screenshot here, Ctrl+V)" style="flex:1;min-width:0"></textarea>
@@ -2598,6 +2794,7 @@ function buildTrainMilestones() {
 let state = {
   apps: [], trainings: [], contacts: [], watchlist: [], checkouts: [], searchSetup: [],
   events: [], // Events Pipeline on the Dashboard; see dashEvents()
+  activitySubjects: {}, // Activities card subjects, keyed by activity (see acActivities)
   kpis: { weeklyContacts:0, recruitersContacted:0, coffeChats:0, trainingMins:0 },
   milestones: {}, trainMilestones: {},
   weeklyNote: "",
@@ -2674,6 +2871,7 @@ async function loadState() {
         state.watchlist        = d.watchlist       || [];
         state.checkouts        = d.checkouts       || [];
         state.events           = d.events          || [];
+        state.activitySubjects = d.activitySubjects || {};
         state.searchSetup      = d.searchSetup !== undefined ? d.searchSetup : DEFAULT_SEARCH_SETUP;
         state.kpis            = { weeklyContacts:0, recruitersContacted:0, coffeChats:0, trainingMins:0, ...(d.kpis||{}) };
         state.milestones      = d.milestones      || {};
@@ -2706,6 +2904,7 @@ async function loadState() {
   state.watchlist        = lsGet("watchlist") || [];
   state.checkouts        = lsGet("checkouts") || [];
   state.events           = lsGet("events")    || [];
+  state.activitySubjects = lsGet("activitySubjects") || {};
   { const lsSS = lsGet("searchSetup"); state.searchSetup = lsSS !== null && lsSS !== undefined ? lsSS : DEFAULT_SEARCH_SETUP; }
   state.kpis            = { weeklyContacts:0, recruitersContacted:0, coffeChats:0, trainingMins:0, ...(lsGet("kpis")||{}) };
   state.milestones      = lsGet("ms")        || {};
@@ -2728,7 +2927,7 @@ async function saveState() {
   lsSet("apps", state.apps); lsSet("trainings", state.trainings);
   lsSet("contacts", state.contacts); lsSet("watchlist", state.watchlist); lsSet("checkouts", state.checkouts); lsSet("kpis", state.kpis);
   lsSet("searchSetup", state.searchSetup);
-  lsSet("events", state.events);
+  lsSet("events", state.events); lsSet("activitySubjects", state.activitySubjects);
   lsSet("ms", state.milestones); lsSet("tms", state.trainMilestones);
   lsSet("note", state.weeklyNote);
   lsSet("criteria", state.searchCriteria); lsSet("jobMatch", state.jobMatch);
@@ -2744,6 +2943,7 @@ async function saveState() {
       await db.collection("users").doc(currentUid).set({
         apps: state.apps, trainings: state.trainings, contacts: state.contacts, watchlist: state.watchlist,
         checkouts: state.checkouts, searchSetup: state.searchSetup, events: state.events,
+        activitySubjects: state.activitySubjects,
         kpis: state.kpis, milestones: state.milestones,
         trainMilestones: state.trainMilestones, weeklyNote: state.weeklyNote,
         searchCriteria: state.searchCriteria, jobMatch: state.jobMatch,
@@ -3162,6 +3362,448 @@ function renderDashboard() {
     cdPipeCard("event_available", "var(--cd-green)", "Events Pipeline",
       `<span style="display:flex;gap:6px">${ev.sample?`<span class="cd-total" style="color:var(--cd-orange);background:#fffbeb;border-color:#fde68a" title="No events tracked yet: these numbers are placeholders">Sample data</span>`:""}<span class="cd-total" style="color:var(--cd-green);background:#ecfdf5;border-color:#a7f3d0">${ev.list.length} Total</span></span>`,
       Object.entries(EVENT_STATUS).map(([s,color])=>cdRow(s, ev.list.filter(e=>e.status===s).length, ev.list.length, color)).join(""));
+  renderActivities();
+}
+
+// ═══════════════════════════ RENDER ACTIVITIES ═════════════════════════════════
+// Calendar of everything dated in the tracker: contact touchpoints, applications sent, application/training notes,
+// follow-ups, watched-job deadlines, training target dates and events. Overdue follow-ups sit in today's column.
+const AC_PERIODS = {
+  week:  { label:"Weekly Matrix",  icon:"insights" },
+  month: { label:"Monthly Matrix", icon:"calendar_view_month" },
+  all:   { label:"All",            icon:"apps" },
+};
+const AC_TARGETS = { touches:10, events:2, training:3 }; // per week; applications use the weekly target from setup
+let acPeriod = (()=>{ try { const p = localStorage.getItem("actPeriod"); return AC_PERIODS[p] ? p : "week"; } catch(e) { return "week"; } })();
+let acOffset = 0; // weeks (Weekly) or months (Monthly) away from the current one
+const AC_TONES = {
+  outreach: { who:"#3b0030", tag:["#f5e7ef","#3b0030"], card:"" },
+  reply:    { who:"#1f1a1d", tag:["#ecfdf5","#047857"], card:"" },
+  app:      { who:"#006879", tag:["#d1fae5","#065f46"], card:"background:#f2f9f8;border-color:#d2ebe7" },
+  update:   { who:"#006879", tag:["#ecfeff","#006879"], card:"" },
+  action:   { who:"#2f7a86", tag:["#e3f7f3","#006879"], card:"" },
+  meeting:  { who:"#3b0030", tag:["#3b0030","#fff"],    card:"background:#faf6f8;border-color:#e9dee5" },
+  event:    { who:"#d9600a", tag:["#d9600a","#fff"],    card:"background:#fff4eb;border-color:#f5e3d0" },
+  training: { who:"#1f9c6e", tag:["#1f9c6e","#fff"],    card:"background:#ecfdf5;border-color:#a7f3d0" },
+};
+const AC_DOTS = { outreach:"#3b0030", reply:"#10b981", app:"#006879", update:"#006879", action:"#2f7a86", meeting:"#3b0030", event:"#d9600a", training:"#1f9c6e" };
+const AC_CHANNEL_TAG = { "LinkedIn message":"Outreach", "Email":"Email", "Phone / video call":"Call", "In person / coffee":"Coffee", "Text / WhatsApp":"Text", "Other":"Touch" };
+
+function acYmd(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+function acToday() { return acYmd(new Date()); }
+function acParse(ymd) { const [y,m,d] = ymd.split("-").map(Number); return new Date(y, m-1, d); }
+function acAddDays(ymd, n) { const d = acParse(ymd); d.setDate(d.getDate()+n); return acYmd(d); }
+function acMonday(ymd) { const d = acParse(ymd); d.setDate(d.getDate()-((d.getDay()+6)%7)); return acYmd(d); }
+function acIsoWeek(ymd) { const d = acParse(ymd); d.setDate(d.getDate()+3-((d.getDay()+6)%7)); const w1 = new Date(d.getFullYear(),0,4);
+  return 1 + Math.round(((d - w1)/86400000 - 3 + ((w1.getDay()+6)%7))/7); }
+function acDiff(a, b) { return Math.round((acParse(a)-acParse(b))/86400000); }
+function acFmt(ymd, opts, loc) { return acParse(ymd).toLocaleDateString(loc||"en-GB", opts); }
+function acIsDate(s) { return /^\d{4}-\d{2}-\d{2}/.test(s||""); }
+// Note timestamps: entries given only a date are stored as UTC midnight, so they get no clock time.
+// A booked entry (Notes / History / Activity → "Book a day & time") sits on its booked day and time.
+function acWhen(h) {
+  if (h.scheduledAt && acIsDate(h.scheduledAt)) {
+    const [date, time] = h.scheduledAt.split("T");
+    return { date, time: time || "", booked: true };
+  }
+  return acStamp(h.ts);
+}
+function acStamp(ts) {
+  if (!ts) return null;
+  const d = new Date(ts); if (isNaN(d)) return null;
+  const dateOnly = /T00:00:00(\.000)?Z$/.test(ts);
+  return { date: acYmd(d), time: dateOnly ? "" : d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}) };
+}
+function acShort(n) { const p = String(n||"").trim().split(/\s+/); return p.length>1 ? `${p[0]} ${p[p.length-1][0]}.` : p[0]||""; }
+function acInitials(n) { const p = String(n||"").trim().split(/\s+/).filter(Boolean); return ((p[0]||"?")[0] + (p.length>1 ? p[p.length-1][0] : "")).toUpperCase(); }
+function acEsc(s) { return escHtml(String(s ?? "")); }
+function acClip(s, n) { s = String(s||"").replace(/\s+/g," ").trim(); return s.length>n ? s.slice(0,n-1)+"…" : s; }
+
+function acRange() {
+  const t = acToday();
+  if (acPeriod === "week") {
+    const from = acAddDays(acMonday(t), acOffset*7);
+    return { from, to: acAddDays(from, 6) };
+  }
+  if (acPeriod === "month") {
+    const base = acParse(t); const first = new Date(base.getFullYear(), base.getMonth()+acOffset, 1);
+    const last = new Date(first.getFullYear(), first.getMonth()+1, 0);
+    return { from: acYmd(first), to: acYmd(last) };
+  }
+  return { from: "0000-01-01", to: "9999-12-31" };
+}
+
+// Each item: who (name), company, tag (category), an optional saved subject, and a status line.
+// Subjects are kept in state.activitySubjects under a stable key per activity.
+function acActivities() {
+  const t = acToday(), out = [], subj = state.activitySubjects || {};
+  const push = (o) => out.push({ ...o, subject: o.subject || subj[o.key] || "" });
+  const due = d => d < t ? { status:`Overdue ${acDiff(t, d)}d`, statusColor:"#e11d48" } : { status: d===t ? "Due today" : "Planned" };
+  // Contact cards are tagged with the contact's Relationship; events, interviews and training get their own tag.
+  state.contacts.forEach(c => {
+    const rel = c.relation || "Contact";
+    (c.history||[]).forEach(h => {
+      const s = acWhen(h); if (!s) return;
+      push({ key:`c:${c.id}:h:${h.id||h.ts}`, date:s.date, time:s.time, booked:s.booked, kind: s.booked ? "meeting" : "outreach", pillar:"touches", tag: rel,
+             who: c.name, company: c.company, note: h.text, subject: h.subject, channel: AC_CHANNEL_TAG[h.channel] ? h.channel : "", status:"Logged", open:`openNetModal('${c.id}')` });
+    });
+    if (c.followUpDate && acIsDate(c.followUpDate)) {
+      const meeting = c.status === "Meeting set";
+      push({ key:`c:${c.id}:fu:${c.followUpDate}`, date: c.followUpDate < t ? t : c.followUpDate, kind: meeting ? "meeting" : "action",
+             tag: rel, who: c.name, company: c.company, note: meeting ? "1:1 meeting" : "Follow-up", ...due(c.followUpDate),             open:`openNetModal('${c.id}')` });
+    }
+  });
+  state.apps.forEach(a => {
+    const who = a.contact || a.company || "Application", company = a.contact ? a.company : a.role;
+    const interview = a.status === "Interviewing";
+    if (a.status !== WATCH_STATUS && acIsDate(a.dateApplied))
+      push({ key:`a:${a.id}:applied`, date:a.dateApplied.slice(0,10), kind:"app", pillar:"apps", tag:"App", who: a.company || "Application", company: a.role,
+             note: a.role, status:"Submitted", statusColor:"#047857", open:`openAppModal('${a.id}')` });
+    if (a.status === WATCH_STATUS && acIsDate(a.deadline) && a.deadline >= t)
+      push({ key:`a:${a.id}:deadline`, date:a.deadline.slice(0,10), kind:"app", tag:"Deadline", who: a.company || "Application", company: a.role,
+             note: a.role, status:"Apply by", statusColor:"#047857", open:`openAppModal('${a.id}')` });
+    (a.history||[]).forEach(h => {
+      const s = acWhen(h); if (!s) return;
+      push({ key:`a:${a.id}:h:${h.id||h.ts}`, date:s.date, time:s.time, booked:s.booked, kind:"update", tag: interview ? "Interview" : "Update", who, company, note: h.text, subject: h.subject, status:"Note",
+             open:`openAppModal('${a.id}')` });
+    });
+    if (a.followUp && acIsDate(a.followUpDate))
+      push({ key:`a:${a.id}:fu:${a.followUpDate}`, date: a.followUpDate < t ? t : a.followUpDate, kind:"action", tag: interview ? "Interview" : "Follow-up", who, company,
+             note: `Follow up · ${a.role||""}`, ...due(a.followUpDate), open:`openAppModal('${a.id}')` });
+  });
+  state.trainings.forEach(x => {
+    (x.history||[]).forEach(h => {
+      const s = acWhen(h); if (!s) return;
+      push({ key:`t:${x.id}:h:${h.id||h.ts}`, date:s.date, time:s.time, booked:s.booked, kind:"training", pillar:"training", tag:"Training", who: x.title, company: x.provider,
+             note: h.text, subject: h.subject, status:"Logged", open:`openTrainModal('${x.id}')` });
+    });
+    if (x.status !== "Completed" && acIsDate(x.targetDate))
+      push({ key:`t:${x.id}:target`, date:x.targetDate.slice(0,10), kind:"training", tag:"Training", who: x.title, company: x.provider,
+             note: x.category, status:"Target date", open:`openTrainModal('${x.id}')` });
+  });
+  (state.events||[]).forEach(e => {
+    if (!acIsDate(e.date)) return;
+    push({ key:`e:${e.id}`, date:e.date.slice(0,10), time:e.time||"", kind:"event", pillar:"events", tag:"Event", who: e.name, company: e.organiser || "",
+           note: e.location, status: e.location || e.status || "" });
+  });
+  return out.sort((a,b)=> a.date.localeCompare(b.date) || (a.time||"99").localeCompare(b.time||"99"));
+}
+
+// Each card has a left border in the colour of the tile it belongs to (Network, Applications, Events, Training).
+// The group comes from the activity key: c = contact, a = application, e = event, t = training.
+const AC_GROUPS = {
+  c: { name:"Network",      who:"#3b0030", bg:"#fbf4f8", border:"#ecd9e4" },
+  a: { name:"Applications", who:"#006879", bg:"#effafb", border:"#c4e6ec" },
+  e: { name:"Events",       who:"#c2410c", bg:"#fff6ee", border:"#f6dcc4" },
+  t: { name:"Training",     who:"#1f9c6e", bg:"#effaf5", border:"#bfe8d6" },
+};
+function acGroup(it) { return AC_GROUPS[String(it.key||"")[0]] || AC_GROUPS.c; }
+// One colour per tag: each Relationship value and each activity type. [background, text]
+const AC_TAG_COLORS = {
+  "Former colleague":           ["#f5e7ef","#3b0030"],
+  "AZ / Evinova":               ["#eef2ff","#4338ca"],
+  "Recruiter/Agency":           ["#f3e8ff","#7e22ce"],
+  "Industry / Company contact": ["#fef3c7","#b45309"],
+  "Friend / Personal":          ["#fce7f3","#be185d"],
+  "LinkedIn":                   ["#e8f0fe","#0a66c2"],
+  "Contact":                    ["#f3f4f6","#4b5563"],
+  "App":                        ["#d1fae5","#065f46"],
+  "Deadline":                   ["#cffafe","#0e7490"],
+  "Update":                     ["#e2e8f0","#334155"],
+  "Follow-up":                  ["#e3f7f3","#2f7a86"],
+  "Interview":                  ["#fee2e2","#b91c1c"],
+  "Training":                   ["#1f9c6e","#ffffff"],
+  "Event":                      ["#d9600a","#ffffff"],
+};
+// Relationship values added later get a stable colour from this list.
+const AC_TAG_SPARE = [["#ecfccb","#4d7c0f"],["#e0f2fe","#0369a1"],["#fae8ff","#a21caf"],["#ffedd5","#c2410c"],["#f1f5f9","#475569"],["#ccfbf1","#0f766e"]];
+function acTagColor(tag) {
+  if (AC_TAG_COLORS[tag]) return AC_TAG_COLORS[tag];
+  let h = 0; for (const ch of String(tag)) h = (h*31 + ch.charCodeAt(0)) >>> 0;
+  return AC_TAG_SPARE[h % AC_TAG_SPARE.length];
+}
+
+// Card: name + category tag, subject (or an "Add subject" button), then time • company • status.
+function acItem(it) {
+  const g = acGroup(it), tone = AC_TONES[it.kind];
+  const meta = [];
+  // Only time-critical states go on the card (Overdue / Due today); plain labels like "Logged" are left out.
+  if (/^(Overdue|Due today)/.test(it.status||"")) meta.push(it.statusColor ? `<span style="color:${it.statusColor};font-weight:600">${acEsc(it.status)}</span>` : acEsc(it.status));
+  const tip = [it.who, it.company, it.tag, it.subject, it.note].filter(Boolean).join(" — ");
+  return `<div class="ac-item" style="border-left:4px solid ${g.who}"${it.open?` onclick="${it.open}"`:""} title="${acEsc(acClip(tip, 300))}" data-key="${acEsc(it.key)}">
+    <div class="ac-item-top"><span class="ac-item-who" style="color:${tone.who}">${acEsc(it.who)}</span><span class="ac-item-tag" style="background:${acTagColor(it.tag)[0]};color:${acTagColor(it.tag)[1]}" title="${acEsc(it.tag)}">${acEsc(it.tag)}</span></div>
+    ${it.company ? `<span class="ac-item-co">${acEsc(it.company)}</span>` : ""}
+    ${it.subject ? `<p class="ac-item-subj" title="Click to edit the subject" onclick="event.stopPropagation();acEditSubject(this)">${acEsc(it.subject)}</p>`
+                 : `<button class="ac-add-subj" onclick="event.stopPropagation();acEditSubject(this)">+ Add subject</button>`}
+    ${meta.length ? `<span class="ac-item-meta">${meta.join(" • ")}</span>` : ""}
+  </div>`;
+}
+// Keys like "c:<contactId>:h:<entryId>" point at a Notes / History / Activity entry: its subject lives on the entry,
+// so the card and the form show the same text. Other cards (follow-ups, applications sent, deadlines) use state.activitySubjects.
+function acEntryForKey(key) {
+  const m = /^([cat]):(.+?):h:(.+)$/.exec(key || ""); if (!m) return null;
+  const list = { c: state.contacts, a: state.apps, t: state.trainings }[m[1]];
+  const owner = list.find(o => String(o.id) === m[2]);
+  return owner ? (owner.history || []).find(h => String(h.id || h.ts) === m[3]) || null : null;
+}
+function acGetSubject(key) { const h = acEntryForKey(key); return (h && h.subject) || (state.activitySubjects||{})[key] || ""; }
+function acSetSubject(key, v) {
+  const h = acEntryForKey(key), subj = { ...(state.activitySubjects||{}) };
+  if (h) { if (v) h.subject = v; else delete h.subject; delete subj[key]; }
+  else if (v) subj[key] = v; else delete subj[key];
+  state.activitySubjects = subj;
+}
+function acEditSubject(el) {
+  const card = el.closest(".ac-item"), key = card.dataset.key;
+  const input = document.createElement("input");
+  input.className = "ac-subj-input"; input.maxLength = 120; input.placeholder = "Add subject";
+  input.value = acGetSubject(key);
+  let done = false;
+  const finish = save => {
+    if (done) return; done = true;
+    if (save) {
+      acSetSubject(key, input.value.trim());
+      saveState();
+    }
+    renderActivities();
+  };
+  input.onclick = e => e.stopPropagation();
+  input.onkeydown = e => { if (e.key==="Enter") finish(true); else if (e.key==="Escape") finish(false); };
+  input.onblur = () => finish(true);
+  el.replaceWith(input); input.focus();
+}
+
+function acWeekView(items, from) {
+  const t = acToday();
+  return `<div class="ac-week">${Array.from({length:7}, (_,i) => {
+    const day = acAddDays(from, i), list = items.filter(x=>x.date===day);
+    const isToday = day===t, weekend = i>=5;
+    const name = acFmt(day, {weekday:"short"}) + " " + acParse(day).getDate();
+    let count;
+    if (weekend && !list.length) count = `<span class="ac-day-count" style="background:#f3f4f6;color:#6b7280">Weekend</span>`;
+    else if (isToday) count = `<span class="ac-day-count" style="color:#065f46;font-weight:700">${list.length} Item${list.length===1?"":"s"}</span>`;
+    else if (day < t) count = `<span class="ac-day-count" style="background:#ecfdf5;color:#047857">${list.length} Done</span>`;
+    else count = `<span class="ac-day-count" style="background:#f5e7ef;color:#3b0030">${list.length} Plan</span>`;
+    return `<div class="ac-day${isToday?" today":weekend?" weekend":""}">
+      <div class="ac-day-hdr"><span class="ac-day-name"${isToday?' style="color:#064e3b"':""}>${name}${isToday?'<span class="ac-today-tag">Today</span>':""}</span>${count}</div>
+      <div class="ac-day-items">${list.length ? list.map(acItem).join("") : '<div class="ac-day-empty">Nothing logged</div>'}</div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function acMonthView(items, from, to) {
+  const t = acToday(), start = acMonday(from);
+  let end = acAddDays(acMonday(to), 6);
+  const days = []; for (let d = start; d <= end; d = acAddDays(d,1)) days.push(d);
+  const heads = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(h=>`<div class="ac-mhead">${h}</div>`).join("");
+  return `<div class="ac-month">${heads}${days.map(day => {
+    const list = items.filter(x=>x.date===day), out = day<from || day>to;
+    const chips = list.slice(0,3).map(it=>`<div class="ac-mchip"${it.open?` onclick="${it.open}"`:""} title="${acEsc([it.tag, it.who, it.company, it.subject].filter(Boolean).join(" · "))}"><span class="ac-mdot" style="background:${(c=>c[0]==="#ffffff"||/^#(1f9c6e|d9600a)$/.test(c[0])?c[0]:c[1])(acTagColor(it.tag))}"></span><span>${acEsc(it.who)}</span></div>`).join("");
+    const more = list.length>3 ? `<button class="ac-mmore" onclick="acOpenWeek('${day}')">+${list.length-3} more</button>` : "";
+    return `<div class="ac-mcell${out?" out":""}${day===t?" today":""}"><div class="ac-mdate"><span>${acParse(day).getDate()}</span>${list.length?`<span style="color:var(--ac-gray4);font-weight:600">${list.length}</span>`:""}</div>${chips}${more}</div>`;
+  }).join("")}</div>`;
+}
+
+function acAllView(items) {
+  if (!items.length) return `<div class="ac-empty">No dated activity yet.</div>`;
+  const t = acToday(), byDay = {};
+  items.forEach(x => (byDay[x.date] = byDay[x.date] || []).push(x));
+  return `<div class="ac-agenda">${Object.keys(byDay).sort().reverse().map(day => `
+    <div class="ac-ag-day"><div class="ac-ag-date"${day===t?' style="color:#047857"':""}>${acFmt(day,{weekday:"short", day:"numeric", month:"short"})}<small>${day===t?"Today":acParse(day).getFullYear()}</small></div>
+      <div class="ac-ag-items">${byDay[day].map(acItem).join("")}</div></div>`).join("")}</div>`;
+}
+
+function acTile(icon, iconBg, iconFg, label, badge, valColor, val, unit) {
+  return `<div class="ac-tile"><div class="ac-tile-ico" style="background:${iconBg};color:${iconFg}"><span class="msi">${icon}</span></div>
+    <div class="ac-tile-body"><div class="ac-tile-top"><span class="ac-tile-lbl">${label}</span>${badge}</div>
+    <div class="ac-tile-val" style="color:${valColor}">${val} <small>${unit}</small></div></div></div>`;
+}
+function acTileBadge(text, tone) {
+  const c = { green:["#ecfdf5","#047857","#a7f3d0"], amber:["#fffbeb","#d9600a","#fde68a"], rose:["#fff1f2","#be123c","#fecdd3"], gray:["#f3f4f6","#4b5563","#e5e7eb"] }[tone];
+  return `<span class="ac-tile-badge" style="background:${c[0]};color:${c[1]};border-color:${c[2]}">${text}</span>`;
+}
+
+function setActPeriod(p) {
+  acPeriod = p; acOffset = 0;
+  try { localStorage.setItem("actPeriod", p); } catch(e) {}
+  renderActivities();
+}
+function acShift(n) { acOffset = n===0 ? 0 : acOffset+n; renderActivities(); }
+function acOpenWeek(day) {
+  acPeriod = "week"; acOffset = Math.round(acDiff(acMonday(day), acMonday(acToday()))/7);
+  try { localStorage.setItem("actPeriod", "week"); } catch(e) {}
+  renderActivities();
+}
+
+function renderActivities() {
+  if (!document.getElementById("tab-activities")) return;
+  const t = acToday(), { from, to } = acRange();
+  const all = acActivities(), items = all.filter(x => x.date>=from && x.date<=to);
+
+  document.querySelectorAll("#tab-activities .ac-period").forEach(el => el.innerHTML = Object.entries(AC_PERIODS).map(([k,p]) =>
+    `<button class="${k===acPeriod?"on":""}" onclick="setActPeriod('${k}')"><span class="msi">${p.icon}</span><span>${p.label}</span></button>`).join(""));
+  document.getElementById("ac-matrix-title").textContent =
+    acPeriod==="week" ? "Weekly Activities" : acPeriod==="month" ? "Monthly Activities" : "All Activities";
+
+  let label;
+  if (acPeriod==="week") label = `Week ${String(acIsoWeek(from)).padStart(2,"0")} (${acFmt(from,{month:"short",day:"numeric"},"en-US")} – ${acFmt(to, acParse(from).getMonth()===acParse(to).getMonth()?{day:"numeric"}:{month:"short",day:"numeric"},"en-US")})`;
+  else if (acPeriod==="month") label = acFmt(from, {month:"long", year:"numeric"});
+  else label = "All time";
+  document.getElementById("ac-range").innerHTML = acPeriod==="all"
+    ? `<span class="ac-range-lbl"><span class="msi" style="color:var(--ac-gray)">date_range</span>${label}</span>`
+    : `<button onclick="acShift(-1)" title="Previous"><span class="msi">chevron_left</span></button>
+       <button class="ac-range-lbl" onclick="acShift(0)" title="Back to the current ${acPeriod}"><span class="msi" style="color:var(--ac-gray)">date_range</span>${label}</button>
+       <button onclick="acShift(1)" title="Next"><span class="msi">chevron_right</span></button>`;
+
+  // Tiles and pacing: targets are per week, scaled to the shown period. The current period is judged on the days gone so far.
+  const days = acPeriod==="all" ? null : acDiff(to, from)+1;
+  const weeks = days ? days/7 : null;
+  const elapsed = !days ? 1 : t < from ? 0 : t > to ? 1 : (acDiff(t, from)+1)/days;
+  const count = p => items.filter(x=>x.pillar===p && x.date<=t).length;
+  const pillars = [
+    { key:"touches",  label:"Network Touches", color:"#3b0030", actual:count("touches"),  weekly:AC_TARGETS.touches },
+    { key:"apps",     label:"Applications",    color:"#006879", actual:count("apps"),     weekly:state.goals?.weeklyAppTarget || 3 },
+    { key:"events",   label:"Events",          color:"#d9600a", actual:count("events"),   weekly:AC_TARGETS.events },
+    { key:"training", label:"Upskilling",      color:"#1f9c6e", actual:count("training"), weekly:AC_TARGETS.training },
+  ].map(p => ({ ...p, target: weeks ? Math.max(1, Math.round(p.weekly*weeks)) : null }))
+   .map(p => ({ ...p, onTrack: p.target===null || p.actual >= Math.ceil(p.target*elapsed) }));
+  const P = Object.fromEntries(pillars.map(p=>[p.key,p]));
+  const pct = p => Math.round(p.actual/p.target*100);
+  const tone = p => p.target===null ? "gray" : p.onTrack ? "green" : p.actual>0 ? "amber" : "rose";
+  const plannedEvents = all.filter(x=>x.kind==="event" && x.date>t).length;
+  const activeTrain = state.trainings.filter(x=>x.status==="In progress").length;
+  document.getElementById("ac-tiles").innerHTML =
+    acTile("alternate_email", "#f5e7ef", "#3b0030", "Network", acTileBadge(P.touches.target ? pct(P.touches)+"%" : "All time", tone(P.touches)), "#3b0030",
+           P.touches.actual, P.touches.target ? `/ ${P.touches.target} Goal` : "logged") +
+    acTile("send", "#ecfeff", "#006879", "Applications", acTileBadge(P.apps.target===null ? "All time" : P.apps.onTrack ? "On Track" : "Behind", tone(P.apps)), "#006879",
+           P.apps.actual, P.apps.target ? `/ ${P.apps.target} Sent` : "sent") +
+    acTile("groups", "#fff4eb", "#d9600a", "Events", acTileBadge(`${plannedEvents} Active`, plannedEvents ? "amber" : "gray"), "#d9600a",
+           P.events.actual, "Attended &amp; Sched") +
+    acTile("school", "#ecfdf5", "#1f9c6e", "Training", acTileBadge(`${activeTrain} Active`, activeTrain ? "green" : "gray"), "#1f9c6e",
+           P.training.actual, "sessions logged");
+
+  document.getElementById("ac-cal").innerHTML =
+    acPeriod==="week" ? acWeekView(items, from) : acPeriod==="month" ? acMonthView(items, from, to) : acAllView(items);
+
+  // Multi-pillar completion bar
+  const totalTarget = pillars.reduce((n,p)=>n+(p.target||0),0);
+  const met = pillars.filter(p=>p.target!==null && p.actual>=p.target).length;
+  const onTrack = pillars.filter(p=>p.onTrack).length;
+  const totalActual = pillars.reduce((n,p)=>n+p.actual,0);
+  const seg = p => {
+    const w = totalTarget ? Math.min(p.actual,p.target)/totalTarget*100 : (totalActual ? p.actual/totalActual*100 : 0);
+    return `<div style="height:100%;width:${w.toFixed(1)}%;background:${p.color}" title="${p.label}: ${p.actual}"></div>`;
+  };
+  const pacing = totalTarget ? Math.round(pillars.reduce((n,p)=>n+Math.min(p.actual,p.target),0)/totalTarget*100) : null;
+  const allGood = onTrack===pillars.length;
+  document.getElementById("ac-prog").innerHTML = `
+    <div class="ac-prog-top"><span class="ac-prog-ttl"><span class="msi">stacked_bar_chart</span> Multi-Pillar ${acPeriod==="month"?"Monthly":acPeriod==="all"?"All-Time":"Weekly"} Completion Progress</span>
+      <span style="font-size:11px;color:var(--ac-gray);font-weight:500">${pacing===null ? `Totals: <strong style="color:var(--ac-ink)">${totalActual}</strong> logged activities`
+        : `Overall Pacing: <strong style="color:var(--ac-ink)">${pacing}%</strong> (${met} of 4 targets met)`}</span></div>
+    <div class="ac-prog-bar">${pillars.map(seg).join("")}</div>
+    <div class="ac-prog-foot">
+      <div class="ac-legend">${pillars.map(p=>`<span><i style="background:${p.color}"></i>${p.label}: <strong>${p.actual}${p.target?" / "+p.target:""}</strong></span>`).join("")}</div>
+      ${pacing===null ? "" : `<div style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:${allGood?"#10b981":"#f59e0b"}"></span>
+        <span style="font-size:11px;font-weight:600;color:${allGood?"#065f46":"#92400e"}">${allGood ? "All 4 Pillars On Track" : `${onTrack} of 4 Pillars On Track`}</span></div>`}
+    </div>`;
+
+  renderActPriorities();
+}
+
+// Priority Action Items: overdue and due-today follow-ups, plus this week's meetings, follow-ups, deadlines, training targets and events.
+function renderActPriorities() {
+  const t = acToday(), weekEnd = acAddDays(acMonday(t), 6), rows = [];
+  const when = d => `${acFmt(d,{weekday:"short"})} ${acParse(d).getDate()}`;
+  const lastNote = h => { const n = (h||[]).filter(x=>x.text).slice(-1)[0]; return n ? n.text : ""; };
+  state.contacts.forEach(c => {
+    if (!acIsDate(c.followUpDate) || c.followUpDate > weekEnd) return;
+    const d = c.followUpDate, overdue = d < t, meeting = c.status==="Meeting set";
+    rows.push({ sort: overdue ? "0"+d : d===t ? "1" : "2"+d, overdue, dueToday: d===t, meeting,
+      name: c.name, role: [c.role, c.company].filter(Boolean).join(" @ "), avatar: acInitials(c.name),
+      avTone: meeting ? ["#ecfeff","#006879"] : ["#f5e7ef","#3b0030"],
+      type: meeting ? ["1:1 Meeting","#ecfeff","#006879"] : ["Outreach Touch","#f5e7ef","#3b0030"],
+      date: overdue||d===t ? "" : when(d), desc: lastNote(c.history) || (meeting ? "Meeting set: confirm time, place and agenda." : "Follow-up planned."),
+      open:`openNetModal('${c.id}')`,
+      main: { label:"Mark follow-up done", icon:"check", bg:"#3b0030", fn:`netFollowUpDone('${c.id}');renderActivities()` },
+      side: { icon:"alarm", title:"Snooze 2 days", fn:`netSetFollowUp('${c.id}','${acAddDays(t,2)}');renderActivities()` } });
+  });
+  state.apps.forEach(a => {
+    if (a.followUp && acIsDate(a.followUpDate) && a.followUpDate <= weekEnd) {
+      const d = a.followUpDate, overdue = d < t;
+      rows.push({ sort: overdue ? "0"+d : d===t ? "1" : "2"+d, overdue, dueToday: d===t,
+        name: a.contact || a.company, role: a.contact ? `${a.role||""} @ ${a.company||""}` : (a.role||""), avatar: acInitials(a.contact || a.company),
+        avTone: ["#e3f7f3","#006879"], type: ["Application Follow-up","#ecfeff","#006879"], date: overdue||d===t ? "" : when(d),
+        desc: lastNote(a.history) || `Follow up on your application for ${a.role||"this role"}.`, open:`openAppModal('${a.id}')`,
+        main: { label:"Mark follow-up done", icon:"check", bg:"#3b0030", fn:`acAppFollowUp('${a.id}','')` },
+        side: { icon:"alarm", title:"Snooze 2 days", fn:`acAppFollowUp('${a.id}','${acAddDays(t,2)}')` } });
+    }
+    if (a.status===WATCH_STATUS && acIsDate(a.deadline) && a.deadline >= t && a.deadline <= weekEnd)
+      rows.push({ sort: "2"+a.deadline, dueToday: a.deadline===t, name: a.company, role: a.role||"", icon:"send", avTone:["#ecfeff","#006879"],
+        type: ["Application Deadline","#ecfeff","#006879"], date: a.deadline===t ? "" : when(a.deadline), border:"#2f7a86",
+        desc: `Apply by ${acFmt(a.deadline,{weekday:"long", day:"numeric", month:"short"})}.`, open:`openAppModal('${a.id}')`,
+        main: { label:"Open job", icon:"open_in_new", bg:"#006879", fn:`openAppModal('${a.id}')` },
+        side: { icon:"calendar_month", title:"Deadline "+a.deadline } });
+  });
+  state.trainings.forEach(x => {
+    if (x.status==="Completed" || !acIsDate(x.targetDate) || x.targetDate < t || x.targetDate > weekEnd) return;
+    rows.push({ sort: "2"+x.targetDate, training:true, dueToday: x.targetDate===t, name: x.title, role: x.provider || x.category || "", icon:"school",
+      avTone:["#ecfdf5","#1f9c6e"], type:["Training & Cert","#d1fae5","#065f46"], date: x.targetDate===t ? "" : when(x.targetDate), border:"#1f9c6e",
+      desc: lastNote(x.history) || `Target date for ${x.title}.`, open:`openTrainModal('${x.id}')`,
+      main: { label:"Open course", icon:"play_circle", bg:"#1f9c6e", fn:`openTrainModal('${x.id}')` }, side: { icon:"info", title:"Details", fn:`openTrainModal('${x.id}')` } });
+  });
+  (state.events||[]).forEach(e => {
+    if (!acIsDate(e.date) || e.date < t || e.date > weekEnd) return;
+    rows.push({ sort: "2"+e.date, event:true, dueToday: e.date===t, name: e.name, role: e.location||"", icon:"groups", avTone:["#fff4eb","#d9600a"],
+      type:["Networking Event","#fffbeb","#d9600a"], date: when(e.date)+(e.time?" • "+e.time:""), border:"#d9600a", desc: e.notes || "" });
+  });
+  const booked = (list, mk) => list.forEach(o => (o.history||[]).forEach(h => {
+    if (!h.scheduledAt || !acIsDate(h.scheduledAt)) return;
+    const [d, tm] = h.scheduledAt.split("T");
+    if (d < t || d > weekEnd) return;
+    rows.push({ sort: (d===t ? "1" : "2"+d) + (tm||""), dueToday: d===t, date: (d===t ? "Today" : when(d)) + (tm ? " • "+tm : ""),
+      desc: h.subject || (state.activitySubjects||{})[mk.key(o,h)] || h.text || "Booked activity", ...mk.row(o) });
+  }));
+  booked(state.contacts, { key:(c,h)=>`c:${c.id}:h:${h.id||h.ts}`, row: c => ({ meeting:true, name:c.name, role:[c.role, c.company].filter(Boolean).join(" @ "),
+    avatar: acInitials(c.name), avTone:["#f5e7ef","#3b0030"], type:["Booked","#3b0030","#ffffff"], border:"#3b0030", open:`openNetModal('${c.id}')`,
+    main:{ label:"Open contact", icon:"event", bg:"#3b0030", fn:`openNetModal('${c.id}')` } }) });
+  booked(state.apps, { key:(a,h)=>`a:${a.id}:h:${h.id||h.ts}`, row: a => ({ meeting: a.status==="Interviewing", name:a.company, role:a.role||"",
+    icon:"send", avTone:["#ecfeff","#006879"], type:[a.status==="Interviewing" ? "Interview" : "Booked","#006879","#ffffff"], border:"#006879",
+    open:`openAppModal('${a.id}')`, main:{ label:"Open application", icon:"open_in_new", bg:"#006879", fn:`openAppModal('${a.id}')` } }) });
+  booked(state.trainings, { key:(x,h)=>`t:${x.id}:h:${h.id||h.ts}`, row: x => ({ training:true, name:x.title, role:x.provider||x.category||"",
+    icon:"school", avTone:["#ecfdf5","#1f9c6e"], type:["Training","#1f9c6e","#ffffff"], border:"#1f9c6e",
+    open:`openTrainModal('${x.id}')`, main:{ label:"Open course", icon:"play_circle", bg:"#1f9c6e", fn:`openTrainModal('${x.id}')` } }) });
+  rows.sort((a,b)=>a.sort.localeCompare(b.sort));
+
+  const n = f => rows.filter(f).length;
+  const pill = (txt, c) => `<span class="ac-pill" style="background:${c[0]};color:${c[1]};border-color:${c[2]}">${txt}</span>`;
+  document.getElementById("ac-pri-pills").innerHTML =
+    pill(`${n(r=>r.overdue)} Overdue`, ["#fef2f2","#b91c1c","#fecaca"]) + pill(`${n(r=>r.dueToday)} Due Today`, ["#ecfdf5","#065f46","#a7f3d0"]) +
+    pill(`${n(r=>r.meeting)} Meetings &amp; Syncs`, ["#f5e7ef","#3b0030","#e9dee5"]) + pill(`${n(r=>r.event||r.training)} Events &amp; Training`, ["#fff4eb","#d9600a","#f5e3d0"]);
+
+  const badge = (txt, c, bold) => `<span style="padding:2px 8px;border-radius:9999px;font-size:10px;font-weight:${bold?700:600};background:${c[0]};color:${c[1]};${c[2]?"border:1px solid "+c[2]:""}">${txt}</span>`;
+  document.getElementById("ac-pri").innerHTML = !rows.length ? `<div class="ac-empty">Nothing due this week. 🎉</div>` : rows.map(r => {
+    const border = r.overdue ? "#ef4444" : r.dueToday ? "#10b981" : r.border || (r.meeting ? "#2f7a86" : "#d1d5db");
+    const status = r.overdue ? badge(`Overdue (${acDiff(t, r.sort.slice(1))}d)`, ["#fff1f2","#be123c","#fecdd3"], true)
+                 : r.dueToday ? badge("Due Today", ["#ecfdf5","#065f46","#a7f3d0"]) : "";
+    return `<div class="ac-pri-row" style="border-left-color:${border}"${r.open?` onclick="${r.open}"`:""}>
+      <div class="ac-pri-main">
+        <div class="ac-av" style="background:${r.avTone[0]};color:${r.avTone[1]}">${r.icon?`<span class="msi">${r.icon}</span>`:acEsc(r.avatar)}</div>
+        <div style="min-width:0">
+          <div class="ac-pri-line"><span class="ac-pri-name">${acEsc(r.name)}</span>${r.role?`<span style="font-size:12px;color:var(--ac-gray4)">•</span><span class="ac-pri-role">${acEsc(r.role)}</span>`:""}
+            ${status}${badge(r.type[0], [r.type[1], r.type[2]])}${r.date?badge(acEsc(r.date), ["#f3f4f6","#374151"]):""}</div>
+          ${r.desc?`<p class="ac-pri-desc">${acEsc(r.desc)}</p>`:""}
+        </div>
+      </div>
+      <div class="ac-pri-acts" onclick="event.stopPropagation()">
+        ${r.main?`<button class="ac-act" style="background:${r.main.bg}" onclick="${r.main.fn}"><span class="msi">${r.main.icon}</span><span>${r.main.label}</span></button>`:""}
+        ${r.side?`<button class="ac-icon-btn" title="${acEsc(r.side.title)}"${r.side.fn?` onclick="${r.side.fn}"`:""}><span class="msi">${r.side.icon}</span></button>`:""}
+      </div>
+    </div>`;
+  }).join("");
+}
+function acAppFollowUp(id, date) {
+  state.apps = state.apps.map(a => a.id!==id ? a : { ...a, followUpDate: date, followUp: !!date });
+  saveState(); renderApplications(); renderJobWatchlist(); renderDashboard();
 }
 
 // ═══════════════════════════ RENDER APPLICATIONS ═══════════════════════════════
@@ -4061,6 +4703,7 @@ function openAppModal(id, defaultStatus) {
   document.getElementById("af-concerns").value   = app?.concerns||"";
   updateFitPreview();
   document.getElementById("af-note-input").value = "";
+  resetBooking("af");
   clearNoteImage("af");
   setupNotePasteListener("af-note-input", "af");
   document.getElementById("af-followup").checked = app?.followUp||false;
@@ -4077,7 +4720,7 @@ function renderAppHistoryEntries() {
     return `<div class="history-entry">
       <div class="history-avatar">MM</div>
       <div class="history-body">
-        <div class="history-meta">You &nbsp;·&nbsp; ${fmtDatetime(h.ts)}</div>
+        <div class="history-meta">You &nbsp;·&nbsp; ${fmtDatetime(h.ts)}</div>${bookingBadge(h)}
         <div class="history-text" id="aht-${i}">${escHtml(h.text)}</div>
         ${noteImageThumb(h)}
         <textarea class="history-edit-area" id="ahea-${i}" rows="2">${escHtml(h.text)}</textarea>
@@ -4085,7 +4728,7 @@ function renderAppHistoryEntries() {
           <button class="history-link" id="ahedit-${i}" onclick="startEditAppHistory(${i})">Edit</button>
           <button class="history-link" id="ahsave-${i}" style="display:none;color:var(--status-success-text)" onclick="saveEditAppHistory(${i})">Save</button>
           <button class="history-link" id="ahcancel-${i}" style="display:none" onclick="renderAppHistoryEntries()">Cancel</button>
-          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteAppHistoryEntry(${i})">Delete</button>
+          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteAppHistoryEntry(${i})">Delete</button><button class="history-link" onclick="editEntryBooking('af',${i},this)">📅 ${h.scheduledAt?"Change activity":"Book activity"}</button><button class="history-link" onclick="editEntrySubject('af',${i},this)">✏️ ${h.subject?"Edit subject":"Add subject"}</button>
         </div>
       </div>
     </div>`;
@@ -4095,11 +4738,12 @@ async function addAppHistoryEntry() {
   const input = document.getElementById("af-note-input");
   const text = input.value.trim();
   const file = _pendingNoteImage["af"];
-  if (!text && !file) return;
-  const entry = { id:String(Date.now()), ts:new Date().toISOString(), text };
+  const booking = takeBooking("af");
+  if (!text && !file && !booking) return;
+  const entry = { id:String(Date.now()), ts:new Date().toISOString(), text, ...(booking||{}) };
   if (file) Object.assign(entry, await uploadNoteImage(file));
   _appModalHistory.push(entry);
-  input.value = ""; clearNoteImage("af"); renderAppHistoryEntries();
+  input.value = ""; resetBooking("af"); clearNoteImage("af"); renderAppHistoryEntries();
 }
 function startEditAppHistory(i) {
   document.getElementById("aht-"+i).classList.add("editing");
@@ -4125,9 +4769,10 @@ async function submitApp() {
   if (!company||!role) return;
   const pendingNote = document.getElementById("af-note-input").value.trim();
   const pendingFile = _pendingNoteImage["af"];
+  const pendingBook = takeBooking("af");
   const history = [..._appModalHistory];
-  if (pendingNote || pendingFile) {
-    const note = { id:String(Date.now()), ts:new Date().toISOString(), text:pendingNote };
+  if (pendingNote || pendingFile || pendingBook) {
+    const note = { id:String(Date.now()), ts:new Date().toISOString(), text:pendingNote, ...(pendingBook||{}) };
     if (pendingFile) Object.assign(note, await uploadNoteImage(pendingFile));
     history.push(note);
   }
@@ -4186,6 +4831,7 @@ function openTrainModal(id) {
   document.getElementById("tf-target").value   = t?.targetDate||"";
   document.getElementById("tf-url").value      = t?.url||"";
   document.getElementById("tf-note-input").value = "";
+  resetBooking("tf");
   renderTrainHistoryEntries();
   document.getElementById("trainModal").style.display="flex";
 }
@@ -4197,14 +4843,14 @@ function renderTrainHistoryEntries() {
     return `<div class="history-entry">
       <div class="history-avatar">MM</div>
       <div class="history-body">
-        <div class="history-meta">You &nbsp;·&nbsp; ${fmtDatetime(h.ts)}</div>
+        <div class="history-meta">You &nbsp;·&nbsp; ${fmtDatetime(h.ts)}</div>${bookingBadge(h)}
         <div class="history-text" id="tht-${i}">${escHtml(h.text)}</div>
         <textarea class="history-edit-area" id="thea-${i}" rows="2">${escHtml(h.text)}</textarea>
         <div class="history-actions">
           <button class="history-link" id="thedit-${i}" onclick="startEditTrainHistory(${i})">Edit</button>
           <button class="history-link" id="thsave-${i}" style="display:none;color:var(--status-success-text)" onclick="saveEditTrainHistory(${i})">Save</button>
           <button class="history-link" id="thcancel-${i}" style="display:none" onclick="renderTrainHistoryEntries()">Cancel</button>
-          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteTrainHistoryEntry(${i})">Delete</button>
+          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteTrainHistoryEntry(${i})">Delete</button><button class="history-link" onclick="editEntryBooking('tf',${i},this)">📅 ${h.scheduledAt?"Change activity":"Book activity"}</button><button class="history-link" onclick="editEntrySubject('tf',${i},this)">✏️ ${h.subject?"Edit subject":"Add subject"}</button>
         </div>
       </div>
     </div>`;
@@ -4212,9 +4858,9 @@ function renderTrainHistoryEntries() {
 }
 function addTrainHistoryEntry() {
   const input = document.getElementById("tf-note-input");
-  const text = input.value.trim(); if (!text) return;
-  _trainModalHistory.push({ id:String(Date.now()), ts:new Date().toISOString(), text });
-  input.value = ""; renderTrainHistoryEntries();
+  const text = input.value.trim(), booking = takeBooking("tf"); if (!text && !booking) return;
+  _trainModalHistory.push({ id:String(Date.now()), ts:new Date().toISOString(), text, ...(booking||{}) });
+  input.value = ""; resetBooking("tf"); renderTrainHistoryEntries();
 }
 function startEditTrainHistory(i) {
   document.getElementById("tht-"+i).classList.add("editing");
@@ -4235,7 +4881,8 @@ function submitTrain() {
   if (!title) return;
   const pendingNote = document.getElementById("tf-note-input").value.trim();
   const history = [..._trainModalHistory];
-  if (pendingNote) history.push({ id:String(Date.now()), ts:new Date().toISOString(), text:pendingNote });
+  const pendingBook = takeBooking("tf");
+  if (pendingNote || pendingBook) history.push({ id:String(Date.now()), ts:new Date().toISOString(), text:pendingNote, ...(pendingBook||{}) });
   const entry = {
     id: editTrainId||String(Date.now()),
     title,
@@ -4273,6 +4920,76 @@ function addRecommended(title) {
 
 // ═══════════════════════════ HELPERS ══════════════════════════════════════════
 function escHtml(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+// Booked activities: entry.scheduledAt is local "YYYY-MM-DD" or "YYYY-MM-DDTHH:MM" (as typed). The Activities tab
+// places the entry on that day and time.
+function toggleBook(p) {
+  const on = document.getElementById(p+"-book").checked;
+  document.getElementById(p+"-book-fields").style.display = on ? "flex" : "none";
+  if (on && !document.getElementById(p+"-book-date").value) document.getElementById(p+"-book-date").value = today();
+}
+function takeBooking(p) {
+  const box = document.getElementById(p+"-book");
+  if (!box || !box.checked) return null;
+  const d = document.getElementById(p+"-book-date").value, t = document.getElementById(p+"-book-time").value;
+  const subj = document.getElementById(p+"-book-subject").value.trim();
+  return d ? { scheduledAt: t ? `${d}T${t}` : d, ...(subj ? { subject: subj } : {}) } : null;
+}
+function resetBooking(p) {
+  const box = document.getElementById(p+"-book"); if (!box) return;
+  box.checked = false;
+  document.getElementById(p+"-book-date").value = "";
+  document.getElementById(p+"-book-time").value = "";
+  document.getElementById(p+"-book-subject").value = "";
+  toggleBook(p);
+}
+// Inline editor under one activity in the list. Changes are kept with the form and saved when you click Save.
+function editEntryBooking(p, i, btn) {
+  const list = { nf:_modalHistory, af:_appModalHistory, tf:_trainModalHistory }[p];
+  const redraw = { nf:renderHistoryEntries, af:renderAppHistoryEntries, tf:renderTrainHistoryEntries }[p];
+  const body = btn.closest(".history-body"), h = list[i];
+  if (!h || body.querySelector(".entry-book")) return;
+  const [d, t] = (h.scheduledAt || "").split("T");
+  const box = document.createElement("div");
+  box.className = "entry-book";
+  box.innerHTML = `<input type="date" class="form-input" value="${d || today()}"><input type="time" class="form-input" step="900" value="${t || ""}"><input type="text" class="form-input act-book-subj" maxlength="120" placeholder="Subject (shown on the Activities card)" value="${escHtml(h.subject || "")}">
+    <button type="button" class="history-link" style="color:var(--status-success-text);font-weight:600" data-act="save">Save time</button>
+    ${h.scheduledAt ? '<button type="button" class="history-link" style="color:var(--status-urgent-text)" data-act="remove">Remove booking</button>' : ""}
+    <button type="button" class="history-link" data-act="cancel">Cancel</button>`;
+  box.onclick = e => {
+    const act = e.target.dataset.act; if (!act) return;
+    if (act === "save") {
+      const [di, ti, si] = box.querySelectorAll("input");
+      if (!di.value) { di.focus(); return; }
+      h.scheduledAt = ti.value ? `${di.value}T${ti.value}` : di.value;
+      if (si.value.trim()) h.subject = si.value.trim(); else delete h.subject;
+    } else if (act === "remove") delete h.scheduledAt;
+    redraw();
+  };
+  body.appendChild(box);
+}
+// Subject of one activity, edited in the form. The Activities card shows and edits the same text.
+function editEntrySubject(p, i, btn) {
+  const list = { nf:_modalHistory, af:_appModalHistory, tf:_trainModalHistory }[p];
+  const redraw = { nf:renderHistoryEntries, af:renderAppHistoryEntries, tf:renderTrainHistoryEntries }[p];
+  const body = btn.closest(".history-body"), h = list[i];
+  if (!h || body.querySelector(".entry-book")) return;
+  const box = document.createElement("div");
+  box.className = "entry-book";
+  box.innerHTML = `<input type="text" class="form-input act-book-subj" maxlength="120" placeholder="Subject (shown on the Activities card)" value="${escHtml(h.subject || "")}">
+    <button type="button" class="history-link" style="color:var(--status-success-text);font-weight:600" data-act="save">Save subject</button>
+    <button type="button" class="history-link" data-act="cancel">Cancel</button>`;
+  const input = box.querySelector("input");
+  const save = () => { const v = input.value.trim(); if (v) h.subject = v; else delete h.subject; redraw(); };
+  box.onclick = e => { const act = e.target.dataset.act; if (act === "save") save(); else if (act === "cancel") redraw(); };
+  input.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); save(); } else if (e.key === "Escape") redraw(); };
+  body.appendChild(box); input.focus();
+}
+function bookingBadge(h) {
+  if (!h.scheduledAt) return h.subject ? `<div><span class="book-badge" style="background:#f3f4f6;color:#374151;border-color:#e5e7eb">✏️ ${escHtml(h.subject)}</span></div>` : "";
+  const [d, t] = h.scheduledAt.split("T"), [y, m, dd] = d.split("-").map(Number);
+  const day = new Date(y, m-1, dd).toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short", year:"numeric"});
+  return `<div><span class="book-badge">📅 Booked: ${day}${t ? ", "+t : ""}${h.subject ? " · "+escHtml(h.subject) : ""}</span></div>`;
+}
 function fmtDatetime(iso) {
   if (!iso) return "";
   const d = new Date(iso);
@@ -4299,6 +5016,7 @@ function openNetModal(id) {
   document.getElementById("nf-linkedin").value    = c?.linkedIn||"";
   document.getElementById("nf-shared").checked    = c?.shared||false;
   document.getElementById("nf-note-input").value  = "";
+  resetBooking("nf");
   document.getElementById("nf-note-date").value   = today();
   clearNoteImage("nf");
   setupNotePasteListener("nf-note-input", "nf");
@@ -4317,7 +5035,7 @@ function renderHistoryEntries() {
     return `<div class="history-entry" id="he-${i}">
       <div class="history-avatar">MM</div>
       <div class="history-body">
-        <div class="history-meta">You &nbsp;·&nbsp; ${fmtDatetime(h.ts)}</div>
+        <div class="history-meta">You &nbsp;·&nbsp; ${fmtDatetime(h.ts)}</div>${bookingBadge(h)}
         <div class="history-text" id="ht-${i}">${escHtml(h.text)}</div>
         ${noteImageThumb(h)}
         <textarea class="history-edit-area" id="hea-${i}" rows="2">${escHtml(h.text)}</textarea>
@@ -4325,7 +5043,7 @@ function renderHistoryEntries() {
           <button class="history-link" id="hedit-${i}" onclick="startEditHistory(${i})">Edit</button>
           <button class="history-link" id="hsave-${i}" style="display:none;color:var(--status-success-text)" onclick="saveEditHistory(${i})">Save</button>
           <button class="history-link" id="hcancel-${i}" style="display:none" onclick="cancelEditHistory(${i})">Cancel</button>
-          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteHistoryEntry(${i})">Delete</button>
+          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteHistoryEntry(${i})">Delete</button><button class="history-link" onclick="editEntryBooking('nf',${i},this)">📅 ${h.scheduledAt?"Change activity":"Book activity"}</button><button class="history-link" onclick="editEntrySubject('nf',${i},this)">✏️ ${h.subject?"Edit subject":"Add subject"}</button>
         </div>
       </div>
     </div>`;
@@ -4336,13 +5054,14 @@ async function addHistoryEntry() {
   const input = document.getElementById("nf-note-input");
   const text = input.value.trim();
   const file = _pendingNoteImage["nf"];
-  if (!text && !file) return;
+  const booking = takeBooking("nf");
+  if (!text && !file && !booking) return;
   const dateVal = document.getElementById("nf-note-date").value;
   const ts = dateVal ? new Date(dateVal).toISOString() : new Date().toISOString();
-  const entry = { id: String(Date.now()), ts, text };
+  const entry = { id: String(Date.now()), ts, text, ...(booking||{}) };
   if (file) Object.assign(entry, await uploadNoteImage(file));
   _modalHistory.push(entry);
-  input.value = "";
+  input.value = ""; resetBooking("nf");
   clearNoteImage("nf");
   renderHistoryEntries();
 }
@@ -4373,9 +5092,10 @@ async function submitNet() {
   if (!name) return;
   const pendingNote = document.getElementById("nf-note-input").value.trim();
   const pendingFile = _pendingNoteImage["nf"];
+  const pendingBook = takeBooking("nf");
   const history = [..._modalHistory];
-  if (pendingNote || pendingFile) {
-    const note = { id: String(Date.now()), ts: new Date().toISOString(), text: pendingNote };
+  if (pendingNote || pendingFile || pendingBook) {
+    const note = { id: String(Date.now()), ts: new Date().toISOString(), text: pendingNote, ...(pendingBook||{}) };
     if (pendingFile) Object.assign(note, await uploadNoteImage(pendingFile));
     history.push(note);
   }
@@ -4448,7 +5168,7 @@ function renderCoHistoryEntries() {
     return `<div class="history-entry">
       <div class="history-avatar">MM</div>
       <div class="history-body">
-        <div class="history-meta">You &nbsp;·&nbsp; ${fmtDatetime(h.ts)}</div>
+        <div class="history-meta">You &nbsp;·&nbsp; ${fmtDatetime(h.ts)}</div>${bookingBadge(h)}
         <div class="history-text" id="coht-${i}">${escHtml(h.text)}</div>
         ${noteImageThumb(h)}
         <textarea class="history-edit-area" id="cohea-${i}" rows="2">${escHtml(h.text)}</textarea>
