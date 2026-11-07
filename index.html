@@ -207,6 +207,73 @@
   .pip-right { display: flex; align-items: center; gap: 10px; }
   .pip-bar-wrap { width: 70px; height: 6px; border-radius: 3px; background: var(--border-default); overflow: hidden; }
 
+  /* ── Career Dashboard ── (wider than other tabs, like the Stitch layout) */
+  .body:has(> #tab-dashboard.active) { max-width: 1360px; }
+  #tab-dashboard { --cd-teal:#006879; --cd-teal2:#2f7a86; --cd-plum:#3b0030; --cd-green:#1f9c6e; --cd-orange:#d9600a; --cd-red:#ba1a1a;
+    --cd-ink:#1f1a1d; --cd-label:#7c6470; --cd-gray:#6b7280; --cd-gray4:#9ca3af; --cd-border:#e5e3df; --cd-track:#f3f4f6; }
+  .cd-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--cd-border); }
+  .cd-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .cd-kicker { padding: 2px 8px; border-radius: 9999px; background: #f5e7ef; color: var(--cd-plum); font-size: 10px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+  .cd-live { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: #047857; }
+  .cd-pulse { width: 6px; height: 6px; border-radius: 50%; background: #10b981; animation: cdPulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+  @keyframes cdPulse { 50% { opacity: .5; } }
+  .cd-title { font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -.025em; color: var(--cd-ink); margin: 0; }
+  .cd-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .cd-seg { display: flex; align-items: center; background: #f1f0ee; padding: 4px; border-radius: 9999px; }
+  .cd-seg button { display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 9999px; border: none; background: none; font: 500 12px/16px inherit; font-family: inherit; color: #4b5563; cursor: pointer; transition: all .15s; }
+  .cd-seg button:hover { color: #000; background: rgba(255,255,255,.6); }
+  .cd-seg button.on { background: var(--cd-plum); color: #fff; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.05); padding: 6px 14px; }
+  .cd-seg .msi, .cd-export .msi { font-size: 15px; }
+  .cd-export { display: flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 9999px; background: #fff; color: var(--cd-plum); border: 1px solid var(--cd-border); font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.05); transition: background .15s; }
+  .cd-export:hover { background: rgba(245,231,239,.6); }
+  .cd-pillars { margin-top: 24px; }
+  .cd-pillar { margin-bottom: 24px; }
+  .cd-phdr { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 4px; margin-bottom: 10px; }
+  .cd-phdr-l { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .cd-pdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .cd-ptitle { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #374151; margin: 0; }
+  .cd-ptag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 9999px; border: 1px solid; white-space: nowrap; }
+  .cd-ptarget { font-size: 11px; font-weight: 500; color: var(--cd-gray); white-space: nowrap; }
+  .cd-grid5 { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 14px; }
+  .cd-card { background: #fff; border: 1px solid var(--cd-border); border-radius: 12px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.05); overflow: hidden; transition: border-color .15s; min-width: 0; }
+  .cd-card:hover { border-color: var(--cd-hover, rgba(0,104,121,.4)); }
+  .cd-chead { display: flex; align-items: center; justify-content: space-between; gap: 6px; color: var(--cd-label); margin-bottom: 8px; }
+  .cd-clabel { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .cd-chead .msi { font-size: 18px; flex-shrink: 0; }
+  .cd-val { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+  .cd-num { font-size: 30px; line-height: 36px; font-weight: 800; letter-spacing: -.025em; }
+  .cd-unit { font-size: 12px; font-weight: 500; color: var(--cd-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cd-pill { font-size: 12px; font-weight: 600; padding: 2px 6px; border-radius: 9999px; border: 1px solid; white-space: nowrap; }
+  .cd-pill.sm { font-size: 10px; }
+  .cd-pill.green  { color: #047857; background: #ecfdf5; border-color: #a7f3d0; }
+  .cd-pill.amber  { color: var(--cd-orange); background: #fffbeb; border-color: #fde68a; }
+  .cd-pill.rose   { color: #be123c; background: #fff1f2; border-color: #fecdd3; }
+  .cd-pill.cyan   { color: var(--cd-teal); background: #ecfeff; border-color: #cffafe; }
+  .cd-pill.gray   { color: #4b5563; background: #f3f4f6; border-color: #e5e7eb; }
+  .cd-sub { margin-top: 8px; font-size: 11px; color: var(--cd-gray); display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .cd-sub > span:last-child { overflow: hidden; text-overflow: ellipsis; }
+  .cd-sub b { font-weight: 500; color: #374151; }
+  .cd-sdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .cd-pipes { margin-top: 32px; }
+  .cd-grid3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+  .cd-pcard { background: #fff; border: 1px solid var(--cd-border); border-radius: 12px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,.05); display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+  .cd-pc-hdr { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--cd-border); }
+  .cd-pc-ttl { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--cd-ink); margin: 0; }
+  .cd-pc-ttl .msi { font-size: 18px; }
+  .cd-total { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; border: 1px solid; white-space: nowrap; }
+  .cd-rows > div + div { margin-top: 12px; }
+  .cd-row { display: flex; align-items: center; gap: 12px; font-size: 12px; }
+  .cd-row-name { display: flex; align-items: center; gap: 8px; width: 112px; flex-shrink: 0; min-width: 0; }
+  .cd-row-name span:last-child { font-weight: 500; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cd-row-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .cd-track { flex: 1; background: var(--cd-track); border-radius: 9999px; height: 8px; overflow: hidden; }
+  .cd-fill { height: 8px; border-radius: 9999px; }
+  .cd-row-val { width: 24px; text-align: right; font-weight: 600; color: #1f2937; }
+  .cd-row-val.zero { color: var(--cd-gray4); }
+  @media (max-width: 1023px) { .cd-grid5 { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+  @media (max-width: 767px)  { .cd-grid3 { grid-template-columns: 1fr; } }
+  @media (max-width: 639px)  { .cd-grid5 { grid-template-columns: 1fr; } .cd-phdr { flex-wrap: wrap; } }
+
   a { color: var(--color-primary-hover); }
   @media (max-width: 700px) {
     .grid4 { grid-template-columns: repeat(2,1fr); }
@@ -578,68 +645,47 @@
 
 <!-- ═══════════════════════════════ DASHBOARD ═══════════════════════════════ -->
 <div id="tab-dashboard" class="section active">
-
-  <div class="sec-label">Job Search</div>
-  <div class="grid4" id="dash-job-stats"></div>
-
-  <div class="sec-label">Network</div>
-  <div class="grid4" id="dash-net-stats"></div>
-
-  <div class="sec-label">Training</div>
-  <div class="grid4" id="dash-train-stats"></div>
-
-  <div class="grid2">
-    <div class="card">
-      <div class="card-hdr"><span class="card-ttl" style="color:var(--color-primary)">Application Pipeline</span></div>
-      <div id="dash-app-pipeline"></div>
+  <div class="cd-top">
+    <div>
+      <div class="cd-eyebrow"><span class="cd-kicker">Executive Analytics</span><span style="font-size:12px;color:var(--cd-gray4)">•</span><span class="cd-live"><span class="cd-pulse"></span> Live Cadence</span></div>
+      <h1 class="cd-title">Career Dashboard</h1>
     </div>
-    <div class="card">
-      <div class="card-hdr"><span class="card-ttl" style="color:var(--status-progress-text)">Network Pipeline</span></div>
-      <div id="dash-net-pipeline"></div>
+    <div class="cd-actions">
+      <div class="cd-seg" id="cd-period"></div>
+      <button class="cd-export" onclick="exportCSV()"><span class="msi">download</span><span>Export Report</span></button>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-hdr">
-      <span class="card-ttl" style="color:var(--color-primary)">🎯 Job Match Fit</span>
-      <span style="font-size:11px;color:var(--text-muted)">Phase 2 · Markus Job Search Instructions</span>
-    </div>
-    <div class="grid4" id="dash-fit-stats"></div>
-    <div class="grid2" style="margin-top:4px">
-      <div>
-        <div class="sec-label" style="margin-bottom:6px">Highest-fit current leads</div>
-        <div id="dash-top-fit"></div>
+  <div class="cd-pillars">
+    <div class="cd-pillar">
+      <div class="cd-phdr">
+        <div class="cd-phdr-l"><span class="cd-pdot" style="background:var(--cd-teal)"></span><h3 class="cd-ptitle">Job Search</h3><span class="cd-ptag" style="color:var(--cd-teal);background:#ecfeff;border-color:#cffafe">Active Applications</span></div>
+        <span class="cd-ptarget" id="cd-job-target"></span>
       </div>
-      <div>
-        <div class="sec-label" style="margin-bottom:6px">Refresh</div>
-        <div id="dash-refresh" style="font-size:12px;color:var(--text-muted);line-height:1.7"></div>
+      <div class="cd-grid5" id="cd-job"></div>
+    </div>
+    <div class="cd-pillar">
+      <div class="cd-phdr">
+        <div class="cd-phdr-l"><span class="cd-pdot" style="background:var(--cd-plum)"></span><h3 class="cd-ptitle">Network</h3><span class="cd-ptag" style="color:var(--cd-plum);background:#f5e7ef;border-color:#e9dee5">Executive Pipeline</span></div>
+        <span class="cd-ptarget" id="cd-net-target"></span>
       </div>
+      <div class="cd-grid5" id="cd-net"></div>
+    </div>
+    <div class="cd-pillar">
+      <div class="cd-phdr">
+        <div class="cd-phdr-l"><span class="cd-pdot" style="background:var(--cd-green)"></span><h3 class="cd-ptitle">Training</h3><span class="cd-ptag" style="color:#047857;background:#ecfdf5;border-color:#a7f3d0">Upskilling &amp; Certifications</span></div>
+        <span class="cd-ptarget" id="cd-train-target"></span>
+      </div>
+      <div class="cd-grid5" id="cd-train"></div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-ttl" style="color:var(--status-warning-text);margin-bottom:12px">🔔 Follow-ups & To-Dos</div>
-    <div id="dash-followups"></div>
-  </div>
-
-  <div class="card">
-    <div class="card-ttl" style="color:var(--color-primary);margin-bottom:14px">Weekly Activity KPIs</div>
-    <div class="grid4" id="dash-kpis"></div>
-    <div class="form-group" style="margin-top:12px;margin-bottom:0">
-      <label class="form-label">Weekly reflection</label>
-      <textarea class="form-textarea" id="weeklyNote" rows="2" placeholder="What worked? What to adjust next week?" oninput="debounce(saveNote,800)()"></textarea>
+  <div class="cd-pipes">
+    <div class="cd-phdr" style="margin-bottom:16px">
+      <div class="cd-phdr-l"><span class="cd-pdot" style="background:var(--cd-plum)"></span><h2 class="cd-ptitle" style="font-size:12px">Pipeline Breakdowns</h2><span class="cd-ptag" style="color:#374151;background:#f1f0ee;border-color:var(--cd-border)">Live Status Distribution</span></div>
+      <span class="cd-ptarget">Real-time conversion funnels</span>
     </div>
-  </div>
-
-  <div class="grid2">
-    <div class="card">
-      <div class="card-ttl" style="color:var(--color-primary);margin-bottom:12px">Job Search Milestones</div>
-      <div id="dash-ms"></div>
-    </div>
-    <div class="card">
-      <div class="card-ttl" style="color:var(--color-primary);margin-bottom:12px">Training Milestones</div>
-      <div id="dash-tms"></div>
-    </div>
+    <div class="cd-grid3" id="cd-pipelines"></div>
   </div>
 </div>
 
@@ -2551,6 +2597,7 @@ function buildTrainMilestones() {
 // ═══════════════════════════ STATE ════════════════════════════════════════════
 let state = {
   apps: [], trainings: [], contacts: [], watchlist: [], checkouts: [], searchSetup: [],
+  events: [], // Events Pipeline on the Dashboard; see dashEvents()
   kpis: { weeklyContacts:0, recruitersContacted:0, coffeChats:0, trainingMins:0 },
   milestones: {}, trainMilestones: {},
   weeklyNote: "",
@@ -2626,6 +2673,7 @@ async function loadState() {
         state.contacts        = netMigrateStatuses(d.contacts || []);
         state.watchlist        = d.watchlist       || [];
         state.checkouts        = d.checkouts       || [];
+        state.events           = d.events          || [];
         state.searchSetup      = d.searchSetup !== undefined ? d.searchSetup : DEFAULT_SEARCH_SETUP;
         state.kpis            = { weeklyContacts:0, recruitersContacted:0, coffeChats:0, trainingMins:0, ...(d.kpis||{}) };
         state.milestones      = d.milestones      || {};
@@ -2657,6 +2705,7 @@ async function loadState() {
   state.contacts         = netMigrateStatuses(lsGet("contacts") || []);
   state.watchlist        = lsGet("watchlist") || [];
   state.checkouts        = lsGet("checkouts") || [];
+  state.events           = lsGet("events")    || [];
   { const lsSS = lsGet("searchSetup"); state.searchSetup = lsSS !== null && lsSS !== undefined ? lsSS : DEFAULT_SEARCH_SETUP; }
   state.kpis            = { weeklyContacts:0, recruitersContacted:0, coffeChats:0, trainingMins:0, ...(lsGet("kpis")||{}) };
   state.milestones      = lsGet("ms")        || {};
@@ -2679,6 +2728,7 @@ async function saveState() {
   lsSet("apps", state.apps); lsSet("trainings", state.trainings);
   lsSet("contacts", state.contacts); lsSet("watchlist", state.watchlist); lsSet("checkouts", state.checkouts); lsSet("kpis", state.kpis);
   lsSet("searchSetup", state.searchSetup);
+  lsSet("events", state.events);
   lsSet("ms", state.milestones); lsSet("tms", state.trainMilestones);
   lsSet("note", state.weeklyNote);
   lsSet("criteria", state.searchCriteria); lsSet("jobMatch", state.jobMatch);
@@ -2693,7 +2743,7 @@ async function saveState() {
     try {
       await db.collection("users").doc(currentUid).set({
         apps: state.apps, trainings: state.trainings, contacts: state.contacts, watchlist: state.watchlist,
-        checkouts: state.checkouts, searchSetup: state.searchSetup,
+        checkouts: state.checkouts, searchSetup: state.searchSetup, events: state.events,
         kpis: state.kpis, milestones: state.milestones,
         trainMilestones: state.trainMilestones, weeklyNote: state.weeklyNote,
         searchCriteria: state.searchCriteria, jobMatch: state.jobMatch,
@@ -2950,163 +3000,168 @@ function sel(id, opts, selected) {
 }
 
 // ═══════════════════════════ RENDER DASHBOARD ══════════════════════════════════
+// ── Career Dashboard ──
+// Period toggle: "Last …" cards count the last 7 / 30 days or all time; "Planned …" cards look the same distance ahead.
+const CD_PERIODS = {
+  week:  { label:"Weekly Matrix",  icon:"insights",       days:7,    last:"Last Wk",      planned:"Planned This Wk" },
+  month: { label:"Monthly Matrix", icon:"calendar_month", days:30,   last:"Last 30 Days", planned:"Planned This Month" },
+  all:   { label:"All",            icon:"apps",           days:null, last:"All Time",     planned:"Planned (Upcoming)" },
+};
+let cdPeriod = (()=>{ try { const p = localStorage.getItem("dashPeriod"); return CD_PERIODS[p] ? p : "week"; } catch(e) { return "week"; } })();
+function setDashPeriod(p) {
+  cdPeriod = p;
+  try { localStorage.setItem("dashPeriod", p); } catch(e) {}
+  renderDashboard();
+}
+const CD_NET_WEEKLY_TARGET = 10;     // touchpoints per week
+const CD_TRAIN_WEEKLY_MINS = 180;    // 3.0 hrs per week
+
+// Events Pipeline. state.events is saved with everything else, but nothing adds events yet,
+// so the card shows clearly labelled sample numbers (never saved) until the first real event exists.
+const EVENT_STATUS = { "Interested":"#6366f1", "Planned / Booked":"#d9600a", "Attended":"#10b981" };
+const SAMPLE_EVENTS = Object.entries({ "Interested":4, "Planned / Booked":3, "Attended":5 })
+  .flatMap(([status,n]) => Array.from({length:n}, (_,i) => ({ id:`sample-${status}-${i}`, name:"Sample event", status })));
+function dashEvents() {
+  const real = state.events || [];
+  return real.length ? { list:real, sample:false } : { list:SAMPLE_EVENTS, sample:true };
+}
+
+function cdShift(days) { const d = new Date(); d.setDate(d.getDate()+days); return d.toISOString().slice(0,10); }
+function cdShortName(n) { const p = String(n||"").trim().split(/\s+/); return p.length>1 ? `${p[0]} ${p[p.length-1][0]}.` : p[0]||""; }
+function cdList(items, max=3) { const u = [...new Set(items.filter(Boolean))]; return u.slice(0,max).join(", ") + (u.length>max ? ` +${u.length-max}` : ""); }
+function cdDays(n) { return n===1 ? "1 day" : n+" days"; }
+function cdCard({label, icon, iconColor, labelColor, hover, num, numColor, unit, pill, sub, subDot, title}) {
+  return `<div class="cd-card"${hover?` style="--cd-hover:${hover}"`:""}>
+    <div class="cd-chead"><span class="cd-clabel" title="${label}"${labelColor?` style="color:${labelColor}"`:""}>${label}</span><span class="msi" style="color:${iconColor}">${icon}</span></div>
+    <div class="cd-val"><span class="cd-num" style="color:${numColor}">${num}</span>${pill||""}${unit?`<span class="cd-unit">${unit}</span>`:""}</div>
+    <div class="cd-sub"${title?` title="${escHtml(title)}"`:""}>${subDot?`<span class="cd-sdot" style="background:${subDot}"></span>`:""}<span>${sub}</span></div>
+  </div>`;
+}
+function cdPill(text, tone, small) { return `<span class="cd-pill ${tone}${small?" sm":""}">${text}</span>`; }
+function cdRow(label, val, total, color) {
+  const pct = total>0 ? Math.min(val/total*100,100) : 0;
+  return `<div class="cd-row"><div class="cd-row-name"><span class="cd-row-dot" style="background:${color}"></span><span title="${label}">${label}</span></div>
+    <div class="cd-track"><div class="cd-fill" style="width:${pct.toFixed(1)}%;background:${color}"></div></div>
+    <span class="cd-row-val${val===0?" zero":""}">${val}</span></div>`;
+}
+function cdPipeCard(icon, iconColor, title, totalHtml, rows) {
+  return `<div class="cd-pcard"><div class="cd-pc-hdr"><h3 class="cd-pc-ttl"><span class="msi" style="color:${iconColor}">${icon}</span>${title}</h3>${totalHtml}</div>
+    <div class="cd-rows">${rows}</div></div>`;
+}
+
 function renderDashboard() {
-  const apps = state.apps, contacts = state.contacts, trainings = state.trainings, kpis = state.kpis;
-  const realApps = apps.filter(a=>a.status!==WATCH_STATUS);
-  const total = realApps.length;
+  const P = CD_PERIODS[cdPeriod];
+  const t = today(), from = P.days ? cdShift(-(P.days-1)) : "", until = P.days ? cdShift(P.days) : "9999-12-31";
+  const inPast = d => !!d && d.slice(0,10) >= from && d.slice(0,10) <= t;
+  const upcoming = d => !!d && /^\d{4}-\d{2}-\d{2}/.test(d) && d.slice(0,10) >= t && d.slice(0,10) <= until;
+  const weeks = P.days ? P.days/7 : null;
+
+  document.getElementById("cd-period").innerHTML = Object.entries(CD_PERIODS).map(([k,p])=>
+    `<button class="${k===cdPeriod?"on":""}" onclick="setDashPeriod('${k}')"><span class="msi">${p.icon}</span><span>${p.label}</span></button>`).join("");
+
+  // ── Job Search ──
+  const apps = state.apps, realApps = apps.filter(a=>a.status!==WATCH_STATUS);
+  const weeklyApps = state.goals?.weeklyAppTarget || 3;
+  document.getElementById("cd-job-target").textContent = `Target: ${Math.round(weeklyApps*52/12)} apps / month`;
+  const companies = new Set(realApps.map(a=>(a.company||"").trim().toLowerCase()).filter(Boolean)).size;
+  const recentApps = realApps.filter(a=>inPast(a.dateApplied)).length;
+  const appTarget = weeks ? Math.round(weeklyApps*weeks) : null;
+  const appDiff = appTarget!==null ? recentApps-appTarget : null;
+  const plannedApps = apps.filter(a=>a.status===WATCH_STATUS && upcoming(a.deadline)).sort((a,b)=>a.deadline.localeCompare(b.deadline));
+  const overdueApps = apps.filter(a=>a.followUp && a.followUpDate && a.followUpDate < t).sort((a,b)=>a.followUpDate.localeCompare(b.followUpDate));
   const interviews = realApps.filter(a=>a.status==="Interviewing"||a.status==="Offer").length;
-  const offers = realApps.filter(a=>a.status==="Offer").length;
-  const convRate = total>0?Math.round((interviews/total)*100):0;
-  const interimLeads = realApps.filter(a=>a.status==="Interim Lead").length;
-  const rateColor = convRate>=20?"var(--status-success-text)":"var(--status-warning-text)";
+  const rate = realApps.length ? Math.round(interviews/realApps.length*100) : 0;
+  const rateTone = rate>=10 ? ["Optimal","green"] : rate>=5 ? ["Fair","amber"] : ["Low","rose"];
+  const overdueAppNames = overdueApps.map(a=>a.contact ? `${cdShortName(a.contact)} @ ${a.company}` : `${a.company} — ${a.role}`);
+  document.getElementById("cd-job").innerHTML = [
+    cdCard({ label:"No. of applications", icon:"send", iconColor:"var(--cd-teal)", num:realApps.length, numColor:"var(--cd-teal)", unit:"submitted",
+             sub:`Across ${companies} compan${companies===1?"y":"ies"}`, subDot:"var(--cd-teal)" }),
+    cdCard({ label:`Applications ${P.last}`, icon:"trending_up", iconColor:"#059669", num:recentApps, numColor:"var(--cd-green)",
+             pill: appDiff===null ? "" : cdPill(`${appDiff>=0?"+":""}${appDiff} vs target`, appDiff>=0?"green":"amber"),
+             sub: appTarget ? `Pacing: ${Math.round(recentApps/appTarget*100)}% of ${appTarget}-app target` : "Applications with an applied date",
+             subDot: appDiff===null||appDiff>=0 ? "#10b981" : "#f59e0b" }),
+    cdCard({ label:P.planned, icon:"event_note", iconColor:"var(--cd-gray4)", num:plannedApps.length, numColor:"var(--cd-ink)", unit:"in queue",
+             sub: plannedApps.length ? `<b>${escHtml(cdList(plannedApps.map(a=>a.company)))}</b>` : "No watched deadlines ahead",
+             title: plannedApps.map(a=>`${a.company} — ${a.role} (${a.deadline})`).join("\n") }),
+    cdCard({ label:"Overdue", labelColor:"#78350f", icon:"schedule", iconColor:"var(--cd-orange)", hover:"#fcd34d", num:overdueApps.length, numColor:"var(--cd-orange)",
+             pill: overdueApps.length ? cdPill("Follow-up pending","amber",true) : cdPill("All clear","green",true),
+             sub: overdueApps.length ? `<b>${escHtml(cdList(overdueAppNames,2))}</b>` : "No application follow-ups overdue", title: overdueAppNames.join("\n") }),
+    cdCard({ label:"Interview rate", icon:"task_alt", iconColor:"var(--cd-teal)", num:rate+"%", numColor:"var(--cd-teal)",
+             pill: realApps.length ? cdPill(rateTone[0], rateTone[1]) : "", sub:`${interviews} interview${interviews===1?"":"s"} secured`, subDot:"#10b981" }),
+  ].join("");
 
-  document.getElementById("dash-job-stats").innerHTML =
-    stat(total, "Applications", "var(--color-primary)") +
-    stat(convRate+"%", "Interview Rate", rateColor) +
-    stat(offers, "Offers", "var(--status-success-text)") +
-    stat(interimLeads, "Interim Leads", "var(--color-primary)");
+  // ── Network ──
+  const contacts = state.contacts;
+  document.getElementById("cd-net-target").textContent = `Cadence: ${CD_NET_WEEKLY_TARGET} touches / week`;
+  const netCompanies = new Set(contacts.map(c=>(c.company||"").trim().toLowerCase()).filter(Boolean)).size;
+  const touches = contacts.reduce((n,c)=>n+(c.history||[]).filter(h=>inPast(h.ts)).length, 0);
+  const touchTarget = weeks ? Math.round(CD_NET_WEEKLY_TARGET*weeks) : null;
+  const touchPct = touchTarget ? Math.round((touches/touchTarget-1)*100) : null;
+  const plannedC = contacts.filter(c=>upcoming(c.followUpDate));
+  const plannedMeet = plannedC.filter(c=>c.status==="Meeting set").length;
+  const overdueC = contacts.filter(c=>c.followUpDate && c.followUpDate < t).sort((a,b)=>a.followUpDate.localeCompare(b.followUpDate));
+  const reached = contacts.filter(c=>c.status && c.status!=="To contact").length;
+  const warm = contacts.filter(c=>c.status==="Meeting set"||c.status==="Met / Replied").length;
+  const health = reached ? Math.round(warm/reached*100) : 0;
+  const healthTone = health>=50 ? ["Optimal","green"] : health>=25 ? ["Fair","amber"] : ["Low","rose"];
+  document.getElementById("cd-net").innerHTML = [
+    cdCard({ label:"Network contact", icon:"groups", iconColor:"var(--cd-gray4)", hover:"rgba(59,0,48,.4)", num:contacts.length, numColor:"var(--cd-plum)", unit:"contacts",
+             sub:`Across ${netCompanies} target compan${netCompanies===1?"y":"ies"}`, subDot:"#6366f1" }),
+    cdCard({ label:`Interactions ${P.last}`, icon:"trending_up", iconColor:"#059669", hover:"rgba(59,0,48,.4)", num:touches, numColor:"var(--cd-green)",
+             pill: touchPct===null ? "" : cdPill(`${touchPct>=0?"+":""}${touchPct}% vs goal`, touchPct>=0?"green":"amber"),
+             sub: touchTarget ? `Target was ${touchTarget} touchpoints` : "Touchpoints logged on contacts",
+             subDot: touchPct===null||touchPct>=0 ? "#10b981" : "#f59e0b" }),
+    cdCard({ label:P.planned, icon:"event_upcoming", iconColor:"var(--cd-teal2)", hover:"rgba(59,0,48,.4)", num:plannedC.length, numColor:"var(--cd-teal2)", unit:"scheduled",
+             sub:`<b style="color:var(--cd-teal2)">${plannedMeet} meeting${plannedMeet===1?"":"s"}</b> • ${plannedC.length-plannedMeet} follow-up${plannedC.length-plannedMeet===1?"":"s"}`,
+             title: plannedC.map(c=>`${c.name} (${c.followUpDate})`).join("\n") }),
+    cdCard({ label:"Overdue follow-ups", labelColor:"#9f1239", icon:"warning", iconColor:"#e11d48", hover:"#fca5a5", num:overdueC.length, numColor:"#e11d48",
+             pill: overdueC.length ? cdPill("Action Req","rose",true) : cdPill("All clear","green",true),
+             sub: overdueC.length ? `<b>${escHtml(cdList(overdueC.map(c=>cdShortName(c.name))))}</b>` : "No contact follow-ups overdue",
+             title: overdueC.map(c=>`${c.name} (${c.followUpDate})`).join("\n") }),
+    cdCard({ label:"Conversation health", icon:"favorite", iconColor:"var(--cd-plum)", hover:"rgba(59,0,48,.4)", num:health+"%", numColor:"var(--cd-plum)",
+             pill: reached ? cdPill(healthTone[0], healthTone[1]) : "",
+             sub:`${warm} warm dialogue thread${warm===1?"":"s"} of ${reached} reached`, subDot:"#10b981" }),
+  ].join("");
 
-  // Job Match Fit — Phase 2 "Dashboard summary" from Markus Job Search Instructions.
-  // Spans the whole pipeline (Watching + real applications) since fit is scored before applying too.
-  const withFit = apps.filter(a=>a.overallFit!==null && a.overallFit!==undefined);
-  const highFit = withFit.filter(a=>a.overallFit>=75).length;
-  const withDeadline = apps.filter(a=>a.deadline);
-  const deadlines14 = withDeadline.filter(a=>{
-    const days = Math.round((new Date(a.deadline)-new Date(today()))/86400000);
-    return days>=0 && days<=14;
-  }).length;
-  document.getElementById("dash-fit-stats").innerHTML =
-    stat(highFit, "High Overall Fit (≥75)", "var(--status-success-text)") +
-    stat(deadlines14, "Deadlines ≤14 days", deadlines14>0?"var(--color-primary)":"var(--text-muted)") +
-    stat(withFit.length, "Scored so far", "var(--status-progress-text)") +
-    stat(apps.length-withFit.length, "Not yet scored", "var(--text-muted)");
+  // ── Training ──
+  const trainings = state.trainings;
+  document.getElementById("cd-train-target").textContent = `Target: ${(CD_TRAIN_WEEKLY_MINS/60).toFixed(1)} hrs / week`;
+  const cats = [...new Set(trainings.map(x=>x.category).filter(Boolean))];
+  const activeTrain = trainings.filter(x=>(x.history||[]).some(h=>inPast(h.ts)));
+  const mins = state.kpis?.trainingMins || 0;
+  const plannedT = trainings.filter(x=>x.status!=="Completed" && upcoming(x.targetDate));
+  const inProg = trainings.filter(x=>x.status==="In progress");
+  const done = trainings.filter(x=>x.status==="Completed");
+  document.getElementById("cd-train").innerHTML = [
+    cdCard({ label:"No. of training courses", icon:"school", iconColor:"var(--cd-green)", hover:"rgba(31,156,110,.4)", num:trainings.length, numColor:"var(--cd-green)", unit:"courses tracked",
+             sub: escHtml(cdList(cats)) || "No categories yet", subDot:"var(--cd-green)", title: cats.join(", ") }),
+    cdCard({ label:`Trainings ${P.last}`, icon:"trending_up", iconColor:"#059669", hover:"rgba(31,156,110,.4)", num:activeTrain.length, numColor:"var(--cd-green)",
+             pill: cdPill(`${(mins/60).toFixed(1)} hrs logged`, "green"),
+             sub:`${Math.round(mins/CD_TRAIN_WEEKLY_MINS*100)}% of weekly target`, subDot:"#10b981",
+             title: activeTrain.map(x=>x.title).join("\n") }),
+    cdCard({ label:P.planned, icon:"calendar_today", iconColor:"var(--cd-gray4)", hover:"rgba(31,156,110,.4)", num:plannedT.length, numColor:"var(--cd-ink)", unit:"modules &amp; exams",
+             sub: plannedT.length ? `<b>${escHtml(cdList(plannedT.map(x=>x.title),2))}</b>` : "No target dates ahead", title: plannedT.map(x=>`${x.title} (${x.targetDate})`).join("\n") }),
+    cdCard({ label:"In progress", labelColor:"var(--cd-teal)", icon:"hourglass_top", iconColor:"var(--cd-teal)", hover:"#67e8f9", num:inProg.length, numColor:"var(--cd-teal)",
+             pill: cdPill("Active","cyan",true), sub: inProg.length ? `<b>${escHtml(cdList(inProg.map(x=>x.title),2))}</b>` : "Nothing in progress", title: inProg.map(x=>x.title).join("\n") }),
+    cdCard({ label:"Completed", icon:"verified", iconColor:"var(--cd-green)", hover:"rgba(31,156,110,.4)", num:done.length, numColor:"var(--cd-green)",
+             pill: cdPill("Certifications","green"), sub: done.length ? escHtml(cdList(done.map(x=>x.title),2)) : "None completed yet", subDot:"#10b981",
+             title: done.map(x=>x.title).join("\n") }),
+  ].join("");
 
-  const topFit = withFit.slice().sort((a,b)=>b.overallFit-a.overallFit).slice(0,4);
-  document.getElementById("dash-top-fit").innerHTML = topFit.length===0
-    ? `<div style="font-size:12px;color:var(--text-muted)">No applications scored yet — add fit scores in an application's Job Match Evaluation.</div>`
-    : topFit.map(a=>`
-      <div class="item-row" style="padding:6px 0;border-bottom:1px solid var(--border-default);cursor:pointer" onclick="openAppModal('${a.id}')">
-        <div style="font-size:12px"><b>${a.role}</b><br><span style="color:var(--text-muted)">${a.company}</span></div>
-        <div style="font-size:15px;font-weight:800;color:var(--color-primary)">${a.overallFit}</div>
-      </div>`).join("");
-
-  document.getElementById("dash-refresh").innerHTML =
-    `Last refresh: <b style="color:var(--text-primary)">not yet automated</b><br>` +
-    `Next scheduled refresh: <b style="color:var(--text-primary)">—</b><br>` +
-    `<span style="font-size:11px">Weekly review-only automation isn't scheduled yet — see the Phase-completion checklist.</span>`;
-
-  const totalC = contacts.length;
-  const highPri = contacts.filter(c=>c.priority==="High").length;
-  const activeC = contacts.filter(c=>["Contacted","Meeting set"].includes(c.status)).length;
-  const metC    = contacts.filter(c=>c.status==="Met / Replied").length;
-  document.getElementById("dash-net-stats").innerHTML =
-    stat(totalC, "Contacts Tracked", "var(--status-progress-text)") +
-    stat(highPri, "High Priority", "var(--color-primary)") +
-    stat(activeC, "In Progress", "var(--status-warning-text)") +
-    stat(metC, "Met / Replied", "var(--status-success-text)");
-
-  const completed = trainings.filter(t=>t.status==="Completed").length;
-  const inProg    = trainings.filter(t=>t.status==="In progress").length;
-  const trainHrs  = ((kpis.trainingMins||0)/60).toFixed(1);
-  document.getElementById("dash-train-stats").innerHTML =
-    stat(trainings.length, "Courses Tracked", "var(--color-primary)") +
-    stat(inProg, "In Progress", "var(--status-warning-text)") +
-    stat(completed, "Completed", "var(--status-success-text)") +
-    stat(trainHrs+"h", "This Week", "var(--status-progress-text)");
-
-  // App pipeline — real applications only; Watching lives in Job Sites & Companies / Job Watchlist
-  let appPip = "";
-  Object.entries(APP_STATUS).forEach(([s,cfg])=>{
-    if (s===WATCH_STATUS) return;
-    const c = realApps.filter(a=>a.status===s).length;
-    appPip += progRow(s, c, total, cfg.dot);
-  });
-  document.getElementById("dash-app-pipeline").innerHTML = appPip;
-
-  // Net pipeline
-  let netPip = "";
-  Object.entries(NET_STATUS).forEach(([s,cfg])=>{
-    const c = contacts.filter(co=>co.status===s).length;
-    netPip += progRow(s, c, totalC, cfg.dot);
-  });
-  document.getElementById("dash-net-pipeline").innerHTML = netPip;
-
-  // Follow-ups & to-dos (chronological)
-  const followUps = [
-    ...apps.filter(a=>a.followUp&&a.followUpDate).map(a=>({
-      date:a.followUpDate, label:`${a.company} — ${a.role}`, type:"Application", color:"var(--color-primary)",
-      action:`openAppModal('${a.id}')`
-    })),
-    ...contacts.filter(c=>c.followUpDate).map(c=>({
-      date:c.followUpDate, label:[c.name,c.company].filter(Boolean).join(" @ "), type:"Network", color:"var(--status-progress-text)",
-      action:`openNetModal('${c.id}')`
-    })),
-  ].sort((a,b)=>a.date.localeCompare(b.date));
-
-  document.getElementById("dash-followups").innerHTML = followUps.length===0
-    ? `<div class="empty-state">No follow-ups scheduled.</div>`
-    : followUps.map(f=>{
-        const overdue = f.date < today();
-        return `<div class="item-row" style="cursor:pointer;padding:8px 0;border-bottom:1px solid var(--border-default)" onclick="${f.action}">
-          <div style="flex:1">
-            <div class="item-badges">
-              ${badge(f.type, f.color, "#F1F5F9")}
-              <span class="item-name" style="font-size:13px">${f.label}</span>
-            </div>
-          </div>
-          <div style="font-size:12px;font-weight:700;color:${overdue?"var(--color-primary)":"var(--status-warning-text)"}">${overdue?"⚠ ":""}${f.date}</div>
-        </div>`;
-      }).join("");
-
-  // KPIs
-  const kpiDefs = [
-    { key:"weeklyContacts",      label:"Network contacts",  target:10,  color:"var(--status-progress-text)",   steps:["-1","+1"] },
-    { key:"recruitersContacted", label:"Recruiters briefed",target:10,  color:"var(--color-primary-hover)",   steps:["-1","+1"] },
-    { key:"coffeChats",          label:"Coffee chats",      target:3,   color:"var(--status-warning-text)", steps:["-1","+1"] },
-    { key:"trainingMins",        label:"Training mins",     target:175, color:"var(--color-primary)", steps:["-15","+15","+30","+45"] },
-  ];
-  let kpiHtml = "";
-  kpiDefs.forEach(({key,label,target,color,steps})=>{
-    const val = kpis[key]||0;
-    const pct = Math.min((val/target)*100,100);
-    const valColor = val>=target?"var(--status-success-text)":color;
-    kpiHtml += `<div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-        <span style="font-size:11px;color:var(--text-muted)">${label}</span>
-        <span style="font-size:11px;font-weight:700;color:${valColor}">${val}/${target}</span>
-      </div>
-      <div class="prog-wrap"><div class="prog-bar" style="width:${pct}%;background:${color}"></div></div>
-      <div class="kpi-btns">${steps.map(d=>`<button class="kpi-btn" onclick="adjKpi('${key}',${parseInt(d)})">${d}</button>`).join("")}</div>
-    </div>`;
-  });
-  document.getElementById("dash-kpis").innerHTML = kpiHtml;
-
-  // Weekly note
-  document.getElementById("weeklyNote").value = state.weeklyNote;
-
-  // Job milestones
-  let msHtml = "";
-  buildJobMilestones().forEach((m,i)=>{
-    const done = !!state.milestones[i];
-    msHtml += `<div class="milestone" onclick="toggleMs(${i})">
-      <div class="ms-dot${done?" done-green":""}"><span class="check">✓</span></div>
-      <div><div class="ms-week">Wk ${m.week} · ${m.date}</div>
-      <div class="ms-label" style="color:${done?"var(--status-success-text)":"var(--text-primary)"};font-weight:${done?600:400}">${m.label}</div></div>
-    </div>`;
-  });
-  document.getElementById("dash-ms").innerHTML = msHtml;
-
-  // Train milestones
-  let tmsHtml = "";
-  buildTrainMilestones().forEach((m,i)=>{
-    const done = !!state.trainMilestones[i];
-    tmsHtml += `<div class="milestone" onclick="toggleTms(${i})">
-      <div class="ms-dot${done?" done-purple":""}"><span class="check">✓</span></div>
-      <div><div class="ms-week">Wk ${m.week}</div>
-      <div class="ms-label" style="color:${done?"var(--color-primary)":"var(--text-primary)"};font-weight:${done?600:400}">${m.label}</div></div>
-    </div>`;
-  });
-  document.getElementById("dash-tms").innerHTML = tmsHtml;
+  // ── Pipelines ──
+  const APP_DOTS = { "Applied":"var(--cd-teal)", "Interviewing":"var(--cd-teal2)", "Offer":"var(--cd-green)", "Rejected":"var(--cd-red)", "Withdrawn":"var(--cd-gray4)", "Interim Lead":"var(--cd-plum)" };
+  const NET_DOTS = { "To contact":"#f59e0b", "Contacted":"var(--cd-teal)", "Meeting set":"var(--cd-teal2)", "Met / Replied":"var(--cd-plum)", "Not responsive":"var(--cd-gray4)" };
+  const ev = dashEvents();
+  document.getElementById("cd-pipelines").innerHTML =
+    cdPipeCard("send", "var(--cd-teal)", "Application Pipeline",
+      `<span class="cd-total" style="color:var(--cd-teal);background:#ecfeff;border-color:#cffafe">${realApps.length} Total</span>`,
+      Object.keys(APP_STATUS).filter(s=>s!==WATCH_STATUS).map(s=>cdRow(s, realApps.filter(a=>a.status===s).length, realApps.length, APP_DOTS[s]||APP_STATUS[s].dot)).join("")) +
+    cdPipeCard("groups", "var(--cd-plum)", "Network Pipeline",
+      `<span class="cd-total" style="color:var(--cd-plum);background:#f5e7ef;border-color:#e9dee5">${contacts.length} Total</span>`,
+      Object.keys(NET_STATUS).map(s=>cdRow(s, contacts.filter(c=>c.status===s).length, contacts.length, NET_DOTS[s]||NET_STATUS[s].dot)).join("")) +
+    cdPipeCard("event_available", "var(--cd-green)", "Events Pipeline",
+      `<span style="display:flex;gap:6px">${ev.sample?`<span class="cd-total" style="color:var(--cd-orange);background:#fffbeb;border-color:#fde68a" title="No events tracked yet: these numbers are placeholders">Sample data</span>`:""}<span class="cd-total" style="color:var(--cd-green);background:#ecfdf5;border-color:#a7f3d0">${ev.list.length} Total</span></span>`,
+      Object.entries(EVENT_STATUS).map(([s,color])=>cdRow(s, ev.list.filter(e=>e.status===s).length, ev.list.length, color)).join(""));
 }
 
 // ═══════════════════════════ RENDER APPLICATIONS ═══════════════════════════════
@@ -5850,7 +5905,8 @@ function toggleTms(i) {
   saveState(); renderDashboard();
 }
 function saveNote() {
-  state.weeklyNote = document.getElementById("weeklyNote").value;
+  const el = document.getElementById("weeklyNote"); if (!el) return;
+  state.weeklyNote = el.value;
   saveState();
 }
 
