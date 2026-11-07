@@ -506,6 +506,24 @@
     .jx-ractions { justify-content: flex-end; }
   }
 
+  /* Category picker (job site / company forms): a list where each category has a ✕ to remove it */
+  .cat-dd { position: relative; }
+  .cat-dd-btn { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; text-align: left; cursor: pointer; background: var(--bg-surface); }
+  .cat-dd-btn span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cat-dd-btn .muted { color: var(--text-muted); }
+  .cat-dd-caret { color: var(--text-muted); flex-shrink: 0; }
+  .cat-dd-panel { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 40; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,.12); max-height: 260px; overflow-y: auto; padding: 4px; }
+  .cat-dd-row { display: flex; align-items: center; gap: 6px; border-radius: 8px; }
+  .cat-dd-row:hover { background: var(--bg-surface-subtle); }
+  .cat-dd-row.on { background: var(--color-primary-light); }
+  .cat-dd-pick { flex: 1; min-width: 0; text-align: left; background: none; border: none; padding: 8px 10px; font: inherit; font-size: 13px; color: var(--text-primary); cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cat-dd-pick small { color: var(--text-muted); margin-left: 6px; }
+  .cat-dd-pick.muted { color: var(--text-muted); }
+  .cat-dd-pick.new { color: var(--color-primary); font-weight: 600; }
+  .cat-dd-del { flex-shrink: 0; background: none; border: none; color: var(--status-urgent-text); font-weight: 800; font-size: 13px; padding: 4px 8px; margin-right: 2px; border-radius: 6px; cursor: pointer; }
+  .cat-dd-del:hover { background: var(--status-urgent-bg); }
+  .cat-dd-sep { height: 1px; background: var(--border-default); margin: 4px 6px; }
+
   a { color: var(--color-primary-hover); }
   @media (max-width: 700px) {
     .grid4 { grid-template-columns: repeat(2,1fr); }
@@ -2583,7 +2601,10 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
   <div class="modal">
     <div class="modal-title" style="color:var(--color-primary)" id="watchModalTitle">Add Company</div>
     <div class="form-group"><label class="form-label">Company Name *</label><input class="form-input" id="wf-company" placeholder="e.g. Volvo Cars"></div>
-    <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="wf-industry-select" onchange="wfCategoryChanged()"></select>
+    <div class="form-group"><label class="form-label">Category</label><div class="cat-dd" id="wf-cat-dd">
+        <button type="button" class="form-input cat-dd-btn" onclick="catToggle('wf')"><span id="wf-cat-label"></span><span class="cat-dd-caret">▾</span></button>
+        <div class="cat-dd-panel" id="wf-cat-panel" hidden></div>
+      </div>
       <input class="form-input" id="wf-industry" placeholder="Name of the new category, e.g. Automotive, Fintech, Healthcare" style="display:none;margin-top:6px"></div>
     <div class="form-group"><label class="form-label">Search frequency</label><select class="form-input" id="wf-frequency" onchange="wfSuggestNextRun(true)"></select></div>
     <div class="form-grid2" style="margin-bottom:14px">
@@ -2612,7 +2633,10 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
   <div class="modal">
     <div class="modal-title" style="color:var(--color-primary)" id="searchSetupModalTitle">Add Source</div>
     <div class="form-group"><label class="form-label">Source *</label><input class="form-input" id="ss-source" placeholder="e.g. LinkedIn Jobs, Maquire, AstraZeneca careers"></div>
-    <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="ss-category-select" onchange="ssCategoryChanged()"></select>
+    <div class="form-group"><label class="form-label">Category</label><div class="cat-dd" id="ss-cat-dd">
+        <button type="button" class="form-input cat-dd-btn" onclick="catToggle('ss')"><span id="ss-cat-label"></span><span class="cat-dd-caret">▾</span></button>
+        <div class="cat-dd-panel" id="ss-cat-panel" hidden></div>
+      </div>
       <input class="form-input" id="ss-category" placeholder="Name of the new category…" style="display:none;margin-top:6px"></div>
     <div class="form-group"><label class="form-label">Search / Channel</label><input class="form-input" id="ss-channel" placeholder="Query family or method"></div>
     <div class="form-group">
@@ -2684,38 +2708,6 @@ const DEFAULT_SEARCH_SETUP = [
   { id:"ss-seed-6", source:"The Hub", channel:"Nordic startup / scale-up board", geography:"Nordics", frequency:"Weekly", status:"Paused", lastRun:"", nextRun:"", notes:"Paused — retire or resume based on signal quality." },
 ];
 
-// Curated list of Markus's job sites; now only used for the category list in the Add Job Site form.
-// (The "+ Add Starter Sources" button that bulk-added it was removed.) Platsbanken/Arbetsförmedlingen isn't repeated here since it's already
-// the one with real search integration (see ss-seed-2 above).
-// url uses {q} (and {location} where the site supports it) for CONFIRMED
-// query templates — tested directly against the live site. Plain URLs with
-// no placeholder are unverified: "Open" will land on the site's own search
-// page or homepage, not necessarily pre-filtered — see each one's notes.
-const STARTER_JOB_SITES = [
-  { category:"Swedish general job boards", source:"LinkedIn Jobs Sweden", url:"https://www.linkedin.com/jobs/search/?keywords={q}&location={location}", geography:"Sweden", notes:"Confirmed query template." },
-  { category:"Swedish general job boards", source:"Indeed Sweden", url:"https://se.indeed.com/jobs?q={q}&l={location}", geography:"Sweden", manualOnly:true, notes:"Confirmed query template, but Indeed returns HTTP 403 to Cloud Run's IP range specifically (works fine from a normal browser) — blocks automated scraping, not just an unverified pattern. Manual search only." },
-  { category:"Swedish general job boards", source:"Blocket Jobb", url:"https://www.blocket.se/annonser/jobb", geography:"Sweden", notes:"Corrected URL — jobb.blocket.se doesn't exist. This one loads, but a ?q= search seemed to route into Blocket's general marketplace rather than clean job listings when tested; verify manually before trusting the scrape." },
-  { category:"Swedish general job boards", source:"Ledigajobb.se", url:"https://ledigajobb.se/pr/{q-slug}-jobb/{location-slug}", geography:"Sweden", notes:"Confirmed template — uses lowercase hyphenated path slugs (e.g. /pr/teknisk-projektledare-jobb/göteborg), not query params." },
-
-  { category:"Gothenburg-specific", source:"Lediga Jobb Göteborg", url:"https://www.ledigajobbgoteborg.se", geography:"Gothenburg", notes:"Unverified — do one search on the site itself, copy the resulting URL, and replace your search words with {q} here." },
-  { category:"Gothenburg-specific", source:"Göteborg Lediga Jobb", url:"https://www.goteborgledigajobb.se", geography:"Gothenburg", notes:"Unverified — do one search on the site itself, copy the resulting URL, and replace your search words with {q} here." },
-  { category:"Gothenburg-specific", source:"Info Göteborg jobs", url:"https://infogoteborg.se/lediga-jobb-goteborg/", geography:"Gothenburg", notes:"Looks like a listing/info page rather than a searchable board — likely no query template exists." },
-  { category:"Gothenburg-specific", source:"Business Region Göteborg", url:"https://www.businessregiongoteborg.se/om-oss/jobb-praktik-och-prao", geography:"Gothenburg", notes:"Informational page about jobs/internships, not a searchable board." },
-
-  { category:"Public sector", source:"Göteborgs Stad careers (Varbi)", url:"https://goteborgsstad.varbi.com/", geography:"Gothenburg", notes:"Also relevant to the Göteborg Stad watchlist entry. Unverified query template — Varbi portals often support ?query= or similar; test and confirm." },
-  { category:"Public sector", source:"Västra Götalandsregionen jobs", url:"https://www.vgregion.se/jobba-i-vgr/sok-jobb-i-vgr/", geography:"Västra Götaland", notes:"Unverified — do one search on the site itself, copy the resulting URL, and replace your search words with {q} here." },
-  { category:"Public sector", source:"Offentliga Jobb (Västra Götalands län)", url:"https://www.offentligajobb.se/lediga-jobb/vastra-gotalands-lan", geography:"Västra Götaland", notes:"All Swedish public-sector postings, filtered to the region. Unverified query template." },
-
-  { category:"Recruitment & staffing agencies", source:"Randstad Sweden", url:"https://www.randstad.se/jobb/?q={q}", geography:"Sweden", frequency:"Fortnightly", notes:"Query param guessed as ?q=, not independently confirmed to filter — check the first open." },
-  { category:"Recruitment & staffing agencies", source:"Michael Page Sweden", url:"https://www.michaelpage.se", geography:"Sweden", frequency:"Fortnightly", notes:"Unverified — do one search on the site itself, copy the resulting URL, and replace your search words with {q} here." },
-  { category:"Recruitment & staffing agencies", source:"Academic Work", url:"https://www.academicwork.se/jobb?q={q}", geography:"Sweden", frequency:"Fortnightly", notes:"Query param guessed as ?q=, not independently confirmed to filter — check the first open." },
-  { category:"Recruitment & staffing agencies", source:"Poolia", url:"https://www.poolia.se", geography:"Sweden", frequency:"Fortnightly", manualOnly:true, notes:"Returns HTTP 403 to automated requests generally (not just from Cloud Run) — likely bot-detection infrastructure. Manual search only." },
-  { category:"Recruitment & staffing agencies", source:"Manpower Sweden", url:"https://www.manpower.se/sv/lediga-jobb/stad/goteborg", geography:"Gothenburg", frequency:"Fortnightly", notes:"URL pre-filtered to Gothenburg by the site itself, but appending a role search on top is unverified." },
-  { category:"Recruitment & staffing agencies", source:"Bravura", url:"https://www.bravura.se/karriar/lediga-jobb-goteborg/", geography:"Gothenburg", frequency:"Fortnightly", notes:"URL pre-filtered to Gothenburg by the site itself, but appending a role search on top is unverified." },
-
-  { category:"Life Science / MedTech", source:"Nature Careers", url:"https://www.nature.com/naturecareers/searchjobs/?keywords={q}", geography:"Sweden filter", frequency:"Fortnightly", notes:"Corrected URL — the standalone naturecareers.com domain refuses connections; the real site is under nature.com. They also expose a job-search RSS feed (nature.com/naturecareers/jobsrss/?keywords=X), confirmed working but not wired up here — mostly global science/academia roles, so may return little for generalist Swedish searches." },
-  { category:"Life Science / MedTech", source:"GoCo Health Innovation City", url:"https://goco.se/", geography:"Gothenburg", frequency:"Fortnightly", notes:"Listings mostly appear via Indeed/LinkedIn rather than their own site — this URL is just the parent site, no search function." },
-];
 const APP_TRACK = {
   "Permanent": { color:"var(--color-primary)", bg:"var(--color-primary-light)" },
   "Interim":   { color:"var(--status-warning-text)", bg:"var(--status-warning-bg)" },
@@ -5406,7 +5398,7 @@ function openWatchModal(id) {
   const w = id ? state.watchlist.find(x=>x.id===id) : null;
   document.getElementById("watchModalTitle").textContent = id?"Edit Company":"Add Company";
   document.getElementById("wf-company").value    = w?.company||"";
-  wfFillCategories(w?.industry||"");
+  catInit("wf", w?.industry||"");
   sel("wf-frequency", SS_FREQUENCY_OPTIONS, w?.frequency||"Weekly");
   document.getElementById("wf-lastrun").value = w?.lastRun||"";
   document.getElementById("wf-nextrun").value = w?.nextRun||"";
@@ -5574,45 +5566,79 @@ function wfSuggestNextRun(force) {
   if (!force && next.value) return;
   next.value = nextRunDate(document.getElementById("wf-frequency").value, document.getElementById("wf-lastrun").value || today());
 }
-function wfFillCategories(current) {
-  current = (current||"").trim();
-  const cats = [...new Set((state.watchlist||[]).map(w=>(w.industry||"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-  if (current && !cats.includes(current)) cats.unshift(current);
-  const sel = document.getElementById("wf-industry-select");
-  sel.innerHTML = `<option value="">— No category (shows under Other) —</option>` +
-    cats.map(c=>`<option value="${escHtml(c)}">${escHtml(c)}</option>`).join("") +
-    `<option value="__new__">+ New category…</option>`;
-  sel.value = current;
-  const input = document.getElementById("wf-industry");
-  input.value = current; input.style.display = "none";
+// The list shows the categories your job sites / companies use. Removing one moves everything in it to
+// "Other" (no category), after you confirm. The chosen value lives in the text input (#ss-category / #wf-industry),
+// which the Save code reads; that input is shown only for "+ New category…".
+const CAT_CFG = {
+  ss: { items: () => state.searchSetup || [], field: "category", input: "ss-category", noun: ["job site","job sites"], redraw: () => renderSearchSetupTab() },
+  wf: { items: () => state.watchlist || [],   field: "industry", input: "wf-industry", noun: ["company","companies"],  redraw: () => renderWatchlist() },
+};
+function catList(p) {
+  const cfg = CAT_CFG[p], counts = {};
+  cfg.items().forEach(x => { const c = (x[cfg.field]||"").trim(); if (c) counts[c] = (counts[c]||0) + 1; });
+  return Object.keys(counts).sort((a,b)=>a.localeCompare(b)).map(name => ({ name, count: counts[name] }));
 }
-function wfCategoryChanged() {
-  const sel = document.getElementById("wf-industry-select"), input = document.getElementById("wf-industry");
-  if (sel.value === "__new__") { input.value = ""; input.style.display = ""; input.focus(); }
-  else { input.value = sel.value; input.style.display = "none"; }
+function catInit(p, current) {
+  const input = document.getElementById(CAT_CFG[p].input);
+  input.value = (current||"").trim(); input.style.display = "none";
+  document.getElementById(p+"-cat-panel").hidden = true;
+  catLabel(p);
 }
-function ssFillCategories(current) {
-  const cats = [...new Set([...(state.searchSetup||[]).map(s=>(s.category||"").trim()), ...STARTER_JOB_SITES.map(s=>s.category)].filter(Boolean))];
-  if (current && !cats.includes(current)) cats.unshift(current);
-  const sel = document.getElementById("ss-category-select");
-  sel.innerHTML = `<option value="">— No category (shows under Other) —</option>` +
-    cats.map(c=>`<option value="${escHtml(c)}">${escHtml(c)}</option>`).join("") +
-    `<option value="__new__">+ New category…</option>`;
-  sel.value = current || "";
-  const input = document.getElementById("ss-category");
-  input.value = current || ""; input.style.display = "none";
+function catLabel(p) {
+  const v = document.getElementById(CAT_CFG[p].input).value.trim(), el = document.getElementById(p+"-cat-label");
+  el.textContent = v || "— No category (shows under Other) —";
+  el.className = v ? "" : "muted";
 }
-function ssCategoryChanged() {
-  const sel = document.getElementById("ss-category-select"), input = document.getElementById("ss-category");
-  if (sel.value === "__new__") { input.value = ""; input.style.display = ""; input.focus(); }
-  else { input.value = sel.value; input.style.display = "none"; }
+function catToggle(p) {
+  const panel = document.getElementById(p+"-cat-panel");
+  if (!panel.hidden) { panel.hidden = true; return; }
+  catRenderPanel(p); panel.hidden = false;
 }
+function catRenderPanel(p) {
+  const cfg = CAT_CFG[p], cur = document.getElementById(cfg.input).value.trim();
+  const list = catList(p);
+  if (cur && !list.some(c => c.name === cur)) list.unshift({ name: cur, count: 0 });
+  const esc = s => escHtml(s).replace(/'/g, "&#39;");
+  document.getElementById(p+"-cat-panel").innerHTML =
+    `<div class="cat-dd-row${cur?"":" on"}"><button type="button" class="cat-dd-pick muted" onclick="catPick('${p}','')">— No category (shows under Other) —</button></div>` +
+    list.map(c => `<div class="cat-dd-row${c.name===cur?" on":""}">
+      <button type="button" class="cat-dd-pick" data-cat="${esc(c.name)}" onclick="catPick('${p}', this.dataset.cat)">${escHtml(c.name)}${c.count?`<small>${c.count}</small>`:""}</button>
+      <button type="button" class="cat-dd-del" data-cat="${esc(c.name)}" title="Remove this category" onclick="catRemove('${p}', this.dataset.cat)">✕</button>
+    </div>`).join("") +
+    `<div class="cat-dd-sep"></div><div class="cat-dd-row"><button type="button" class="cat-dd-pick new" onclick="catPick('${p}', null)">+ New category…</button></div>`;
+}
+function catPick(p, value) { // value null = "+ New category…"
+  const input = document.getElementById(CAT_CFG[p].input);
+  document.getElementById(p+"-cat-panel").hidden = true;
+  if (value === null) { input.value = ""; input.style.display = ""; input.focus(); document.getElementById(p+"-cat-label").textContent = "+ New category…"; return; }
+  input.value = value; input.style.display = "none"; catLabel(p);
+}
+function catRemove(p, name) {
+  const cfg = CAT_CFG[p], users = cfg.items().filter(x => (x[cfg.field]||"").trim() === name);
+  const msg = users.length
+    ? `Remove the category "${name}"?\n\n${users.length} ${cfg.noun[users.length===1?0:1]} in it will move to "Other" (no category).`
+    : `Remove the category "${name}"?`;
+  if (!confirm(msg)) return;
+  users.forEach(x => { x[cfg.field] = ""; });
+  if (users.length) {
+    saveState(); cfg.redraw();
+    if (p === "wf") users.filter(w => w.shared).forEach(w => mirrorShared("sharedWatchlist", w.id, { company: w.company, industry: "", careerSite: w.careerSite }));
+  }
+  const input = document.getElementById(cfg.input);
+  if (input.value.trim() === name) { input.value = ""; catLabel(p); }
+  catRenderPanel(p);
+}
+// Close an open category list when clicking anywhere else.
+document.addEventListener("click", e => {
+  ["ss","wf"].forEach(p => { const dd = document.getElementById(p+"-cat-dd"), panel = document.getElementById(p+"-cat-panel");
+    if (dd && panel && !panel.hidden && !dd.contains(e.target)) panel.hidden = true; });
+});
 function openSearchSetupModal(id) {
   editSearchSetupId = id||null;
   const s = id ? state.searchSetup.find(x=>x.id===id) : null;
   document.getElementById("searchSetupModalTitle").textContent = id?"Edit Source":"Add Source";
   document.getElementById("ss-source").value    = s?.source||"";
-  ssFillCategories(s?.category||"");
+  catInit("ss", s?.category||"");
   document.getElementById("ss-channel").value   = s?.channel||"";
   document.getElementById("ss-url").value       = s?.url||"";
   document.getElementById("ss-geography").value = s?.geography||"";
