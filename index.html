@@ -514,6 +514,9 @@
   .jx-rmsg { font-size: 11px; color: var(--jx-muted); margin-top: 3px; }
   .jx-badge { font-size: 11px; line-height: 14px; font-weight: 600; padding: 2px 8px; border-radius: 9999px; border: 1px solid; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
   .jx-badge .d { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  /* the same green dot pill, used as a button (Job Watchlist: Add to shortlist / Mark Applied) */
+  button.jx-badge.act { font-family: inherit; font-size: 12px; line-height: 16px; padding: 4px 10px; cursor: pointer; color: var(--status-success-text); background: var(--status-success-bg); border-color: var(--status-success-border); transition: filter .15s; }
+  button.jx-badge.act:hover { filter: brightness(.96) saturate(1.15); }
   .jx-ractions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
   .jx-open { display: inline-flex; padding: 4px; color: var(--jx-muted); border-radius: 6px; text-decoration: none; }
   .jx-open:hover { color: var(--jx-plum); }
@@ -1317,7 +1320,7 @@
 <div id="tab-applications" class="section">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
     <div class="filters" id="app-status-filters"></div>
-    <button class="btn btn-primary" onclick="openAppModal()">+ Add Application</button>
+    <button class="jx-badge act" onclick="openAppModal()"><span class="d"></span>Add Application</button>
   </div>
   <div class="filters" id="app-track-filters"></div>
   <div id="app-list"></div>
@@ -1331,7 +1334,7 @@
   </div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
     <div class="filters" id="jw-status-filters"></div>
-    <button class="btn btn-primary" onclick="openAppModal(null,WATCH_STATUS)">+ Add Opportunity</button>
+    <button class="jx-badge act" onclick="openAppModal(null,WATCH_STATUS)"><span class="d"></span>Add Opportunity</button>
   </div>
   <div class="filters" id="jw-sort-controls" style="margin-bottom:14px"></div>
   <div id="jw-list"></div>
@@ -1742,6 +1745,14 @@
   .iq-sec-count { font-size:11px; color:var(--text-muted); font-weight:500; }
   .iq-sec-chevron { font-size:13px; color:var(--text-muted); transition:transform .2s; }
   .iq-sec-chevron.open { transform:rotate(180deg); }
+  /* Job Watchlist section bars (Shortlist / Opportunities): a tinted, slightly stronger bar */
+  .iq-section-hdr-btn.jw-sec { padding:12px 16px; border-width:1.5px; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+  .iq-section-hdr-btn.jw-sec .iq-sec-label { font-size:13px; letter-spacing:1px; }
+  .iq-section-hdr-btn.jw-sec .iq-sec-count { color:var(--text-primary, #333); font-weight:600; }
+  .iq-section-hdr-btn.jw-sec.short { background:var(--status-success-bg); border-color:var(--status-success-border); }
+  .iq-section-hdr-btn.jw-sec.opp { background:var(--status-progress-bg); border-color:var(--status-progress-border); }
+  .iq-section-hdr-btn.jw-sec.rej { background:var(--status-urgent-bg); border-color:var(--status-urgent-border); }
+  .iq-section-hdr-btn.jw-sec:hover { filter:brightness(.97) saturate(1.1); }
   /* Company pills for Typical section */
   .iq-company-pill { display:inline-block; padding:2px 9px; border-radius:var(--radius-pill); font-size:11px; font-weight:700; border:1px solid; white-space:nowrap; }
 </style>
@@ -3976,7 +3987,7 @@ function renderApplications() {
   const rejected = filtered.filter(a=>a.status==="Rejected");
   const rejectedOpen = appRejectedOpen || appStatusFilter==="Rejected";
   const rejectedHtml = rejected.length ? `
-    <div class="iq-section-hdr-btn" style="margin-top:8px" onclick="toggleRejectedApps()">
+    <div class="iq-section-hdr-btn jw-sec rej" style="margin-top:8px" onclick="toggleRejectedApps()">
       <span class="iq-sec-label" style="color:var(--status-urgent-text)">Rejected</span>
       <span class="iq-sec-count">${rejected.length} application${rejected.length===1?"":"s"}</span>
       <span class="iq-sec-chevron${rejectedOpen?" open":""}">▾</span>
@@ -3984,7 +3995,7 @@ function renderApplications() {
     ${rejectedOpen ? rejected.map(renderAppCard).join("") : ""}` : "";
 
   const activeHtml = active.length ? `
-    <div class="iq-section-hdr-btn" onclick="toggleActiveApps()">
+    <div class="iq-section-hdr-btn jw-sec short" onclick="toggleActiveApps()">
       <span class="iq-sec-label" style="color:var(--status-success-text)">Active</span>
       <span class="iq-sec-count">${active.length} application${active.length===1?"":"s"}</span>
       <span class="iq-sec-chevron${appActiveOpen?" open":""}">▾</span>
@@ -3992,7 +4003,7 @@ function renderApplications() {
     ${appActiveOpen ? active.map(renderAppCard).join("") : ""}` : "";
 
   document.getElementById("app-list").innerHTML = filtered.length === 0
-    ? `<div class="card"><div class="empty-state">No applications match this filter. Hit "+ Add Application" to log your first one.</div></div>`
+    ? `<div class="card"><div class="empty-state">No applications match this filter. Hit "Add Application" to log your first one.</div></div>`
     : activeHtml + rejectedHtml;
 }
 let appActiveOpen = true, appRejectedOpen = false;
@@ -4035,17 +4046,42 @@ function renderJobWatchlist() {
     return parseInt(b.id)-parseInt(a.id); // recent = highest timestamp id first
   });
 
+  // Shortlist = only cards you moved there with "Add to shortlist"; everything else (search results,
+  // cards added by hand, older cards) sits under Opportunities until then.
+  const shortlist = rows.filter(a => a.shortlisted === true);
+  const opps = rows.filter(a => a.shortlisted !== true);
+  const sectionHdr = (label, color, count, isOpen, toggleFn, extra, cls) => `
+    <div class="iq-section-hdr-btn jw-sec ${cls||""}" onclick="${toggleFn}()">
+      <span class="iq-sec-label" style="color:${color}">${label}</span>
+      <span class="iq-sec-count">${count} opportunit${count===1?"y":"ies"}</span>
+      ${extra||""}
+      <span class="iq-sec-chevron${isOpen?" open":""}">▾</span>
+    </div>`;
+  const hint = t => `<div style="font-size:12.5px;color:var(--text-muted);padding:2px 4px 14px">${t}</div>`;
   document.getElementById("jw-list").innerHTML = rows.length===0
-    ? `<div class="card"><div class="empty-state">No opportunities match this filter. Hit "+ Add Opportunity" to log one.</div></div>`
-    : `<div class="iq-section-hdr-btn" onclick="toggleActiveWatch()">
-        <span class="iq-sec-label" style="color:var(--status-success-text)">Active</span>
-        <span class="iq-sec-count">${rows.length} opportunit${rows.length===1?"y":"ies"}</span>
-        <span class="iq-sec-chevron${jwActiveOpen?" open":""}">▾</span>
-      </div>
-      ${jwActiveOpen ? rows.map(renderJwCard).join("") : ""}`;
+    ? `<div class="card"><div class="empty-state">No opportunities yet. Run a search in Job Sites &amp; Companies, or hit "+ Add Opportunity" to log one.</div></div>`
+    : sectionHdr("Shortlist", "var(--status-success-text)", shortlist.length, jwActiveOpen, "toggleActiveWatch", "", "short") +
+      (jwActiveOpen ? (shortlist.length ? shortlist.map(renderJwCard).join("") : hint("Nothing shortlisted yet — use “Add to shortlist” on a card below.")) : "") +
+      sectionHdr("Opportunities", "var(--status-progress-text)", opps.length, jwOppsOpen, "toggleOppsWatch",
+        opps.length ? `<button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); clearOpportunities()">Clear Opportunities</button>` : "", "opp") +
+      (jwOppsOpen ? (opps.length ? opps.map(renderJwCard).join("") : hint("No new opportunities — run a search in Job Sites &amp; Companies to fill this list.")) : "");
 }
-let jwActiveOpen = true;
+let jwActiveOpen = true, jwOppsOpen = true;
 function toggleActiveWatch() { jwActiveOpen = !jwActiveOpen; renderJobWatchlist(); }
+function toggleOppsWatch() { jwOppsOpen = !jwOppsOpen; renderJobWatchlist(); }
+function addToShortlist(id) {
+  const app = state.apps.find(a=>a.id===id);
+  if (!app) return;
+  app.shortlisted = true;
+  saveState(); renderJobWatchlist();
+}
+function clearOpportunities() {
+  const n = state.apps.filter(a => a.status===WATCH_STATUS && a.shortlisted!==true).length;
+  if (!n) return;
+  if (!confirm(`Remove all ${n} card${n===1?"":"s"} under Opportunities? Your Shortlist is not affected. This can't be undone.`)) return;
+  state.apps = state.apps.filter(a => !(a.status===WATCH_STATUS && a.shortlisted!==true));
+  saveState(); renderJobWatchlist(); renderDashboard();
+}
 function renderJwCard(app) {
   const sc = APP_STATUS[app.status]||{};
   const fc = fitBadgeColor(app.overallFit);
@@ -4070,7 +4106,9 @@ function renderJwCard(app) {
       </div>
       <div class="item-actions">
         ${appMatchLabelHtml(app)}
-        <button class="btn btn-primary btn-sm" onclick="markApplied('${app.id}')">✅ Mark Applied</button>
+        ${app.shortlisted!==true
+          ? `<button class="jx-badge act" onclick="addToShortlist('${app.id}')"><span class="d"></span>Add to shortlist</button>`
+          : `<button class="jx-badge act" onclick="markApplied('${app.id}')"><span class="d"></span>Mark Applied</button>`}
         <button class="btn btn-sky btn-sm" onclick="openAppModal('${app.id}')">Edit</button>
         <button class="btn btn-danger btn-sm" onclick="deleteApp('${app.id}')">✕</button>
       </div>
@@ -5054,6 +5092,7 @@ async function submitApp() {
     deadline:   prev.deadline || "",
     roleFamily: prev.roleFamily || "",
     stageMandate: prev.stageMandate || "",
+    ...(prev.shortlisted === true ? { shortlisted: true } : {}),   // only cards you added to the shortlist are in it
     fit: prev.fit || { strategic:0, growth:0, culture:0, location:0 },   // no longer entered in the form; kept as stored
     overallFit: prev.overallFit ?? null,
     concerns:   prev.concerns || "",
@@ -6224,6 +6263,7 @@ async function searchArbetsformedlingen(terms, location) {
         roleFamily: "", stageMandate: "",
         fit: { strategic:0, growth:0, culture:0, location:0 }, overallFit: null, concerns: "",
         history: [], followUp: false, followUpDate: "",
+        shortlisted: false,   // found by a search: starts under "Opportunities" until added to the shortlist
       });
       added++;
     }
@@ -6300,6 +6340,7 @@ async function searchOtherJobSites(sitesToScan, criteria) {
         deadline: "", roleFamily: "", stageMandate: "",
         fit: { strategic:0, growth:0, culture:0, location:0 }, overallFit: null, concerns: "",
         history: [], followUp: false, followUpDate: "",
+        shortlisted: false,   // found by a search: starts under "Opportunities" until added to the shortlist
       });
       added++;
     }
@@ -6408,6 +6449,7 @@ function addMatchedJobsToWatchlist(results) {
         deadline: "", roleFamily: "", stageMandate: "",
         fit: { strategic:0, growth:0, culture:0, location:0 }, overallFit: null, concerns: "",
         history: [], followUp: false, followUpDate: "",
+        shortlisted: false,   // found by a search: starts under "Opportunities" until added to the shortlist
       });
       added++;
     }
