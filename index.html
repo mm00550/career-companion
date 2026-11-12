@@ -373,6 +373,8 @@
   .ac-item-co { font-size: 11px; font-weight: 700; line-height: 1.3; color: #6b7280; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word; }
   .ac-item-subj { font-size: 12px; color: #1f2937; line-height: 1.3; font-weight: 500; margin: 2px 0 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; word-break: break-word; cursor: text; }
   .ac-item-subj:hover { text-decoration: underline dotted #b5afa8; }
+  .ac-item-subj.act { cursor: default; }
+  .ac-item-subj.act:hover { text-decoration: none; }
   .ac-add-subj { align-self: flex-start; font-size: 11px; font-weight: 500; color: var(--ac-gray4); background: none; border: 1px dashed #d4cfcb; border-radius: 6px; padding: 1px 6px; margin-top: 2px; cursor: pointer; font-family: inherit; }
   .ac-add-subj:hover { color: var(--ac-plum); border-color: var(--ac-plum); }
   .ac-subj-input { width: 100%; box-sizing: border-box; font-size: 12px; font-family: inherit; padding: 3px 6px; margin-top: 2px; border: 1px solid var(--ac-plum); border-radius: 6px; outline: none; }
@@ -2471,7 +2473,10 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
           <textarea id="af-note-input" rows="2" placeholder="Next steps, interview feedback, recruiter name… (you can paste a screenshot here, Ctrl+V)" style="flex:1;min-width:0"></textarea>
           <div style="display:flex;align-items:center;gap:6px;width:100%;padding:0 0 2px">
             <label style="font-size:11px;color:var(--text-muted);white-space:nowrap">Date:</label>
-            <input type="date" id="af-note-date" class="form-input" style="flex:1;font-size:11px;padding:5px 8px">
+            <input type="date" id="af-note-date" class="form-input" style="flex:1.25;min-width:0;font-size:11px;padding:5px 6px">
+            <label style="font-size:11px;color:var(--text-muted);white-space:nowrap">Time:</label>
+            <select id="af-note-time" class="form-input" style="flex:.8;min-width:0;font-size:11px;padding:5px 6px" title="Optional"></select>
+            <select id="af-note-activity" class="form-input" style="flex:1.3;min-width:0;font-size:11px;padding:5px 6px" title="Type of activity (optional)"></select>
             <input type="file" accept="image/*" id="af-note-image" style="display:none" onchange="handleNoteImageSelect('af', this.files[0])">
             <button type="button" title="Attach screenshot" onclick="document.getElementById('af-note-image').click()">📷</button>
             <button onclick="addAppHistoryEntry()">Add</button>
@@ -2510,9 +2515,16 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
     <div class="form-group">
       <label class="form-label">Notes / History / Activity</label>
       <div class="history-log">
-        <div class="history-add">
-          <textarea id="tf-note-input" rows="2" placeholder="Progress notes, what you learned, next module…"></textarea>
-          <button onclick="addTrainHistoryEntry()">Add</button>
+        <div class="history-add" style="flex-wrap:wrap;gap:6px">
+          <textarea id="tf-note-input" rows="2" placeholder="Progress notes, what you learned, next module…" style="flex:1;min-width:0"></textarea>
+          <div style="display:flex;align-items:center;gap:6px;width:100%;padding:0 0 2px">
+            <label style="font-size:11px;color:var(--text-muted);white-space:nowrap">Date:</label>
+            <input type="date" id="tf-note-date" class="form-input" style="flex:1.25;min-width:0;font-size:11px;padding:5px 6px">
+            <label style="font-size:11px;color:var(--text-muted);white-space:nowrap">Time:</label>
+            <select id="tf-note-time" class="form-input" style="flex:.8;min-width:0;font-size:11px;padding:5px 6px" title="Optional"></select>
+            <select id="tf-note-activity" class="form-input" style="flex:1.3;min-width:0;font-size:11px;padding:5px 6px" title="Type of activity (optional)"></select>
+            <button onclick="addTrainHistoryEntry()">Add</button>
+          </div>
         </div>
         <div class="history-entries" id="tf-history-entries"></div>
       </div>
@@ -2551,7 +2563,10 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
           <textarea id="nf-note-input" rows="2" placeholder="Add a note — what you discussed, next steps, follow-up… (you can paste a screenshot here, Ctrl+V)" style="flex:1;min-width:0"></textarea>
           <div style="display:flex;align-items:center;gap:6px;width:100%;padding:0 0 2px">
             <label style="font-size:11px;color:var(--text-muted);white-space:nowrap">Date:</label>
-            <input type="date" id="nf-note-date" class="form-input" style="flex:1;font-size:11px;padding:5px 8px">
+            <input type="date" id="nf-note-date" class="form-input" style="flex:1.25;min-width:0;font-size:11px;padding:5px 6px">
+            <label style="font-size:11px;color:var(--text-muted);white-space:nowrap">Time:</label>
+            <select id="nf-note-time" class="form-input" style="flex:.8;min-width:0;font-size:11px;padding:5px 6px" title="Optional"></select>
+            <select id="nf-note-activity" class="form-input" style="flex:1.3;min-width:0;font-size:11px;padding:5px 6px" title="Type of activity (optional)"></select>
             <input type="file" accept="image/*" id="nf-note-image" style="display:none" onchange="handleNoteImageSelect('nf', this.files[0])">
             <button type="button" title="Attach screenshot" onclick="document.getElementById('nf-note-image').click()">📷</button>
             <button onclick="addHistoryEntry()">Add</button>
@@ -3577,7 +3592,7 @@ function acActivities() {
     (c.history||[]).forEach(h => {
       const s = acWhen(h); if (!s) return;
       push({ key:`c:${c.id}:h:${h.id||h.ts}`, date:s.date, time:s.time, booked:s.booked, kind: s.booked ? "meeting" : "outreach", pillar:"touches", tag: rel,
-             who: c.name, company: c.company, note: h.text, subject: h.subject, channel: AC_CHANNEL_TAG[h.channel] ? h.channel : "", status:"Logged", open:`openNetModal('${c.id}')` });
+             who: c.name, company: c.company, note: h.text, subject: h.subject, activity: h.activity, channel: AC_CHANNEL_TAG[h.channel] ? h.channel : "", status:"Logged", open:`openNetModal('${c.id}')` });
     });
     if (c.followUpDate && acIsDate(c.followUpDate)) {
       const meeting = c.status === "Meeting set";
@@ -3596,7 +3611,7 @@ function acActivities() {
              note: a.role, status:"Apply by", statusColor:"#047857", open:`openAppModal('${a.id}')` });
     (a.history||[]).forEach(h => {
       const s = acWhen(h); if (!s) return;
-      push({ key:`a:${a.id}:h:${h.id||h.ts}`, date:s.date, time:s.time, booked:s.booked, kind:"update", tag: interview ? "Interview" : "Update", who, company, note: h.text, subject: h.subject, status:"Note",
+      push({ key:`a:${a.id}:h:${h.id||h.ts}`, date:s.date, time:s.time, booked:s.booked, kind:"update", tag: interview ? "Interview" : "Update", who, company, note: h.text, subject: h.subject, activity: h.activity, status:"Note",
              open:`openAppModal('${a.id}')` });
     });
     if (a.followUp && acIsDate(a.followUpDate))
@@ -3607,7 +3622,7 @@ function acActivities() {
     (x.history||[]).forEach(h => {
       const s = acWhen(h); if (!s) return;
       push({ key:`t:${x.id}:h:${h.id||h.ts}`, date:s.date, time:s.time, booked:s.booked, kind:"training", pillar:"training", tag:"Training", who: x.title, company: x.provider,
-             note: h.text, subject: h.subject, status:"Logged", open:`openTrainModal('${x.id}')` });
+             note: h.text, subject: h.subject, activity: h.activity, status:"Logged", open:`openTrainModal('${x.id}')` });
     });
     if (x.status !== "Completed" && acIsDate(x.targetDate))
       push({ key:`t:${x.id}:target`, date:x.targetDate.slice(0,10), kind:"training", tag:"Training", who: x.title, company: x.provider,
@@ -3655,56 +3670,21 @@ function acTagColor(tag) {
   return AC_TAG_SPARE[h % AC_TAG_SPARE.length];
 }
 
-// Card: name + category tag, subject (or an "Add subject" button), then time • company • status.
+// Card: name + category tag, company, the chosen activity (Meeting, Interview, …), then time • status.
 function acItem(it) {
   const g = acGroup(it), tone = AC_TONES[it.kind];
   const meta = [];
   // Only time-critical states go on the card (Overdue / Due today); plain labels like "Logged" are left out.
   if (/^(Overdue|Due today)/.test(it.status||"")) meta.push(it.statusColor ? `<span style="color:${it.statusColor};font-weight:600">${acEsc(it.status)}</span>` : acEsc(it.status));
-  const tip = [it.who, it.company, it.tag, it.subject, it.note].filter(Boolean).join(" — ");
+  const tip = [it.who, it.company, it.tag, it.activity, it.subject, it.note].filter(Boolean).join(" — ");
   return `<div class="ac-item" style="border-left:4px solid ${g.who}"${it.open?` onclick="${it.open}"`:""} title="${acEsc(acClip(tip, 300))}" data-key="${acEsc(it.key)}">
     <div class="ac-item-top"><span class="ac-item-who" style="color:${tone.who}">${acEsc(it.who)}</span><span class="ac-item-tag" style="background:${acTagColor(it.tag)[0]};color:${acTagColor(it.tag)[1]}" title="${acEsc(it.tag)}">${acEsc(it.tag)}</span></div>
     ${it.company ? `<span class="ac-item-co">${acEsc(it.company)}</span>` : ""}
-    ${it.subject ? `<p class="ac-item-subj" title="Click to edit the subject" onclick="event.stopPropagation();acEditSubject(this)">${acEsc(it.subject)}</p>`
-                 : `<button class="ac-add-subj" onclick="event.stopPropagation();acEditSubject(this)">+ Add subject</button>`}
+    ${it.activity ? `<p class="ac-item-subj act" title="Activity">${acEsc(it.activity)}</p>` : ""}
+    ${it.subject ? `<p class="ac-item-subj act">${acEsc(it.subject)}</p>` : ""}
     ${meta.length ? `<span class="ac-item-meta">${meta.join(" • ")}</span>` : ""}
   </div>`;
 }
-// Keys like "c:<contactId>:h:<entryId>" point at a Notes / History / Activity entry: its subject lives on the entry,
-// so the card and the form show the same text. Other cards (follow-ups, applications sent, deadlines) use state.activitySubjects.
-function acEntryForKey(key) {
-  const m = /^([cat]):(.+?):h:(.+)$/.exec(key || ""); if (!m) return null;
-  const list = { c: state.contacts, a: state.apps, t: state.trainings }[m[1]];
-  const owner = list.find(o => String(o.id) === m[2]);
-  return owner ? (owner.history || []).find(h => String(h.id || h.ts) === m[3]) || null : null;
-}
-function acGetSubject(key) { const h = acEntryForKey(key); return (h && h.subject) || (state.activitySubjects||{})[key] || ""; }
-function acSetSubject(key, v) {
-  const h = acEntryForKey(key), subj = { ...(state.activitySubjects||{}) };
-  if (h) { if (v) h.subject = v; else delete h.subject; delete subj[key]; }
-  else if (v) subj[key] = v; else delete subj[key];
-  state.activitySubjects = subj;
-}
-function acEditSubject(el) {
-  const card = el.closest(".ac-item"), key = card.dataset.key;
-  const input = document.createElement("input");
-  input.className = "ac-subj-input"; input.maxLength = 120; input.placeholder = "Add subject";
-  input.value = acGetSubject(key);
-  let done = false;
-  const finish = save => {
-    if (done) return; done = true;
-    if (save) {
-      acSetSubject(key, input.value.trim());
-      saveState();
-    }
-    renderActivities();
-  };
-  input.onclick = e => e.stopPropagation();
-  input.onkeydown = e => { if (e.key==="Enter") finish(true); else if (e.key==="Escape") finish(false); };
-  input.onblur = () => finish(true);
-  el.replaceWith(input); input.focus();
-}
-
 function acWeekView(items, from) {
   const t = acToday();
   return `<div class="ac-week">${Array.from({length:7}, (_,i) => {
@@ -3894,6 +3874,7 @@ function renderActPriorities() {
     if (d < t || d > weekEnd) return;
     rows.push({ sort: (d===t ? "1" : "2"+d) + (tm||""), dueToday: d===t, date: (d===t ? "Today" : when(d)) + (tm ? " • "+tm : ""),
       desc: h.subject || (state.activitySubjects||{})[mk.key(o,h)] || h.text || "Booked activity", ...mk.row(o) });
+    if (h.activity) { const r = rows[rows.length-1]; r.type = [h.activity, ...(r.type||[]).slice(1)]; }
   }));
   booked(state.contacts, { key:(c,h)=>`c:${c.id}:h:${h.id||h.ts}`, row: c => ({ meeting:true, name:c.name, role:[c.role, c.company].filter(Boolean).join(" @ "),
     avatar: acInitials(c.name), avTone:["#f5e7ef","#3b0030"], type:["Booked","#3b0030","#ffffff"], border:"#3b0030", open:`openNetModal('${c.id}')`,
@@ -5023,7 +5004,7 @@ function renderAppHistoryEntries() {
           <button class="history-link" id="ahedit-${i}" onclick="startEditAppHistory(${i})">Edit</button>
           <button class="history-link" id="ahsave-${i}" style="display:none;color:var(--status-success-text)" onclick="saveEditAppHistory(${i})">Save</button>
           <button class="history-link" id="ahcancel-${i}" style="display:none" onclick="renderAppHistoryEntries()">Cancel</button>
-          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteAppHistoryEntry(${i})">Delete</button><button class="history-link" onclick="editEntryBooking('af',${i},this)">📅 ${h.scheduledAt?"Change activity":"Book activity"}</button><button class="history-link" onclick="editEntrySubject('af',${i},this)">✏️ ${h.subject?"Edit subject":"Add subject"}</button>
+          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteAppHistoryEntry(${i})">Delete</button>
         </div>
       </div>
     </div>`;
@@ -5126,6 +5107,7 @@ function openTrainModal(id) {
   document.getElementById("tf-target").value   = t?.targetDate||"";
   document.getElementById("tf-url").value      = t?.url||"";
   document.getElementById("tf-note-input").value = "";
+  document.getElementById("tf-note-date").value = today();
   resetBooking("tf");
   renderTrainHistoryEntries();
   document.getElementById("trainModal").style.display="flex";
@@ -5145,7 +5127,7 @@ function renderTrainHistoryEntries() {
           <button class="history-link" id="thedit-${i}" onclick="startEditTrainHistory(${i})">Edit</button>
           <button class="history-link" id="thsave-${i}" style="display:none;color:var(--status-success-text)" onclick="saveEditTrainHistory(${i})">Save</button>
           <button class="history-link" id="thcancel-${i}" style="display:none" onclick="renderTrainHistoryEntries()">Cancel</button>
-          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteTrainHistoryEntry(${i})">Delete</button><button class="history-link" onclick="editEntryBooking('tf',${i},this)">📅 ${h.scheduledAt?"Change activity":"Book activity"}</button><button class="history-link" onclick="editEntrySubject('tf',${i},this)">✏️ ${h.subject?"Edit subject":"Add subject"}</button>
+          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteTrainHistoryEntry(${i})">Delete</button>
         </div>
       </div>
     </div>`;
@@ -5154,7 +5136,7 @@ function renderTrainHistoryEntries() {
 function addTrainHistoryEntry() {
   const input = document.getElementById("tf-note-input");
   const text = input.value.trim(), booking = takeBooking("tf"); if (!text && !booking) return;
-  _trainModalHistory.push({ id:String(Date.now()), ts:new Date().toISOString(), text, ...(booking||{}) });
+  _trainModalHistory.push({ id:String(Date.now()), ts:noteTs("tf"), text, ...(booking||{}) });
   input.value = ""; resetBooking("tf"); renderTrainHistoryEntries();
 }
 function startEditTrainHistory(i) {
@@ -5177,7 +5159,7 @@ function submitTrain() {
   const pendingNote = document.getElementById("tf-note-input").value.trim();
   const history = [..._trainModalHistory];
   const pendingBook = takeBooking("tf");
-  if (pendingNote || pendingBook) history.push({ id:String(Date.now()), ts:new Date().toISOString(), text:pendingNote, ...(pendingBook||{}) });
+  if (pendingNote || pendingBook) history.push({ id:String(Date.now()), ts:noteTs("tf"), text:pendingNote, ...(pendingBook||{}) });
   const entry = {
     id: editTrainId||String(Date.now()),
     title,
@@ -5215,75 +5197,42 @@ function addRecommended(title) {
 
 // ═══════════════════════════ HELPERS ══════════════════════════════════════════
 function escHtml(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-// Booked activities: entry.scheduledAt is local "YYYY-MM-DD" or "YYYY-MM-DDTHH:MM" (as typed). The Activities tab
-// places the entry on that day and time.
-function toggleBook(p) {
-  const on = document.getElementById(p+"-book").checked;
-  document.getElementById(p+"-book-fields").style.display = on ? "flex" : "none";
-  if (on && !document.getElementById(p+"-book-date").value) document.getElementById(p+"-book-date").value = today();
+// Notes / History / Activity: every entry has a date, an optional time (07:00–19:00 in 15-minute steps) and an
+// optional activity type. An entry with a time is stored with scheduledAt = "YYYY-MM-DDTHH:MM", so the Activities
+// tab places it at that day and time; the activity type is stored as entry.activity.
+const ACTIVITY_TYPES = ["Meeting","Interview","Chat","Phone/Teams call","Email","Event","Presentation","Course","Training"];
+const NOTE_TIMES = (() => { const out = []; for (let h = 7; h <= 19; h++) for (const m of [0,15,30,45]) { if (h === 19 && m) break; out.push(String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")); } return out; })();
+function fillNoteSelects() {
+  ["af","nf","tf"].forEach(p => {
+    const t = document.getElementById(p+"-note-time"), a = document.getElementById(p+"-note-activity");
+    if (t) t.innerHTML = `<option value="">—</option>` + NOTE_TIMES.map(x => `<option value="${x}">${x}</option>`).join("");
+    if (a) a.innerHTML = `<option value="">Activity…</option>` + ACTIVITY_TYPES.map(x => `<option value="${escHtml(x)}">${escHtml(x)}</option>`).join("");
+  });
 }
+fillNoteSelects();
+// Reads the date / time / activity chosen for a new note. null when neither a time nor an activity was chosen.
 function takeBooking(p) {
-  const box = document.getElementById(p+"-book");
-  if (!box || !box.checked) return null;
-  const d = document.getElementById(p+"-book-date").value, t = document.getElementById(p+"-book-time").value;
-  const subj = document.getElementById(p+"-book-subject").value.trim();
-  return d ? { scheduledAt: t ? `${d}T${t}` : d, ...(subj ? { subject: subj } : {}) } : null;
+  const val = id => (document.getElementById(id) || {}).value || "";
+  const t = val(p+"-note-time"), a = val(p+"-note-activity");
+  if (!t && !a) return null;
+  const d = val(p+"-note-date") || today();
+  return { ...(a ? { activity: a } : {}), ...(t ? { scheduledAt: `${d}T${t}` } : {}) };
 }
 function resetBooking(p) {
-  const box = document.getElementById(p+"-book"); if (!box) return;
-  box.checked = false;
-  document.getElementById(p+"-book-date").value = "";
-  document.getElementById(p+"-book-time").value = "";
-  document.getElementById(p+"-book-subject").value = "";
-  toggleBook(p);
+  const t = document.getElementById(p+"-note-time"), a = document.getElementById(p+"-note-activity");
+  if (t) t.value = ""; if (a) a.value = "";
 }
-// Inline editor under one activity in the list. Changes are kept with the form and saved when you click Save.
-function editEntryBooking(p, i, btn) {
-  const list = { nf:_modalHistory, af:_appModalHistory, tf:_trainModalHistory }[p];
-  const redraw = { nf:renderHistoryEntries, af:renderAppHistoryEntries, tf:renderTrainHistoryEntries }[p];
-  const body = btn.closest(".history-body"), h = list[i];
-  if (!h || body.querySelector(".entry-book")) return;
-  const [d, t] = (h.scheduledAt || "").split("T");
-  const box = document.createElement("div");
-  box.className = "entry-book";
-  box.innerHTML = `<input type="date" class="form-input" value="${d || today()}"><input type="time" class="form-input" step="900" value="${t || ""}"><input type="text" class="form-input act-book-subj" maxlength="120" placeholder="Subject (shown on the Activities card)" value="${escHtml(h.subject || "")}">
-    <button type="button" class="history-link" style="color:var(--status-success-text);font-weight:600" data-act="save">Save time</button>
-    ${h.scheduledAt ? '<button type="button" class="history-link" style="color:var(--status-urgent-text)" data-act="remove">Remove booking</button>' : ""}
-    <button type="button" class="history-link" data-act="cancel">Cancel</button>`;
-  box.onclick = e => {
-    const act = e.target.dataset.act; if (!act) return;
-    if (act === "save") {
-      const [di, ti, si] = box.querySelectorAll("input");
-      if (!di.value) { di.focus(); return; }
-      h.scheduledAt = ti.value ? `${di.value}T${ti.value}` : di.value;
-      if (si.value.trim()) h.subject = si.value.trim(); else delete h.subject;
-    } else if (act === "remove") delete h.scheduledAt;
-    redraw();
-  };
-  body.appendChild(box);
+// Timestamp for a new note: the chosen date (today = right now).
+function noteTs(p) {
+  const d = (document.getElementById(p+"-note-date") || {}).value;
+  return d && d !== today() ? new Date(d).toISOString() : new Date().toISOString();
 }
-// Subject of one activity, edited in the form. The Activities card shows and edits the same text.
-function editEntrySubject(p, i, btn) {
-  const list = { nf:_modalHistory, af:_appModalHistory, tf:_trainModalHistory }[p];
-  const redraw = { nf:renderHistoryEntries, af:renderAppHistoryEntries, tf:renderTrainHistoryEntries }[p];
-  const body = btn.closest(".history-body"), h = list[i];
-  if (!h || body.querySelector(".entry-book")) return;
-  const box = document.createElement("div");
-  box.className = "entry-book";
-  box.innerHTML = `<input type="text" class="form-input act-book-subj" maxlength="120" placeholder="Subject (shown on the Activities card)" value="${escHtml(h.subject || "")}">
-    <button type="button" class="history-link" style="color:var(--status-success-text);font-weight:600" data-act="save">Save subject</button>
-    <button type="button" class="history-link" data-act="cancel">Cancel</button>`;
-  const input = box.querySelector("input");
-  const save = () => { const v = input.value.trim(); if (v) h.subject = v; else delete h.subject; redraw(); };
-  box.onclick = e => { const act = e.target.dataset.act; if (act === "save") save(); else if (act === "cancel") redraw(); };
-  input.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); save(); } else if (e.key === "Escape") redraw(); };
-  body.appendChild(box); input.focus();
-}
+// Small tag under a note: "Interview · 14:15" (activity and/or time). Notes saved earlier with a subject still show it.
 function bookingBadge(h) {
-  if (!h.scheduledAt) return h.subject ? `<div><span class="book-badge" style="background:#f3f4f6;color:#374151;border-color:#e5e7eb">✏️ ${escHtml(h.subject)}</span></div>` : "";
-  const [d, t] = h.scheduledAt.split("T"), [y, m, dd] = d.split("-").map(Number);
-  const day = new Date(y, m-1, dd).toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short", year:"numeric"});
-  return `<div><span class="book-badge">📅 Booked: ${day}${t ? ", "+t : ""}${h.subject ? " · "+escHtml(h.subject) : ""}</span></div>`;
+  const time = (h.scheduledAt || "").split("T")[1] || "";
+  const chip = [h.activity, time].filter(Boolean).join(" · ");
+  return (chip ? `<div><span class="book-badge">${escHtml(chip)}</span></div>` : "") +
+    (h.subject ? `<div><span class="book-badge" style="background:#f3f4f6;color:#374151;border-color:#e5e7eb">${escHtml(h.subject)}</span></div>` : "");
 }
 function appNoteTs() {
   const d = document.getElementById("af-note-date").value;
@@ -5342,7 +5291,7 @@ function renderHistoryEntries() {
           <button class="history-link" id="hedit-${i}" onclick="startEditHistory(${i})">Edit</button>
           <button class="history-link" id="hsave-${i}" style="display:none;color:var(--status-success-text)" onclick="saveEditHistory(${i})">Save</button>
           <button class="history-link" id="hcancel-${i}" style="display:none" onclick="cancelEditHistory(${i})">Cancel</button>
-          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteHistoryEntry(${i})">Delete</button><button class="history-link" onclick="editEntryBooking('nf',${i},this)">📅 ${h.scheduledAt?"Change activity":"Book activity"}</button><button class="history-link" onclick="editEntrySubject('nf',${i},this)">✏️ ${h.subject?"Edit subject":"Add subject"}</button>
+          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteHistoryEntry(${i})">Delete</button>
         </div>
       </div>
     </div>`;
