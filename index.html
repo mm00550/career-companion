@@ -596,6 +596,15 @@
   .login-btn:hover { opacity: .92; }
   .login-error { color: var(--status-urgent-text); font-size: 12px; margin-top: -8px; margin-bottom: 10px; display: none; }
   .login-error.show { display: block; }
+  .login-notice { display: none; background: #E9F7F1; color: #14724F; border-radius: var(--radius-sm); padding: 9px 12px; font-size: 12px; line-height: 1.45; margin-bottom: 14px; }
+  .login-links { text-align: center; margin-top: 14px; font-size: 12px; color: var(--login-accent); }
+  .login-links a { color: var(--login-accent); font-weight: 600; text-decoration: underline; cursor: pointer; }
+  .login-links.tight { margin-top: 8px; }
+  .login-hint { font-size: 11px; color: var(--text-muted); margin: -8px 0 12px; }
+  .login-btn.ghost { background: #fff; color: var(--login-accent); border: 1.5px solid var(--login-accent); }
+  .login-btn:disabled { opacity: .6; cursor: default; }
+  .login-mail { width: 44px; height: 44px; border-radius: 50%; background: #F5E7EF; color: var(--login-accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+  .login-mail .msi { font-size: 24px; }
   .logout-btn { font-size: 12px; background: var(--bg-surface); border: 1px solid var(--border-default); color: var(--text-secondary); border-radius: var(--radius-sm); padding: 5px 12px; cursor: pointer; font-weight: 600; transition: background .15s; }
   .logout-btn:hover { background: var(--bg-surface-hover); }
   .logout-btn-danger { color: var(--status-urgent-text); }
@@ -851,19 +860,81 @@
     <span class="login-brand-logo"><img src="ai-accelerate-logo.webp" alt="AI Accelerate"></span>
     <div class="login-brand-title">Career Companion</div>
   </div>
-  <div class="login-box">
-    <div class="login-logo" id="loginTitle">Please enter your credentials</div>
-    <div class="login-sub" id="loginSub"></div>
-    <label class="login-label" for="li-user">Email</label>
-    <input class="login-input" id="li-user" type="email" placeholder="Enter email" autocomplete="username" onkeydown="if(event.key==='Enter')doAuthAction()">
-    <label class="login-label" for="li-pass">Password</label>
-    <input class="login-input" id="li-pass" type="password" placeholder="Enter password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuthAction()">
-    <div class="login-error" id="loginError">Incorrect email or password.</div>
-    <button class="login-btn" id="loginBtn" onclick="doAuthAction()">Sign in</button>
-    <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--login-accent)">
-      <span id="authToggleLabel">Don't have an account?</span>
-      <a href="#" id="authToggleLink" onclick="toggleAuthMode();return false;" style="color:var(--login-accent);font-weight:600">Create one</a>
+  <div class="login-box" id="loginBox">
+
+    <!-- Sign in -->
+    <div id="auth-signin">
+      <div class="login-logo">Sign in</div>
+      <div class="login-sub"></div>
+      <div class="login-notice" id="li-notice"></div>
+      <label class="login-label" for="li-user">Email</label>
+      <input class="login-input" id="li-user" type="email" placeholder="Enter email" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+      <label class="login-label" for="li-pass">Password</label>
+      <input class="login-input" id="li-pass" type="password" placeholder="Enter password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="login-error" id="loginError">Incorrect email or password.</div>
+      <button class="login-btn" id="loginBtn" onclick="doLogin()">Sign in</button>
+      <div class="login-links"><a onclick="setAuthMode('reset')">Forgot password?</a></div>
+      <div class="login-links tight">Don't have an account? <a onclick="setAuthMode('signup')">Create one</a></div>
     </div>
+
+    <!-- Create account -->
+    <div id="auth-signup" style="display:none">
+      <div class="login-logo">Create your account</div>
+      <div class="login-sub">Use the email address you were invited with.</div>
+      <label class="login-label" for="su-email">Email</label>
+      <input class="login-input" id="su-email" type="email" placeholder="Enter email" autocomplete="username" onkeydown="if(event.key==='Enter')doSignUp()">
+      <label class="login-label" for="su-pass">Choose a password</label>
+      <input class="login-input" id="su-pass" type="password" placeholder="Choose a password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignUp()">
+      <div class="login-hint">At least 8 characters</div>
+      <label class="login-label" for="su-pass2">Confirm password</label>
+      <input class="login-input" id="su-pass2" type="password" placeholder="Repeat password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignUp()">
+      <div class="login-error" id="suError"></div>
+      <button class="login-btn" id="suBtn" onclick="doSignUp()">Create account</button>
+      <div class="login-links">Already have an account? <a onclick="setAuthMode('signin')">Sign in</a></div>
+    </div>
+
+    <!-- Verify email -->
+    <div id="auth-verify" style="display:none;text-align:center">
+      <div class="login-mail"><span class="msi">mail</span></div>
+      <div class="login-logo">Check your inbox</div>
+      <div class="login-sub">We sent a confirmation link to <b id="vf-email"></b>. Click it, then come back here. It may land in spam.</div>
+      <div class="login-notice" id="vfInfo"></div>
+      <div class="login-error" id="vfError"></div>
+      <button class="login-btn" id="vfBtn" onclick="checkVerified()">I've confirmed, continue</button>
+      <div class="login-links"><a onclick="resendVerification()">Resend email</a> &nbsp;·&nbsp; <a onclick="useOtherEmail()">Use another email</a></div>
+    </div>
+
+    <!-- Forgot password -->
+    <div id="auth-reset" style="display:none">
+      <div class="login-logo">Reset your password</div>
+      <div class="login-sub">Enter your email and we'll send you a link to choose a new one.</div>
+      <label class="login-label" for="rs-email">Email</label>
+      <input class="login-input" id="rs-email" type="email" placeholder="Enter email" autocomplete="username" onkeydown="if(event.key==='Enter')doSendReset()">
+      <div class="login-error" id="rsError"></div>
+      <button class="login-btn" id="rsBtn" onclick="doSendReset()">Send reset link</button>
+      <div class="login-links"><a onclick="setAuthMode('signin')">← Back to sign in</a></div>
+    </div>
+
+    <!-- Reset link sent -->
+    <div id="auth-resetsent" style="display:none;text-align:center">
+      <div class="login-mail"><span class="msi">mail</span></div>
+      <div class="login-logo">Check your inbox</div>
+      <div class="login-sub">If an account exists for that address, a reset link is on its way. It can take a minute and may land in spam.</div>
+      <button class="login-btn ghost" onclick="setAuthMode('signin')">Back to sign in</button>
+    </div>
+
+    <!-- Choose a new password (opened from the email link) -->
+    <div id="auth-newpw" style="display:none">
+      <div class="login-logo">Choose a new password</div>
+      <div class="login-sub" id="np-email"></div>
+      <label class="login-label" for="np-pass">New password</label>
+      <input class="login-input" id="np-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSetNewPassword()">
+      <label class="login-label" for="np-pass2">Confirm password</label>
+      <input class="login-input" id="np-pass2" type="password" placeholder="Repeat password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSetNewPassword()">
+      <div class="login-error" id="npError"></div>
+      <button class="login-btn" id="npBtn" onclick="doSetNewPassword()">Save password</button>
+    </div>
+
   </div>
 </div>
 
@@ -2711,11 +2782,12 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
   <div class="modal">
     <div class="modal-title" style="color:var(--color-primary)">Change Password</div>
     <div class="form-group"><label class="form-label">Current password *</label><input class="form-input" id="pw-current" type="password" placeholder="Your current password"></div>
-    <div class="form-group"><label class="form-label">New password *</label><input class="form-input" id="pw-new" type="password" placeholder="At least 6 characters"></div>
+    <div class="form-group"><label class="form-label">New password *</label><input class="form-input" id="pw-new" type="password" placeholder="At least 8 characters"></div>
     <div class="form-group"><label class="form-label">Confirm new password *</label><input class="form-input" id="pw-confirm" type="password" placeholder="Repeat new password"></div>
     <div class="login-error" id="pw-error" style="display:none;margin-top:-8px;margin-bottom:14px"></div>
     <div class="login-error" id="pw-success" style="display:none;margin-top:-8px;margin-bottom:14px;color:var(--status-success-text)"></div>
     <div class="modal-footer">
+      <a href="#" onclick="sendResetFromDialog();return false" style="margin-right:auto;font-size:12px;color:var(--color-primary);text-decoration:underline">Forgot it? Email me a reset link</a>
       <button class="btn btn-ghost" onclick="closePasswordModal()">Cancel</button>
       <button class="btn btn-primary" id="pw-submit-btn" onclick="submitPasswordChange()">Update Password</button>
     </div>
@@ -7397,69 +7469,171 @@ function saveNote() {
 // Real Firebase Authentication — Firestore rules require request.auth != null
 // AND the email to exist in the allowlist collection, so this is what actually
 // grants access to the data, not just a UI gate.
-let authMode = "signin"; // "signin" | "signup"
+// Accounts created before this date are not asked to confirm their email.
+const VERIFY_REQUIRED_FROM = Date.parse("2026-11-16T00:00:00Z");
+const AUTH_MIN_PW = 8;
+let authMode = "signin"; // signin | signup | verify | reset | resetsent | newpw
+let authActionCode = null;
+// Tells Firebase's own confirmation / reset page where its "Continue" button should lead back to.
+const authActionSettings = () => ({ url: location.origin + location.pathname, handleCodeInApp: false });
 
-function toggleAuthMode() {
-  authMode = authMode === "signin" ? "signup" : "signin";
-  const err = document.getElementById("loginError");
-  err.classList.remove("show");
-  if (authMode === "signup") {
-    document.getElementById("loginTitle").textContent = "Create your account";
-    document.getElementById("loginSub").textContent = "Your email must be on the invite list to sign up.";
-    document.getElementById("loginBtn").textContent = "Create account";
-    document.getElementById("authToggleLabel").textContent = "Already have an account?";
-    document.getElementById("authToggleLink").textContent = "Sign in";
-  } else {
-    document.getElementById("loginTitle").textContent = "Please enter your credentials";
-    document.getElementById("loginSub").textContent = "";
-    document.getElementById("loginBtn").textContent = "Sign in";
-    document.getElementById("authToggleLabel").textContent = "Don't have an account?";
-    document.getElementById("authToggleLink").textContent = "Create one";
+function setAuthMode(mode, notice) {
+  authMode = mode;
+  ["signin","signup","verify","reset","resetsent","newpw"].forEach(m => {
+    const el = document.getElementById("auth-" + m);
+    if (el) el.style.display = m === mode ? "block" : "none";
+  });
+  document.querySelectorAll("#loginBox .login-error").forEach(e => e.classList.remove("show"));
+  const n = document.getElementById("li-notice");
+  n.textContent = notice || ""; n.style.display = notice ? "block" : "none";
+  const vi = document.getElementById("vfInfo"); vi.style.display = "none";
+  if (mode === "reset") {
+    const rs = document.getElementById("rs-email");
+    if (!rs.value) rs.value = document.getElementById("li-user").value.trim() || document.getElementById("su-email").value.trim();
+  }
+  if (mode === "verify") {
+    const u = firebase.auth().currentUser;
+    document.getElementById("vf-email").textContent = u ? u.email : "";
   }
 }
-
-function doAuthAction() {
-  if (authMode === "signup") doSignUp(); else doLogin();
-}
+function authErr(id, msg) { const e = document.getElementById(id); e.textContent = msg; e.classList.add("show"); }
+function authBusy(id, busy, label) { const b = document.getElementById(id); b.disabled = busy; b.textContent = label; }
 
 function doLogin() {
   const email = document.getElementById("li-user").value.trim();
   const password = document.getElementById("li-pass").value;
-  const err = document.getElementById("loginError");
   const btn = document.getElementById("loginBtn");
-  err.classList.remove("show");
-  btn.disabled = true; btn.textContent = "Signing in…";
+  document.getElementById("loginError").classList.remove("show");
+  authBusy("loginBtn", true, "Signing in…");
   firebase.auth().signInWithEmailAndPassword(email, password)
-    .catch(() => {
-      err.textContent = "Incorrect email or password.";
-      err.classList.add("show");
+    .catch(e => {
+      authErr("loginError", e.code === "auth/too-many-requests" ? "Too many attempts. Wait a few minutes or reset your password." : "Incorrect email or password.");
       document.getElementById("li-pass").value = "";
     })
-    .finally(() => { btn.disabled = false; btn.textContent = "Sign in"; });
+    .finally(() => authBusy("loginBtn", false, "Sign in"));
 }
 
 async function doSignUp() {
-  const email = document.getElementById("li-user").value.trim();
-  const password = document.getElementById("li-pass").value;
-  const err = document.getElementById("loginError");
-  const btn = document.getElementById("loginBtn");
-  err.classList.remove("show");
-  if (!email || !password) return;
-  btn.disabled = true; btn.textContent = "Checking invite…";
+  const email = document.getElementById("su-email").value.trim().toLowerCase();
+  const pw = document.getElementById("su-pass").value;
+  const pw2 = document.getElementById("su-pass2").value;
+  document.getElementById("suError").classList.remove("show");
+  if (!email || !pw) { authErr("suError", "Enter your email and choose a password."); return; }
+  if (pw.length < AUTH_MIN_PW) { authErr("suError", "The password must be at least " + AUTH_MIN_PW + " characters."); return; }
+  if (pw !== pw2) { authErr("suError", "The passwords don't match."); return; }
+  authBusy("suBtn", true, "Checking invite…");
   try {
+    // Allowlist ids are lower-case: that is how Firestore sees the signed-in email.
     const allowDoc = await firebase.firestore().collection("allowlist").doc(email).get();
-    if (!allowDoc.exists) {
-      err.textContent = "This email hasn't been invited yet. Ask the owner to add you.";
-      err.classList.add("show");
-      return;
-    }
-    btn.textContent = "Creating account…";
-    await firebase.auth().createUserWithEmailAndPassword(email, password);
+    if (!allowDoc.exists) { authErr("suError", "This email hasn't been invited yet. Ask the owner to add you."); return; }
+    authBusy("suBtn", true, "Creating account…");
+    const cred = await firebase.auth().createUserWithEmailAndPassword(email, pw);
+    try { await cred.user.sendEmailVerification(authActionSettings()); } catch (e) { /* the verify screen offers "Resend email" */ }
   } catch (e) {
-    err.textContent = e.code === "auth/email-already-in-use" ? "An account with this email already exists." : (e.message || "Could not create account.");
-    err.classList.add("show");
+    const msg = e.code === "auth/email-already-in-use" ? "An account with this email already exists. Sign in instead, or use Forgot password."
+      : e.code === "auth/invalid-email" ? "That doesn't look like a valid email address."
+      : e.code === "auth/weak-password" ? "That password is too weak. Choose a longer one."
+      : (e.message || "Could not create account.");
+    authErr("suError", msg);
   } finally {
-    btn.disabled = false; btn.textContent = authMode === "signup" ? "Create account" : "Sign in";
+    authBusy("suBtn", false, "Create account");
+  }
+}
+
+// ── Email confirmation ──
+function needsVerification(user) {
+  return !user.emailVerified && user.metadata && user.metadata.creationTime
+    && Date.parse(user.metadata.creationTime) >= VERIFY_REQUIRED_FROM;
+}
+async function checkVerified() {
+  const u = firebase.auth().currentUser;
+  if (!u) { setAuthMode("signin"); return; }
+  document.getElementById("vfError").classList.remove("show");
+  authBusy("vfBtn", true, "Checking…");
+  try {
+    await u.reload();
+    if (u.emailVerified) { await u.getIdToken(true); await startSession(u); }
+    else authErr("vfError", "Not confirmed yet. Click the link in the email first (check spam), then try again.");
+  } catch (e) { authErr("vfError", e.message || "Could not check. Try again."); }
+  finally { authBusy("vfBtn", false, "I've confirmed, continue"); }
+}
+async function resendVerification() {
+  const u = firebase.auth().currentUser; if (!u) return;
+  const info = document.getElementById("vfInfo");
+  document.getElementById("vfError").classList.remove("show");
+  try {
+    await u.sendEmailVerification(authActionSettings());
+    info.textContent = "A new confirmation email is on its way."; info.style.display = "block";
+  } catch (e) {
+    authErr("vfError", e.code === "auth/too-many-requests" ? "Please wait a few minutes before asking for another email." : (e.message || "Could not send the email."));
+  }
+}
+function useOtherEmail() {
+  firebase.auth().signOut().then(() => { document.getElementById("su-email").value = ""; document.getElementById("su-pass").value = ""; document.getElementById("su-pass2").value = ""; setAuthMode("signup"); });
+}
+
+// ── Forgot / reset password ──
+async function doSendReset() {
+  const email = document.getElementById("rs-email").value.trim();
+  document.getElementById("rsError").classList.remove("show");
+  if (!email) { authErr("rsError", "Enter your email address."); return; }
+  authBusy("rsBtn", true, "Sending…");
+  try {
+    await firebase.auth().sendPasswordResetEmail(email, authActionSettings());
+  } catch (e) {
+    if (e.code === "auth/invalid-email") { authErr("rsError", "That doesn't look like a valid email address."); authBusy("rsBtn", false, "Send reset link"); return; }
+    if (e.code === "auth/too-many-requests") { authErr("rsError", "Too many requests. Wait a few minutes and try again."); authBusy("rsBtn", false, "Send reset link"); return; }
+    // Any other error (e.g. no such account) gets the same confirmation, so addresses can't be probed.
+  }
+  authBusy("rsBtn", false, "Send reset link");
+  setAuthMode("resetsent");
+}
+async function doSetNewPassword() {
+  const pw = document.getElementById("np-pass").value, pw2 = document.getElementById("np-pass2").value;
+  document.getElementById("npError").classList.remove("show");
+  if (pw.length < AUTH_MIN_PW) { authErr("npError", "The password must be at least " + AUTH_MIN_PW + " characters."); return; }
+  if (pw !== pw2) { authErr("npError", "The passwords don't match."); return; }
+  authBusy("npBtn", true, "Saving…");
+  try {
+    await firebase.auth().confirmPasswordReset(authActionCode, pw);
+    authActionCode = null;
+    history.replaceState(null, "", location.pathname);
+    document.getElementById("np-pass").value = ""; document.getElementById("np-pass2").value = "";
+    setAuthMode("signin", "Password updated. Sign in with your new password.");
+  } catch (e) {
+    authErr("npError", e.code === "auth/weak-password" ? "That password is too weak. Choose a longer one."
+      : (e.code === "auth/expired-action-code" || e.code === "auth/invalid-action-code") ? "This link has expired or was already used. Go back and request a new one."
+      : (e.message || "Could not save the password."));
+  } finally { authBusy("npBtn", false, "Save password"); }
+}
+
+// Opened from a link in an email (?mode=resetPassword / verifyEmail&oobCode=…).
+// Needs the action URL in Firebase › Authentication › Templates to point at this site;
+// otherwise Firebase's own hosted page handles the link instead.
+async function handleAuthActionLink() {
+  const p = new URLSearchParams(location.search);
+  const mode = p.get("mode"), code = p.get("oobCode");
+  if (!mode || !code) return;
+  const auth = firebase.auth();
+  const clean = () => history.replaceState(null, "", location.pathname);
+  const initial = await new Promise(res => { const off = auth.onAuthStateChanged(u => { off(); res(u); }); });
+  document.getElementById("loginOverlay").style.display = "flex";
+  if (mode === "resetPassword") {
+    if (initial) await auth.signOut();
+    authActionCode = code;
+    setAuthMode("newpw");
+    try { document.getElementById("np-email").textContent = "For " + await auth.verifyPasswordResetCode(code); }
+    catch (e) { clean(); authActionCode = null; setAuthMode("reset"); authErr("rsError", "This reset link has expired or was already used. Request a new one."); }
+  } else if (mode === "verifyEmail") {
+    try {
+      await auth.applyActionCode(code); clean();
+      if (initial) { await checkVerified(); return; }
+      setAuthMode("signin", "Email confirmed. Sign in to continue.");
+    } catch (e) {
+      clean();
+      if (initial) { await checkVerified(); return; }
+      setAuthMode("signin", "That confirmation link has expired or was already used. Sign in and we'll offer to send a new one.");
+    }
   }
 }
 
@@ -7467,6 +7641,7 @@ function doLogout() {
   firebase.auth().signOut();
   document.getElementById("li-user").value = "";
   document.getElementById("li-pass").value = "";
+  setAuthMode("signin");
 }
 
 // ═══════════════════════════ CHANGE PASSWORD ═══════════════════════════════════
@@ -7490,7 +7665,7 @@ async function submitPasswordChange() {
   err.style.display = "none"; ok.style.display = "none";
 
   if (!current || !next || !confirmPw) { err.textContent = "Fill in all fields."; err.style.display = "block"; return; }
-  if (next.length < 6) { err.textContent = "New password must be at least 6 characters."; err.style.display = "block"; return; }
+  if (next.length < AUTH_MIN_PW) { err.textContent = "New password must be at least " + AUTH_MIN_PW + " characters."; err.style.display = "block"; return; }
   if (next !== confirmPw) { err.textContent = "New passwords don't match."; err.style.display = "block"; return; }
 
   const user = firebase.auth().currentUser;
@@ -7505,10 +7680,25 @@ async function submitPasswordChange() {
     document.getElementById("pw-new").value = "";
     document.getElementById("pw-confirm").value = "";
   } catch (e) {
-    err.textContent = e.code === "auth/wrong-password" ? "Current password is incorrect." : (e.message || "Could not update password.");
+    err.textContent = (e.code === "auth/wrong-password" || e.code === "auth/invalid-credential") ? "Current password is incorrect." : (e.message || "Could not update password.");
     err.style.display = "block";
   } finally {
     btn.disabled = false; btn.textContent = "Update Password";
+  }
+}
+
+async function sendResetFromDialog() {
+  const user = firebase.auth().currentUser;
+  const err = document.getElementById("pw-error"), ok = document.getElementById("pw-success");
+  err.style.display = "none"; ok.style.display = "none";
+  if (!user) return;
+  try {
+    await firebase.auth().sendPasswordResetEmail(user.email, authActionSettings());
+    ok.textContent = "A reset link was sent to " + user.email + ".";
+    ok.style.display = "block";
+  } catch (e) {
+    err.textContent = e.code === "auth/too-many-requests" ? "Too many requests. Wait a few minutes and try again." : (e.message || "Could not send the email.");
+    err.style.display = "block";
   }
 }
 
@@ -7570,6 +7760,20 @@ function exportCSV() {
 }
 
 // ═══════════════════════════ INIT ═════════════════════════════════════════════
+async function startSession(user) {
+  const overlay = document.getElementById("loginOverlay");
+  const obOverlay = document.getElementById("onboardingOverlay");
+  currentUid = user.uid;
+  overlay.style.display = "none";
+  await loadState();
+  if (!state.goals) {
+    openOnboarding();
+    return;
+  }
+  obOverlay.style.display = "none";
+  seedAiLearningPath();
+  renderAll();
+}
 async function init() {
   await initFirebase();
   firebase.auth().onAuthStateChanged(async (user) => {
@@ -7581,17 +7785,19 @@ async function init() {
       overlay.style.display = "flex";
       return;
     }
-    currentUid = user.uid;
-    overlay.style.display = "none";
-    await loadState();
-    if (!state.goals) {
-      openOnboarding();
+    if (needsVerification(user)) {
+      // New accounts must confirm their email before the app opens.
+      currentUid = null;
+      obOverlay.style.display = "none";
+      overlay.style.display = "flex";
+      setAuthMode("verify");
+      // Coming back from the confirmation link: check again so she doesn't have to press the button.
+      user.reload().then(() => { if (user.emailVerified) checkVerified(); }).catch(() => {});
       return;
     }
-    obOverlay.style.display = "none";
-    seedAiLearningPath();
-    renderAll();
+    await startSession(user);
   });
+  handleAuthActionLink();
 }
 async function renderAll() {
   applyDesignTokenOverrides();
