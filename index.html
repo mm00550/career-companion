@@ -2478,7 +2478,7 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
     </div>
     <p id="li-readiness-status" role="status" style="font-size:12px;color:var(--text-muted);margin:12px 0 0">Target roles are saved with your account. ChatGPT will prepare the review; results are not imported automatically.</p>
   </div>
-  <div style="font-size:12px;color:var(--text-muted);margin:0 0 10px">Saved review — Markus Mosleitner · 7 September 2026. This report does not change when you enter another profile link.</div>
+  <div id="li-saved-caption" style="font-size:12px;color:var(--text-muted);margin:0 0 10px">Saved review — Markus Mosleitner · 7 September 2026. This report does not change when you enter another profile link.</div>
   <iframe id="li-profile-review" src="linkedin-profile-review.html"
     title="LinkedIn profile review and improvement checklist"
     style="display:block;width:100%;height:900px;border:0;border-radius:14px"
@@ -7766,13 +7766,45 @@ async function startSession(user) {
   currentUid = user.uid;
   overlay.style.display = "none";
   await loadState();
+  // Accounts created from VERIFY_REQUIRED_FROM onward start on a blank page: none of the
+  // owner's sample content (courses, job sources, role titles, saved LinkedIn review).
+  const blankStart = isBlankStartAccount(user);
+  if (blankStart) clearSampleContent();
+  showSavedLinkedInReview(!blankStart);
   if (!state.goals) {
     openOnboarding();
     return;
   }
   obOverlay.style.display = "none";
-  seedAiLearningPath();
+  if (!blankStart) seedAiLearningPath();
   renderAll();
+}
+function isBlankStartAccount(user) {
+  return !!(user && user.metadata && user.metadata.creationTime && Date.parse(user.metadata.creationTime) >= VERIFY_REQUIRED_FROM);
+}
+// Removes the built-in sample content from a new account, but only where it is still untouched.
+function clearSampleContent() {
+  let changed = false;
+  const seedNotes = new Map(AI_LEARNING_PATH.map(c => [c.title, c.notes]));
+  const trainings = (state.trainings || []).filter(t => {
+    if (!seedNotes.has(t.title)) return true;
+    const h = t.history || [];
+    const untouched = (t.status || "Not started") === "Not started" && h.length <= 1 && (!h[0] || h[0].text === seedNotes.get(t.title));
+    return !untouched;
+  });
+  if (trainings.length !== (state.trainings || []).length) { state.trainings = trainings; changed = true; }
+  const sources = (state.searchSetup || []).filter(s => !(/^ss-seed-/.test(s.id || "") && !s.lastRun));
+  if (sources.length !== (state.searchSetup || []).length) { state.searchSetup = sources; changed = true; }
+  else if (state.searchSetup === DEFAULT_SEARCH_SETUP) { state.searchSetup = []; }
+  const roles = state.searchCriteria && state.searchCriteria.roleTitles;
+  if (roles && JSON.stringify(roles) === JSON.stringify(DEFAULT_ROLE_TITLES)) { state.searchCriteria.roleTitles = []; changed = true; }
+  if (changed && state.goals) saveState(); // before onboarding, the goals form saves it
+}
+// The saved LinkedIn profile report on the LinkedIn tab belongs to the owner's own profile.
+function showSavedLinkedInReview(show) {
+  const cap = document.getElementById("li-saved-caption"), fr = document.getElementById("li-profile-review");
+  if (cap) cap.style.display = show ? "" : "none";
+  if (fr) { fr.style.display = show ? "block" : "none"; if (!show && fr.getAttribute("src") !== "about:blank") fr.setAttribute("src", "about:blank"); }
 }
 async function init() {
   await initFirebase();
