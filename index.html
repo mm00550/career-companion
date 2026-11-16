@@ -682,6 +682,11 @@
   .nw-search input:focus { background: var(--bg-surface); border-color: var(--border-default); box-shadow: 0 0 0 2px var(--color-primary-light); }
   .nw-chips { display: flex; gap: 6px; flex: 1; min-width: 0; justify-content: flex-end; flex-wrap: wrap; }
   .nw-chip { flex-shrink: 0; white-space: nowrap; }
+  /* Events tab: detail lines on a card */
+  .ev-line { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--text-secondary); line-height: 1.3; min-width: 0; }
+  .ev-line .msi { font-size: 15px; color: var(--text-muted); flex-shrink: 0; }
+  .ev-line .ev-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .ev-line.warn { color: var(--status-warning-text); } .ev-line.warn .msi { color: inherit; }
   @media (max-width: 900px) {
     .nw-toolbar-top, .nw-toolbar-bottom { flex-wrap: wrap; }
     .nw-actions { flex-wrap: wrap; flex-shrink: 1; min-width: 0; max-width: 100%; }
@@ -917,6 +922,7 @@
     <button class="tab-btn" onclick="showTab('suggestions')">Job Match</button>
     <button class="tab-btn" onclick="showTab('linkedin')">LinkedIn</button>
     <button class="tab-btn tab-amber" onclick="showTab('network')">Network</button>
+    <button class="tab-btn tab-amber" onclick="showTab('events')">Events</button>
     <button class="tab-btn tab-amber" onclick="showTab('training')">Training</button>
     <button class="tab-btn tab-amber" onclick="showTab('checkout')">Notes</button>
     <button class="tab-btn tab-amber" onclick="showTab('strategy')">Strategy</button>
@@ -1380,6 +1386,35 @@
 
   <div class="net-section-hdr contacted" style="margin-top:16px">👥 Shared by your network</div>
   <div id="net-shared-list"></div>
+</div>
+
+<!-- ════════════════════════════ EVENTS ════════════════════════════════════ -->
+<div id="tab-events" class="section">
+  <div class="nw-stats" id="ev-stats"></div>
+
+  <div class="card nw-toolbar">
+    <div class="nw-toolbar-top">
+      <div>
+        <div class="nw-title">Events &amp; Presentations</div>
+        <div class="nw-sub">Company presentations, training, networking events and trade fairs: plan them, attend them, follow up</div>
+      </div>
+      <div class="nw-actions">
+        <div class="nw-seg" id="ev-seg"></div>
+        <select class="nw-select" id="ev-sort" onchange="setEvSort(this.value)">
+          <option value="date">Sort: Date (soonest first)</option>
+          <option value="name">Sort: Name (A–Z)</option>
+          <option value="added">Sort: Recently added</option>
+        </select>
+        <button class="nw-btn-primary" onclick="openEventModal()"><span class="msi">event</span>+ Add Event</button>
+      </div>
+    </div>
+    <div class="nw-toolbar-bottom">
+      <div class="nw-search"><span class="msi">search</span><input id="evSearch" placeholder="Search events, organisers, locations, notes…" oninput="renderEvents()"></div>
+      <div class="nw-chips" id="ev-chips"></div>
+    </div>
+  </div>
+
+  <div id="ev-workspace"></div>
 </div>
 
 <!-- ════════════════════════════ TRAINING ════════════════════════════════════ -->
@@ -2588,6 +2623,54 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
   </div>
 </div>
 
+<div class="overlay" id="eventModal" style="display:none" onclick="if(event.target===this)closeEventModal()">
+  <div class="modal">
+    <div class="modal-title" style="color:#d9600a" id="eventModalTitle">Add Event</div>
+    <div class="form-group"><label class="form-label">Event name *</label><input class="form-input" id="ef-name" placeholder="e.g. AstraZeneca company presentation"></div>
+    <div class="form-grid2" style="margin-bottom:14px">
+      <div><label class="form-label">Category</label><select class="form-input" id="ef-category"></select></div>
+      <div><label class="form-label">Status</label><select class="form-input" id="ef-status"></select></div>
+    </div>
+    <div class="form-grid2" style="margin-bottom:14px">
+      <div><label class="form-label">Organiser</label><input class="form-input" id="ef-organiser" placeholder="Company or organisation"></div>
+      <div><label class="form-label">Location</label><input class="form-input" id="ef-location" placeholder="e.g. Gothenburg or Online"></div>
+    </div>
+    <div class="form-grid2" style="margin-bottom:14px">
+      <div><label class="form-label">Key contact</label><input class="form-input" id="ef-contact" placeholder="Name of your contact"></div>
+      <div><label class="form-label">Link to event</label><input class="form-input" id="ef-link" placeholder="https://…"></div>
+    </div>
+    <div class="form-grid2" style="margin-bottom:14px">
+      <div><label class="form-label">Date</label><input type="date" class="form-input" id="ef-date"></div>
+      <div><label class="form-label">Time</label><input type="time" step="900" class="form-input" id="ef-time"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes / History / Activity</label>
+      <div class="history-log">
+        <div class="history-add" style="flex-wrap:wrap;gap:6px">
+          <textarea id="ef-note-input" rows="2" placeholder="Add a note: who you met, what you learned, follow-ups… (you can paste a screenshot here, Ctrl+V)" style="flex:1;min-width:0"></textarea>
+          <div style="display:flex;align-items:center;gap:6px;width:100%;padding:0 0 2px">
+            <label style="font-size:11px;color:var(--text-muted);white-space:nowrap">Date:</label>
+            <input type="date" id="ef-note-date" class="form-input" style="flex:1.25;min-width:0;font-size:11px;padding:5px 6px">
+            <label style="font-size:11px;color:var(--text-muted);white-space:nowrap">Time:</label>
+            <select id="ef-note-time" class="form-input" style="flex:.8;min-width:0;font-size:11px;padding:5px 6px" title="Optional"></select>
+            <select id="ef-note-activity" class="form-input" style="flex:1.3;min-width:0;font-size:11px;padding:5px 6px" title="Type of activity (optional)"></select>
+            <input type="file" accept="image/*" id="ef-note-image" style="display:none" onchange="handleNoteImageSelect('ef', this.files[0])">
+            <button type="button" title="Attach screenshot" onclick="document.getElementById('ef-note-image').click()">📷</button>
+            <button onclick="addEventHistoryEntry()">Add</button>
+          </div>
+        </div>
+        <div id="ef-note-image-preview" style="display:none;padding:8px 12px;background:var(--bg-surface-subtle);border-bottom:1px solid var(--border-default)"></div>
+        <div class="history-entries" id="ef-history-entries"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="ef-delete-btn" style="display:none;margin-right:auto" onclick="deleteEventFromModal()">Delete event</button>
+      <button class="btn btn-ghost" onclick="closeEventModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitEvent()">Save</button>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="checkoutModal" style="display:none" onclick="if(event.target===this)closeCheckoutModal()">
   <div class="modal">
     <div class="modal-title" style="color:var(--color-primary)" id="checkoutModalTitle">Add Item</div>
@@ -3631,8 +3714,13 @@ function acActivities() {
   (state.events||[]).forEach(e => {
     if (!acIsDate(e.date)) return;
     push({ key:`e:${e.id}`, date:e.date.slice(0,10), time:e.time||"", kind:"event", pillar:"events", tag:"Event", who: e.name, company: e.organiser || "",
-           note: e.location, status: e.location || e.status || "" });
+           activity: e.category || "", note: e.location, status: e.location || e.status || "", open:`openEventModal('${e.id}')` });
   });
+  (state.events||[]).forEach(e => (e.history||[]).forEach(h => {
+    const s = acWhen(h); if (!s) return;
+    push({ key:`e:${e.id}:h:${h.id||h.ts}`, date:s.date, time:s.time, booked:s.booked, kind:"event", pillar:"events", tag:"Event", who: e.name, company: e.organiser || "",
+           note: h.text, subject: h.subject, activity: h.activity, status:"Logged", open:`openEventModal('${e.id}')` });
+  }));
   return out.sort((a,b)=> a.date.localeCompare(b.date) || (a.time||"99").localeCompare(b.time||"99"));
 }
 
@@ -4591,6 +4679,316 @@ function setNetStatusFilter(s)   { netStatusFilter=s;   renderNetwork(); }
 function setNetPriFilter(p)      { netPriorityFilter=p; renderNetwork(); }
 function setNetRelFilter(r)      { netRelationFilter=r; renderNetwork(); }
 
+// ═══════════════════════════ EVENTS TAB ═══════════════════════════════════════
+// Company presentations, presentations, training, networking events, trade fairs… Works like the Network tab:
+// a Kanban board (Interested → Planned / Booked → Attended) and a List view. state.events is saved with everything
+// else; each event has: name, category, status, organiser, location, contact (key contact), link, date, time, history.
+const EVENT_CATEGORIES = {
+  "Company presentation": { icon:"business",   color:"#3b0030", bg:"#f5e7ef" },
+  "Presentation":         { icon:"co_present", color:"#7e22ce", bg:"#f3e8ff" },
+  "Training":             { icon:"school",     color:"#1f9c6e", bg:"#e1faf0" },
+  "Networking event":     { icon:"groups",     color:"#d9600a", bg:"#fff4eb" },
+  "Trade fair":           { icon:"storefront", color:"#006879", bg:"#e3f7f3" },
+  "Conference":           { icon:"mic",        color:"#4338ca", bg:"#eef2ff" },
+  "Webinar":              { icon:"videocam",   color:"#0369a1", bg:"#e0f2fe" },
+  "Other":                { icon:"event",      color:"#4b5563", bg:"#f3f4f6" },
+};
+// Same three statuses the dashboard's Events pipeline counts (EVENT_STATUS).
+const EVT_STATUS_UI = {
+  "Interested":       { dot:"#6366f1", color:"#4338ca", bg:"#eef2ff" },
+  "Planned / Booked": { dot:"#d9600a", color:"#c2410c", bg:"#fff4eb" },
+  "Attended":         { dot:"#10b981", color:"#047857", bg:"#ecfdf5" },
+};
+const EVT_NEXT_STEP = {
+  "Interested":       { label:"Mark booked",   to:"Planned / Booked", cls:"teal" },
+  "Planned / Booked": { label:"Mark attended", to:"Attended",         cls:"primary" },
+  "Attended":         { label:"Log note",      to:null,               cls:"" },
+};
+let evView = (()=>{ try { return localStorage.getItem("evView") || "kanban"; } catch(e) { return "kanban"; } })();
+let evSort = "date", evCatFilter = "All", evUpcomingOnly = false, evExpandedId = null, evTableSort = null;
+
+const evCat = e => EVENT_CATEGORIES[e.category] || EVENT_CATEGORIES["Other"];
+const evStatus = e => EVT_STATUS_UI[e.status] ? e.status : "Interested";
+function evWhen(e, short) {
+  if (!e.date) return e.time ? e.time : "No date yet";
+  const d = new Date(e.date + "T00:00:00").toLocaleDateString("en-GB", short ? { weekday:"short", day:"numeric", month:"short" } : { weekday:"short", day:"numeric", month:"short", year:"numeric" });
+  return d + (e.time ? " · " + e.time : "");
+}
+function evRel(e) { return e.date ? netRelDay(e.date) : ""; }
+function evLatestNote(e) { const h = e.history || []; return ((h.length ? h[h.length-1].text : e.notes) || "").trim(); }
+function evOverdue(e) { return e.status === "Planned / Booked" && e.date && e.date < today(); }   // booked, but the date has passed
+
+function renderEvents() {
+  const all = state.events || [];
+  const t0 = today();
+  const upcoming = all.filter(e => e.date && e.date >= t0 && evStatus(e) !== "Attended").sort((a,b) => a.date.localeCompare(b.date) || (a.time||"").localeCompare(b.time||""));
+  const booked = all.filter(e => evStatus(e) === "Planned / Booked");
+  const attended = all.filter(e => evStatus(e) === "Attended");
+  const pill = (txt, color, bg, border) => `<span class="nw-pill" style="color:${color};background:${bg};border-color:${border}">${txt}</span>`;
+  const stat = (lbl, extra, val, valColor, sub, icon, iconColor, iconBg) => `
+    <div class="nw-stat"><div style="min-width:0">
+      <div class="nw-stat-lbl">${lbl}${extra}</div>
+      <div class="nw-stat-row"><span class="nw-stat-val" style="color:${valColor}">${val}</span>${sub ? `<span class="nw-stat-sub">${sub}</span>` : ""}</div></div>
+      <div class="nw-stat-icon" style="color:${iconColor};background:${iconBg}"><span class="msi">${icon}</span></div></div>`;
+  document.getElementById("ev-stats").innerHTML =
+    stat("Events", "", all.length, "var(--text-primary)", "tracked", "event", "var(--color-primary)", "var(--bg-surface-subtle)") +
+    stat("Upcoming", upcoming[0] ? pill("Next: " + netRelDay(upcoming[0].date), "var(--status-success-text)", "var(--status-success-bg)", "var(--status-success-border)") : "",
+         upcoming.length, "var(--status-progress-text)", "still to come", "upcoming", "var(--status-progress-text)", "var(--status-progress-bg)") +
+    stat("Planned / Booked", "", booked.length, "#d9600a", "on the calendar", "confirmation_number", "#d9600a", "#fff4eb") +
+    stat("Attended", "", attended.length, "var(--status-success-text)", "so far", "task_alt", "var(--status-success-text)", "var(--status-success-bg)");
+
+  document.getElementById("ev-seg").innerHTML =
+    `<button class="${evView==="kanban"?"on":""}" onclick="setEvView('kanban')"><span class="msi">view_kanban</span>Kanban View</button>` +
+    `<button class="${evView==="list"?"on":""}" onclick="setEvView('list')"><span class="msi">table_rows</span>List View</button>`;
+  document.getElementById("ev-sort").value = evSort;
+
+  const next30 = all.filter(e => e.date && netDaysFromToday(e.date) >= 0 && netDaysFromToday(e.date) <= 30).length;
+  document.getElementById("ev-chips").innerHTML =
+    `<button class="nw-chip${evCatFilter==="All"&&!evUpcomingOnly?" on":""}" onclick="clearEvFilters()">All (${all.length})</button>` +
+    Object.keys(EVENT_CATEGORIES).map(c => { const cc = EVENT_CATEGORIES[c], on = c === evCatFilter;
+      return `<button class="nw-chip${on?" on":""}" style="${on?"":`color:${cc.color};background:${cc.bg};border-color:${cc.bg}`}" onclick="setEvCat('${on?"All":c}')"><span class="msi" style="font-size:14px">${cc.icon}</span>${c}</button>`; }).join("") +
+    `<button class="nw-chip${evUpcomingOnly?" on":""}" onclick="toggleEvUpcoming()" title="Events in the next 30 days">📅 Next 30 days (${next30})</button>`;
+
+  const search = ((document.getElementById("evSearch") || {}).value || "").toLowerCase();
+  const sorters = {
+    date:  (a,b) => (a.date||"9999").localeCompare(b.date||"9999") || (a.time||"").localeCompare(b.time||""),
+    name:  (a,b) => (a.name||"").localeCompare(b.name||""),
+    added: (a,b) => (parseInt(b.id)||0) - (parseInt(a.id)||0),
+  };
+  const filtered = all.filter(e => {
+    const mc = evCatFilter === "All" || e.category === evCatFilter;
+    const mu = !evUpcomingOnly || (e.date && netDaysFromToday(e.date) >= 0 && netDaysFromToday(e.date) <= 30);
+    const notes = (e.history || []).map(h => h.text).join(" ") + (e.notes || "");
+    const mq = !search || [e.name, e.organiser, e.location, e.contact, e.category, e.status, e.date, notes].join(" ").toLowerCase().includes(search);
+    return mc && mu && mq;
+  }).sort(sorters[evSort] || sorters.date);
+
+  document.getElementById("ev-workspace").innerHTML = evView === "list" ? evRenderTable(filtered, all.length) : evRenderBoard(filtered, all.length);
+  if (evView === "kanban") { document.documentElement.style.setProperty("--sbw", (window.innerWidth - document.documentElement.clientWidth) + "px"); evWireDrag(); }
+}
+
+function evRenderBoard(list, total) {
+  const col = status => {
+    const items = list.filter(e => evStatus(e) === status), ui = EVT_STATUS_UI[status];
+    return `<div class="nw-col" data-status="${escHtml(status)}">
+      <div class="nw-col-hdr"><div class="nw-col-ttl"><span class="nw-col-dot" style="background:${ui.dot}"></span>${escHtml(status)}</div><span class="nw-col-count">${items.length}</span></div>
+      <div class="nw-col-body">${items.length ? items.map(evRenderCard).join("") : `<div class="nw-col-empty">${total ? "Drop an event here" : "No events yet"}</div>`}</div>
+    </div>`;
+  };
+  return `<div class="nw-board">` + Object.keys(EVT_STATUS_UI).map(col).join("") + `</div>`;
+}
+function evRenderCard(e) {
+  const cc = evCat(e), note = evLatestNote(e), step = EVT_NEXT_STEP[evStatus(e)];
+  const link = netSafeUrl(e.link), over = evOverdue(e);
+  const stepClick = step.to ? `evAdvance('${e.id}','${step.to}')` : `openEventModal('${e.id}')`;
+  return `<div class="nw-card${over?" overdue":""}" draggable="true" data-id="${e.id}" title="${note ? escHtml(note.slice(0,300)) : ""}">
+    <div class="nw-card-top"><div class="nw-person">
+      <div class="nw-avatar" style="background:${cc.bg};color:${cc.color}"><span class="msi">${cc.icon}</span></div>
+      <div style="min-width:0"><div class="nw-name">${escHtml(e.name)}</div>
+        <div class="nw-role">${e.organiser ? `<strong class="nw-company">${escHtml(e.organiser)}</strong>` : `<span class="nw-muted">No organiser</span>`}</div></div>
+    </div></div>
+    <div class="nw-tags"><span class="nw-tag" style="color:${cc.color};background:${cc.bg};border-color:transparent">${escHtml(e.category || "Other")}</span></div>
+    <div class="ev-line${over?" warn":""}"><span class="msi">${over ? "warning" : "event"}</span><span class="ev-t">${escHtml(evWhen(e))}</span>${e.date ? `<span class="nw-muted">${over ? "passed — mark attended?" : evRel(e)}</span>` : ""}</div>
+    ${e.location ? `<div class="ev-line"><span class="msi">location_on</span><span class="ev-t">${escHtml(e.location)}</span></div>` : ""}
+    ${e.contact ? `<div class="ev-line"><span class="msi">person</span><span class="ev-t">${escHtml(e.contact)}</span></div>` : ""}
+    <div class="nw-card-foot">
+      ${link ? `<a class="nw-act" href="${escHtml(link)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" draggable="false">🔗 Link</a>` : `<span></span>`}
+      <div class="nw-card-btns">
+        <button class="nw-act nw-icon-btn" onclick="openEventModal('${e.id}')" title="Edit event"><span class="msi">edit</span></button>
+        <button class="nw-act ${step.cls}" onclick="${stepClick}">${step.label}</button>
+      </div>
+    </div>
+  </div>`;
+}
+function evWireDrag() {
+  document.querySelectorAll("#ev-workspace .nw-card").forEach(card => {
+    card.addEventListener("dragstart", ev => { ev.dataTransfer.setData("text/plain", card.dataset.id); ev.dataTransfer.effectAllowed = "move"; card.classList.add("dragging"); });
+    card.addEventListener("dragend", () => card.classList.remove("dragging"));
+  });
+  document.querySelectorAll("#ev-workspace .nw-col").forEach(col => {
+    col.addEventListener("dragover", ev => { ev.preventDefault(); col.classList.add("drop"); });
+    col.addEventListener("dragleave", ev => { if (!col.contains(ev.relatedTarget)) col.classList.remove("drop"); });
+    col.addEventListener("drop", ev => { ev.preventDefault(); col.classList.remove("drop"); const id = ev.dataTransfer.getData("text/plain"); if (id) evSetStatus(id, col.dataset.status); });
+  });
+}
+
+const EV_TABLE_SORTS = {
+  name:     e => (e.name||"").toLowerCase(),
+  organiser:e => (e.organiser||"").toLowerCase(),
+  location: e => (e.location||"").toLowerCase(),
+  date:     e => (e.date||"") && (e.date + " " + (e.time||"")),
+  contact:  e => (e.contact||"").toLowerCase(),
+  status:   e => Object.keys(EVT_STATUS_UI).indexOf(evStatus(e)),
+};
+function setEvTableSort(key) { evTableSort = evTableSort && evTableSort.key === key ? { key, dir: -evTableSort.dir } : { key, dir: 1 }; renderEvents(); }
+function evRenderTable(list, total) {
+  if (!list.length) return `<div class="nw-table-wrap"><div class="nw-empty">${total ? "No events match this filter." : "No events yet. Hit “+ Add Event” to log your first one."}</div></div>`;
+  if (evTableSort) {
+    const get = EV_TABLE_SORTS[evTableSort.key], dir = evTableSort.dir;
+    list = [...list].sort((a,b) => { const va = get(a), vb = get(b), ea = va === "" || va === -1, eb = vb === "" || vb === -1;
+      if (ea || eb) return ea === eb ? 0 : ea ? 1 : -1; return (va < vb ? -1 : va > vb ? 1 : 0) * dir; });
+  }
+  const rows = list.map(e => {
+    const cc = evCat(e), st = evStatus(e), sc = EVT_STATUS_UI[st], open = e.id === evExpandedId, link = netSafeUrl(e.link), over = evOverdue(e);
+    return `<tr class="nw-row${open?" open":""}${over?" overdue":""}">
+      <td style="width:30px"><button class="nw-exp" onclick="toggleEvRow('${e.id}')" title="${open?"Hide":"Show"} notes &amp; activity"><span class="msi">expand_more</span></button></td>
+      <td><div style="display:flex;align-items:center;gap:9px"><div class="nw-avatar sm" style="background:${cc.bg};color:${cc.color};border-radius:9px"><span class="msi" style="font-size:16px">${cc.icon}</span></div><div style="min-width:0">
+        <div style="font-weight:700;font-size:13px">${escHtml(e.name)}</div><div class="nw-muted">${escHtml(e.category || "Other")}</div></div></div></td>
+      <td>${e.organiser ? escHtml(e.organiser) : `<span class="nw-muted">—</span>`}</td>
+      <td>${e.location ? escHtml(e.location) : `<span class="nw-muted">—</span>`}</td>
+      <td>${e.date || e.time ? `<div style="font-weight:600;white-space:nowrap">${escHtml(evWhen(e, true))}</div><div class="${over?"":"nw-muted"}" style="font-size:10.5px;${over?"color:var(--status-warning-text)":""}">${over ? "passed — mark attended?" : evRel(e)}</div>` : `<span class="nw-muted">—</span>`}</td>
+      <td>${e.contact ? escHtml(e.contact) : `<span class="nw-muted">—</span>`}</td>
+      <td>${link ? `<a class="nw-li" href="${escHtml(link)}" target="_blank" rel="noopener" title="${escHtml(link)}">🔗 Open</a>` : `<span class="nw-muted">—</span>`}</td>
+      <td><span class="nw-status" style="color:${sc.color};background:${sc.bg}" onclick="evCycleStatus('${e.id}')" title="Click to move to the next stage"><span class="d" style="background:${sc.dot}"></span>${escHtml(st)}</span></td>
+      <td style="text-align:right;white-space:nowrap"><button class="nw-act" onclick="openEventModal('${e.id}')">Edit</button> <button class="nw-act danger" onclick="deleteEvent('${e.id}')">✕</button></td>
+    </tr>${open ? evRenderDrawer(e) : ""}`;
+  }).join("");
+  const th = (key, label) => { const on = evTableSort && evTableSort.key === key;
+    return `<th class="nw-sortable${on?" on":""}" onclick="setEvTableSort('${key}')" title="Sort by ${label}">${label}<span class="nw-sort-ind">${on ? (evTableSort.dir>0?"▲":"▼") : "↕"}</span></th>`; };
+  return `<div class="nw-table-wrap"><div class="nw-table-scroll"><table class="nw-table">
+    <thead><tr><th></th>${th("name","Event")}${th("organiser","Organiser")}${th("location","Location")}${th("date","Date &amp; time")}${th("contact","Key contact")}<th>Link</th>${th("status","Status")}<th style="text-align:right">Actions</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    <div class="nw-table-foot">Showing <strong>${list.length}</strong> of <strong>${total}</strong> events</div></div>`;
+}
+function evRenderDrawer(e) {
+  const hist = [...(e.history || [])].reverse();
+  const items = hist.length ? hist.map(h => {
+    const time = (h.scheduledAt || "").split("T")[1] || "";
+    const chip = [h.activity, time].filter(Boolean).join(" · ");
+    return `<div class="nw-tl-item"><div class="nw-tl-head"><span>${chip ? `<span class="nw-tl-ch">${escHtml(chip)}</span>` : ""}</span><span class="nw-tl-date">${fmtDatetime(h.ts)}</span></div>
+      <div class="nw-tl-text">${escHtml((h.text || "").trim())}</div>${noteImageThumb(h)}</div>`; }).join("")
+    : `<div class="nw-muted" style="padding:6px 0">No notes or activity yet — open the event and add the first one.</div>`;
+  return `<tr class="nw-drawer"><td colspan="9"><div class="nw-drawer-in" style="grid-template-columns:1fr">
+    <div><div class="nw-sec-ttl"><h4><span class="msi">history_edu</span>Notes &amp; activity</h4><span class="nw-muted">${hist.length} logged</span></div><div class="nw-timeline">${items}</div></div>
+  </div></td></tr>`;
+}
+
+function setEvView(v) { evView = v; try { localStorage.setItem("evView", v); } catch(e) {} renderEvents(); }
+function setEvSort(s) { evSort = s; evTableSort = null; renderEvents(); }
+function setEvCat(c) { evCatFilter = c; renderEvents(); }
+function toggleEvUpcoming() { evUpcomingOnly = !evUpcomingOnly; renderEvents(); }
+function clearEvFilters() { evCatFilter = "All"; evUpcomingOnly = false; renderEvents(); }
+function toggleEvRow(id) { evExpandedId = evExpandedId === id ? null : id; renderEvents(); }
+function evSetStatus(id, to) {
+  const e = (state.events || []).find(x => x.id === id);
+  if (!e || !EVT_STATUS_UI[to] || evStatus(e) === to) return;
+  e.status = to; saveState(); renderEvents(); renderDashboard();
+}
+function evAdvance(id, to) { evSetStatus(id, to); }
+function evCycleStatus(id) {
+  const e = (state.events || []).find(x => x.id === id); if (!e) return;
+  const order = Object.keys(EVT_STATUS_UI); evSetStatus(id, order[(order.indexOf(evStatus(e)) + 1) % order.length]);
+}
+
+// ── Event form ──
+let editEventId = null, _eventModalHistory = [];
+function openEventModal(id) {
+  editEventId = id || null;
+  const e = id ? (state.events || []).find(x => x.id === id) : null;
+  _eventModalHistory = e?.history ? JSON.parse(JSON.stringify(e.history)) : [];
+  document.getElementById("eventModalTitle").textContent = id ? "Edit Event" : "Add Event";
+  document.getElementById("ef-delete-btn").style.display = id ? "" : "none";
+  document.getElementById("ef-name").value      = e?.name || "";
+  sel("ef-category", Object.keys(EVENT_CATEGORIES), e?.category || "Networking event");
+  sel("ef-status",   Object.keys(EVT_STATUS_UI),    e ? evStatus(e) : "Interested");
+  document.getElementById("ef-organiser").value = e?.organiser || "";
+  document.getElementById("ef-location").value  = e?.location || "";
+  document.getElementById("ef-contact").value   = e?.contact || "";
+  document.getElementById("ef-link").value      = e?.link || "";
+  document.getElementById("ef-date").value      = e?.date || "";
+  document.getElementById("ef-time").value      = e?.time || "";
+  document.getElementById("ef-note-input").value = "";
+  document.getElementById("ef-note-date").value  = today();
+  resetBooking("ef");
+  clearNoteImage("ef");
+  setupNotePasteListener("ef-note-input", "ef");
+  renderEventHistoryEntries();
+  document.getElementById("eventModal").style.display = "flex";
+}
+function closeEventModal() { document.getElementById("eventModal").style.display = "none"; editEventId = null; _eventModalHistory = []; clearNoteImage("ef"); }
+function renderEventHistoryEntries() {
+  const el = document.getElementById("ef-history-entries");
+  if (!_eventModalHistory.length) { el.innerHTML = `<div class="history-empty">No notes yet. Add your first note above.</div>`; return; }
+  el.innerHTML = [..._eventModalHistory].reverse().map((h, ri) => {
+    const i = _eventModalHistory.length - 1 - ri;
+    return `<div class="history-entry">
+      <div class="history-avatar">MM</div>
+      <div class="history-body">
+        <div class="history-meta">You &nbsp;·&nbsp; ${fmtDatetime(h.ts)}</div>${bookingBadge(h)}
+        <div class="history-text" id="eht-${i}">${escHtml(h.text)}</div>
+        ${noteImageThumb(h)}
+        <textarea class="history-edit-area" id="ehea-${i}" rows="2">${escHtml(h.text)}</textarea>
+        <div class="history-actions">
+          <button class="history-link" id="ehedit-${i}" onclick="startEditEventHistory(${i})">Edit</button>
+          <button class="history-link" id="ehsave-${i}" style="display:none;color:var(--status-success-text)" onclick="saveEditEventHistory(${i})">Save</button>
+          <button class="history-link" id="ehcancel-${i}" style="display:none" onclick="renderEventHistoryEntries()">Cancel</button>
+          <button class="history-link" style="color:var(--status-urgent-text)" onclick="deleteEventHistoryEntry(${i})">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+async function addEventHistoryEntry() {
+  const input = document.getElementById("ef-note-input");
+  const text = input.value.trim(), file = _pendingNoteImage["ef"], booking = takeBooking("ef");
+  if (!text && !file && !booking) return;
+  const entry = { id: String(Date.now()), ts: noteTs("ef"), text, ...(booking || {}) };
+  if (file) Object.assign(entry, await uploadNoteImage(file));
+  _eventModalHistory.push(entry);
+  input.value = ""; resetBooking("ef"); clearNoteImage("ef"); renderEventHistoryEntries();
+}
+function startEditEventHistory(i) {
+  document.getElementById("eht-"+i).classList.add("editing");
+  document.getElementById("ehea-"+i).classList.add("editing");
+  document.getElementById("ehedit-"+i).style.display = "none";
+  document.getElementById("ehsave-"+i).style.display = "";
+  document.getElementById("ehcancel-"+i).style.display = "";
+}
+function saveEditEventHistory(i) {
+  const val = document.getElementById("ehea-"+i).value.trim(); if (!val) return;
+  _eventModalHistory[i].text = val; renderEventHistoryEntries();
+}
+function deleteEventHistoryEntry(i) { deleteNoteImageIfAny(_eventModalHistory[i]); _eventModalHistory.splice(i, 1); renderEventHistoryEntries(); }
+async function submitEvent() {
+  const name = document.getElementById("ef-name").value.trim();
+  if (!name) { document.getElementById("ef-name").focus(); return; }
+  const pendingNote = document.getElementById("ef-note-input").value.trim();
+  const pendingFile = _pendingNoteImage["ef"], pendingBook = takeBooking("ef");
+  const history = [..._eventModalHistory];
+  if (pendingNote || pendingFile || pendingBook) {
+    const note = { id: String(Date.now()), ts: noteTs("ef"), text: pendingNote, ...(pendingBook || {}) };
+    if (pendingFile) Object.assign(note, await uploadNoteImage(pendingFile));
+    history.push(note);
+  }
+  const prev = (editEventId && (state.events || []).find(x => x.id === editEventId)) || {};
+  const entry = {
+    ...(prev.notes ? { notes: prev.notes } : {}),
+    id: editEventId || String(Date.now()),
+    name,
+    category:  document.getElementById("ef-category").value,
+    status:    document.getElementById("ef-status").value,
+    organiser: document.getElementById("ef-organiser").value.trim(),
+    location:  document.getElementById("ef-location").value.trim(),
+    contact:   document.getElementById("ef-contact").value.trim(),
+    link:      document.getElementById("ef-link").value.trim(),
+    date:      document.getElementById("ef-date").value,
+    time:      document.getElementById("ef-time").value,
+    history,
+  };
+  state.events = state.events || [];
+  if (editEventId) state.events = state.events.map(x => x.id === editEventId ? entry : x); else state.events.push(entry);
+  saveState(); closeEventModal(); renderEvents(); renderDashboard();
+}
+function deleteEvent(id) {
+  const e = (state.events || []).find(x => x.id === id);
+  if (!confirm(`Delete “${e?.name || "this event"}”? This can't be undone.`)) return false;
+  (e?.history || []).forEach(deleteNoteImageIfAny);
+  state.events = state.events.filter(x => x.id !== id);
+  saveState(); renderEvents(); renderDashboard();
+  return true;
+}
+function deleteEventFromModal() { if (editEventId && deleteEvent(editEventId)) closeEventModal(); }
+
 // ═══════════════════════════ RENDER TO CHECK OUT ═══════════════════════════════
 function renderCheckout() {
   renderSharedSection("co-shared-list", sharedCheckoutsCache, c => `
@@ -5203,7 +5601,7 @@ function escHtml(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"
 const ACTIVITY_TYPES = ["Meeting","Interview","Chat","Phone/Teams call","Email","Event","Presentation","Course","Training"];
 const NOTE_TIMES = (() => { const out = []; for (let h = 7; h <= 19; h++) for (const m of [0,15,30,45]) { if (h === 19 && m) break; out.push(String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")); } return out; })();
 function fillNoteSelects() {
-  ["af","nf","tf"].forEach(p => {
+  ["af","nf","tf","ef"].forEach(p => {
     const t = document.getElementById(p+"-note-time"), a = document.getElementById(p+"-note-activity");
     if (t) t.innerHTML = `<option value="">—</option>` + NOTE_TIMES.map(x => `<option value="${x}">${x}</option>`).join("");
     if (a) a.innerHTML = `<option value="">Activity…</option>` + ACTIVITY_TYPES.map(x => `<option value="${escHtml(x)}">${escHtml(x)}</option>`).join("");
@@ -7211,6 +7609,7 @@ async function renderAll() {
   renderJobWatchlist();
   renderSearchSetupTab();
   renderNetwork();
+  renderEvents();
   renderTraining();
   renderCheckout();
   renderStrategy();
