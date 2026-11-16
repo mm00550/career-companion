@@ -3606,7 +3606,7 @@ function acActivities() {
     if (a.status !== WATCH_STATUS && acIsDate(a.dateApplied))
       push({ key:`a:${a.id}:applied`, date:a.dateApplied.slice(0,10), kind:"app", pillar:"apps", tag:"App", who: a.company || "Application", company: a.role,
              note: a.role, status:"Submitted", statusColor:"#047857", open:`openAppModal('${a.id}')` });
-    if (a.status === WATCH_STATUS && acIsDate(a.deadline) && a.deadline >= t)
+    if (a.status === WATCH_STATUS && a.shortlisted === true && acIsDate(a.deadline) && a.deadline >= t)   // only shortlisted roles
       push({ key:`a:${a.id}:deadline`, date:a.deadline.slice(0,10), kind:"app", tag:"Deadline", who: a.company || "Application", company: a.role,
              note: a.role, status:"Apply by", statusColor:"#047857", open:`openAppModal('${a.id}')` });
     (a.history||[]).forEach(h => {
@@ -3849,7 +3849,7 @@ function renderActPriorities() {
         main: { label:"Mark follow-up done", icon:"check", bg:"#3b0030", fn:`acAppFollowUp('${a.id}','')` },
         side: { icon:"alarm", title:"Snooze 2 days", fn:`acAppFollowUp('${a.id}','${acAddDays(t,2)}')` } });
     }
-    if (a.status===WATCH_STATUS && acIsDate(a.deadline) && a.deadline >= t && a.deadline <= weekEnd)
+    if (a.status===WATCH_STATUS && a.shortlisted === true && acIsDate(a.deadline) && a.deadline >= t && a.deadline <= weekEnd)   // only shortlisted roles
       rows.push({ sort: "2"+a.deadline, dueToday: a.deadline===t, name: a.company, role: a.role||"", icon:"send", avTone:["#ecfeff","#006879"],
         type: ["Application Deadline","#ecfeff","#006879"], date: a.deadline===t ? "" : when(a.deadline), border:"#2f7a86",
         desc: `Apply by ${acFmt(a.deadline,{weekday:"long", day:"numeric", month:"short"})}.`, open:`openAppModal('${a.id}')`,
