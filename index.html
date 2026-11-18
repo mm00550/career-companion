@@ -2887,8 +2887,11 @@ const APP_STATUS = {
   "Offer":         { color:"var(--status-success-text)", bg:"var(--status-success-bg)", dot:"var(--status-success-accent)" },
   "Rejected":      { color:"var(--status-urgent-text)", bg:"var(--status-urgent-bg)", dot:"var(--status-urgent-text)" },
   "Withdrawn":     { color:"var(--status-neutral-text)", bg:"var(--status-neutral-bg)", dot:"var(--status-neutral-text)" },
+  "No response":   { color:"var(--status-neutral-text)", bg:"var(--status-neutral-bg)", dot:"var(--status-neutral-text)" },
   "Interim Lead":  { color:"var(--color-primary)", bg:"var(--color-primary-light)", dot:"var(--color-primary)" },
 };
+// Applications that are over: they leave "Active" and sit in the closed group on the Applications tab.
+const APP_CLOSED_STATUSES = ["Rejected", "Withdrawn", "No response"];
 const SOURCE_OPTIONS = ["LinkedIn","National job board","Search firm","Company site","Network","Recruiter","Other"];
 const WORKMODEL_OPTIONS = ["Unknown","Remote","Hybrid","On-site","Travel"];
 const SS_FREQUENCY_OPTIONS = ["Weekly","Daily","Fortnightly","Manual"];
@@ -3651,7 +3654,7 @@ function renderDashboard() {
   ].join("");
 
   // ── Pipelines ──
-  const APP_DOTS = { "Applied":"var(--cd-teal)", "Interviewing":"var(--cd-teal2)", "Offer":"var(--cd-green)", "Rejected":"var(--cd-red)", "Withdrawn":"var(--cd-gray4)", "Interim Lead":"var(--cd-plum)" };
+  const APP_DOTS = { "Applied":"var(--cd-teal)", "Interviewing":"var(--cd-teal2)", "Offer":"var(--cd-green)", "Rejected":"var(--cd-red)", "Withdrawn":"var(--cd-gray4)", "No response":"var(--cd-gray4)", "Interim Lead":"var(--cd-plum)" };
   const NET_DOTS = { "To contact":"#f59e0b", "Contacted":"var(--cd-teal)", "Meeting set":"var(--cd-teal2)", "Met / Replied":"var(--cd-plum)", "Not responsive":"var(--cd-gray4)" };
   const ev = dashEvents();
   document.getElementById("cd-pipelines").innerHTML =
@@ -4122,14 +4125,14 @@ function renderApplications() {
     </div>`;
   }
 
-  // Rejected applications collapse into their own expandable group below the
-  // rest; picking the Rejected filter opens it, since that's what was asked for.
-  const active = filtered.filter(a=>a.status!=="Rejected");
-  const rejected = filtered.filter(a=>a.status==="Rejected");
-  const rejectedOpen = appRejectedOpen || appStatusFilter==="Rejected";
+  // Rejected, withdrawn and no-response applications collapse into their own expandable
+  // group below the rest; picking one of those filters opens it, since that's what was asked for.
+  const active = filtered.filter(a=>!APP_CLOSED_STATUSES.includes(a.status));
+  const rejected = filtered.filter(a=>APP_CLOSED_STATUSES.includes(a.status));
+  const rejectedOpen = appRejectedOpen || APP_CLOSED_STATUSES.includes(appStatusFilter);
   const rejectedHtml = rejected.length ? `
     <div class="iq-section-hdr-btn jw-sec rej" style="margin-top:8px" onclick="toggleRejectedApps()">
-      <span class="iq-sec-label" style="color:var(--status-urgent-text)">Rejected</span>
+      <span class="iq-sec-label" style="color:var(--status-urgent-text)">Rejected / Withdrawn / No response</span>
       <span class="iq-sec-count">${rejected.length} application${rejected.length===1?"":"s"}</span>
       <span class="iq-sec-chevron${rejectedOpen?" open":""}">▾</span>
     </div>
